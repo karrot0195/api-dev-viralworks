@@ -1,10 +1,8 @@
-import * as path from 'path';
-
 import { Config } from 'System/Config';
 
-const ENABLE_DOCUMENT = (process.env.ENABLE_DOCUMENT == 'true') ? true : false;
-const ENABLE_RBAC = (process.env.ENABLE_RBAC == 'true') ? true : false;
-const MONGO_DEBUG = (process.env.MONGO_DEBUG == 'true') ? true : false;
+const ENABLE_DOCUMENT = (process.env.ENABLE_DOCUMENT == 'true' || !process.env.ENABLE_DOCUMENT) ? true : false;
+const ENABLE_RBAC = (process.env.ENABLE_RBAC == 'true' || !process.env.ENABLE_RBAC) ? true : false;
+const MONGO_DEBUG = (process.env.MONGO_DEBUG == 'true' || !process.env.MONGO_DEBUG) ? true : false;
 
 export const config: Config = {
     env: process.env.ENV || 'dev',
@@ -21,11 +19,11 @@ export const config: Config = {
     },
     document: {
         path: 'docs',
-        enable: ENABLE_DOCUMENT || true
+        enable: ENABLE_DOCUMENT
     },
     security: {
         pepper: 'V1r4lW0rk5_2018',
-        RBAC: ENABLE_RBAC || true
+        RBAC: ENABLE_RBAC
     },
     // redis: {
     //     host: process.env.REDIS_HOST || '',
@@ -37,7 +35,7 @@ export const config: Config = {
         username: process.env.MONGO_USERNAME || 'main_vw_v3',
         password: process.env.MONGO_PASSWORD || 'main_vw_v3@123',
         database: process.env.MONGO_DB || 'main_vw_v3',
-        debug: MONGO_DEBUG || true,
+        debug: MONGO_DEBUG,
     }
 }
 
