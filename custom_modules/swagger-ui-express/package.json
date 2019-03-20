@@ -1,0 +1,87 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "swagger-ui-express@https://registry.npmjs.org/swagger-ui-express/-/swagger-ui-express-3.0.10.tgz",
+        "scope": null,
+        "escapedName": "swagger-ui-express",
+        "name": "swagger-ui-express",
+        "rawSpec": "https://registry.npmjs.org/swagger-ui-express/-/swagger-ui-express-3.0.10.tgz",
+        "spec": "https://registry.npmjs.org/swagger-ui-express/-/swagger-ui-express-3.0.10.tgz",
+        "type": "remote"
+      },
+      "D:\\Working\\Viralworks\\api_framework"
+    ]
+  ],
+  "_from": "swagger-ui-express@>=3.0.10 <4.0.0",
+  "_id": "swagger-ui-express@3.0.10",
+  "_inCache": true,
+  "_location": "/swagger-ui-express",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "swagger-ui-express@https://registry.npmjs.org/swagger-ui-express/-/swagger-ui-express-3.0.10.tgz",
+    "scope": null,
+    "escapedName": "swagger-ui-express",
+    "name": "swagger-ui-express",
+    "rawSpec": "https://registry.npmjs.org/swagger-ui-express/-/swagger-ui-express-3.0.10.tgz",
+    "spec": "https://registry.npmjs.org/swagger-ui-express/-/swagger-ui-express-3.0.10.tgz",
+    "type": "remote"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/swagger-ui-express/-/swagger-ui-express-3.0.10.tgz",
+  "_shasum": "c72b32107a57a47913f3b46003e8fd62a7378ea2",
+  "_shrinkwrap": null,
+  "_spec": "swagger-ui-express@https://registry.npmjs.org/swagger-ui-express/-/swagger-ui-express-3.0.10.tgz",
+  "_where": "D:\\Working\\Viralworks\\api_framework",
+  "author": {
+    "name": "Stephen Scott",
+    "email": "scottie1984@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/scottie1984/swagger-ui-express/issues"
+  },
+  "dependencies": {},
+  "description": "Swagger UI Express",
+  "devDependencies": {
+    "es6-shim": "0.35.2",
+    "express": "4.12.2",
+    "mocha": "2.2.5",
+    "phantom": "2.1.21"
+  },
+  "engines": {
+    "node": ">= v0.10.32"
+  },
+  "files": [
+    "static",
+    "package.json",
+    "index.js",
+    "indexTemplate.html",
+    "swagger-ui-init.js",
+    "LICENSE"
+  ],
+  "homepage": "https://github.com/scottie1984/swagger-ui-express",
+  "keywords": [
+    "swagger",
+    "express",
+    "ui",
+    "json",
+    "documentation"
+  ],
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "name": "swagger-ui-express",
+  "optionalDependencies": {},
+  "private": false,
+  "readme": "# Swagger UI Express\n\nAdds middleware to your express app to serve the Swagger UI bound to your Swagger document. This acts as living documentation for your API hosted from within your app.\n\nUpdated to Swagger 3.17.1\n\n## Usage\n\nIn app's `package.json`\n\n    \"swagger-ui-express\": \"latest\" // or desired version\n\nExpress setup `app.js`\n```javascript\nconst express = require('express');\nconst app = express();\nconst swaggerUi = require('swagger-ui-express');\nconst swaggerDocument = require('./swagger.json');\n\napp.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));\n```\n\nOpen http://`<app_host>`:`<app_port>`/api-docs in your browser to view the documentation.\n\nIf you want to set up routing based on the swagger document checkout [swagger-express-router](https://www.npmjs.com/package/swagger-express-router)\n\n### [swagger-jsdoc](https://www.npmjs.com/package/swagger-jsdoc)\n\nIf you are using swagger-jsdoc simply pass the swaggerSpec into the setup function:\n\n```javascript\n// Initialize swagger-jsdoc -> returns validated swagger spec in json format\nconst swaggerSpec = swaggerJSDoc(options);\n\napp.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));\n```\n\n### Swagger Explorer\n\nBy default the Swagger Explorer bar is hidden, to display it pass true as the 'explorer' property of the options to the setup function:\n\n```javascript\nconst express = require('express');\nconst app = express();\nconst swaggerUi = require('swagger-ui-express');\nconst swaggerDocument = require('./swagger.json');\n\nvar options = {\n  explorer : true\n};\n\napp.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));\n```\n\n### Custom swagger options\n\nTo pass custom options e.g. validatorUrl, to the SwaggerUi client pass an object as the 'swaggerOptions' property of the options to the setup function:\n\n```javascript\nconst express = require('express');\nconst app = express();\nconst swaggerUi = require('swagger-ui-express');\nconst swaggerDocument = require('./swagger.json');\n\nvar options = {\n\tswaggerOptions: {\n    validatorUrl : null\n  }\n};\n\napp.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));\n```\n\n### Custom CSS styles\n\nTo customize the style of the swagger page, you can pass custom CSS as the 'customCss' property of the options to the setup function.\n\nE.g. to hide the swagger header:\n\n```javascript\nconst express = require('express');\nconst app = express();\nconst swaggerUi = require('swagger-ui-express');\nconst swaggerDocument = require('./swagger.json');\n\nvar options = {\n  customCss: '.swagger-ui .topbar { display: none }'\n};\n\napp.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));\n```\n\n\n### Custom JS\n\nIf you would like to have full control over your HTML you can  provide your own javascript file, value accepts absolute or relative path\n\n```javascript\nconst express = require('express');\nconst app = express();\nconst swaggerUi = require('swagger-ui-express');\nconst swaggerDocument = require('./swagger.json');\n\nvar options = {\n  customJs: '/custom.js'\n};\n\napp.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));\n```\n\n### Load swagger from url\n\nTo load your swagger from a url instead of injecting the document, pass `null` as the first parameter, and pass the relative or absolute URL as the 'swaggerUrl' property of the options to the setup function.\n\n```javascript\nconst express = require('express');\nconst app = express();\nconst swaggerUi = require('swagger-ui-express');\n\nconst swaggerDocument = require('./swagger.json');\n\nvar options = {\n  swaggerUrl: 'http://petstore.swagger.io/v2/swagger.json'\n}\n\napp.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null, options));\n```\n\n### Load swagger from yaml file\n\nTo load your swagger specification yaml file you need to use a module able to convert yaml to json ; for instance `yamljs`.\n\n    npm install --save yamljs\n\n```javascript\nconst express = require('express');\nconst app = express();\nconst swaggerUi = require('swagger-ui-express');\nconst YAML = require('yamljs');\nconst swaggerDocument = YAML.load('./swagger.yaml');\n\napp.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));\n```\n\n\n## Requirements\n\n* Node v0.10.32 or above\n* Express 4 or above\n\n## Testing\n\nInstall phantom\nnpm install\nnpm test\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/scottie1984/swagger-ui-express.git"
+  },
+  "scripts": {
+    "test": "mocha test/*"
+  },
+  "version": "3.0.10"
+}

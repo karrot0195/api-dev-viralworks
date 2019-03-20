@@ -1,0 +1,63 @@
+{
+  "name": "api-framework",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "ts-node --files index.ts -- --service",
+    "watch": "nodemon -e ts,yaml,yml -w . --ignore './database/*.json'"
+  },
+  "author": {
+    "name": "Daniel Huynh",
+    "email": "sir.truonghuynh@gmail.com",
+    "url": "https://www.linkedin.com/in/huynh-nhat-truong/"
+  },
+  "dependencies": {
+    "@angular/core": "^6.1.6",
+    "@types/bcrypt": "^3.0.0",
+    "@types/body-parser": "https://registry.npmjs.org/@types/body-parser/-/body-parser-1.17.0.tgz",
+    "@types/chai": "^4.1.4",
+    "@types/chai-http": "^3.0.5",
+    "@types/express": "^4.16.0",
+    "@types/jsonwebtoken": "^8.3.0",
+    "@types/lodash": "^4.14.116",
+    "@types/mocha": "^5.2.5",
+    "@types/mongoose": "^5.2.12",
+    "@types/morgan": "^1.7.35",
+    "@types/pluralize": "0.0.29",
+    "@types/redis": "^2.8.6",
+    "@types/reflect-metadata": "https://registry.npmjs.org/@types/reflect-metadata/-/reflect-metadata-0.1.0.tgz",
+    "@types/socket.io": "^1.4.38",
+    "bcrypt": "^3.0.5",
+    "body-parser": "~1.17.1",
+    "chai": "^4.1.2",
+    "chai-http": "^4.0.0",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.3",
+    "dotenv": "^6.0.0",
+    "express": "~4.15.2",
+    "is-my-json-valid": "^2.17.2",
+    "json-schema-ref-parser": "^5.1.2",
+    "json-schema-ref-parser-sync": "^1.0.0",
+    "jsonwebtoken": "^8.5.0",
+    "lodash": "https://registry.npmjs.org/lodash/-/lodash-4.17.10.tgz",
+    "mocha": "^5.2.0",
+    "moment": "^2.22.2",
+    "moment-timezone": "^0.5.21",
+    "mongodb": "https://registry.npmjs.org/mongodb/-/mongodb-3.1.6.tgz",
+    "mongoose": "^5.4.19",
+    "morgan": "~1.8.1",
+    "pluralize": "^7.0.0",
+    "redis": "^2.8.0",
+    "reflect-metadata": "https://registry.npmjs.org/reflect-metadata/-/reflect-metadata-0.1.12.tgz",
+    "rxjs": "^6.3.1",
+    "serve-favicon": "~2.4.2",
+    "socket.io": "^2.1.1",
+    "tsconfig-paths": "^3.5.0",
+    "zone.js": "^0.8.26"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.3",
+    "ts-node": "^7.0.0",
+    "typescript": "^3.0.1"
+  }
+}
