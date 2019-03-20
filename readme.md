@@ -10,8 +10,8 @@ This is my API Framework which apply ExpressJS
 ## Dependencies:
 - Node version: `v10.15.3`
 - NPM version: `v6.4.1`
+- Python: `v2.x`
 - `node-gyp`
-- `python 2.x`
 - Windows users will need the options for c# and c++ installed with their visual studio instance.
 
 ## Usage:
