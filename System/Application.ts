@@ -23,7 +23,8 @@ var debug = require('debug')('shopback-test:server');
 export class Application {
     private _app = express();
     private _server = http.createServer(this._app);
-    private _public: string;
+    private _publicHost: string;
+    private _publicPort: number;
     private _host: string;
     private _port: number;
     private _schema: string;
@@ -38,7 +39,8 @@ export class Application {
         private readonly _swagger: Swagger,
         private readonly _security: Security,
     ) {
-        this._public = this._config.server.public;
+        this._publicHost = this._config.server.public.host;
+        this._publicPort = this._config.server.public.port;
         this._host = this._config.server.host;
         this._port = this._config.server.port;
         this._schema = this._config.server.schema;
@@ -51,10 +53,10 @@ export class Application {
         this._startServer();
 
         console.log('-----------------------------------------------');
-        console.log(`Server has been running on: ${this._schema}://${this._public}:${this._port}/${this._config.version}`);
+        console.log(`Server has been running on: ${this._schema}://${this._publicHost}:${this._publicPort}/${this._config.version}`);
 
         if (this._config.document.enable) {
-            console.log(`Document has been running on: ${this._schema}://${this._public}:${this._port}/${this._config.version}/${this._docPath}`);
+            console.log(`Document has been running on: ${this._schema}://${this._publicHost}:${this._publicPort}/${this._config.version}/${this._docPath}`);
         }
     }
 
@@ -64,7 +66,7 @@ export class Application {
         const morganFormat = (this._config.env == 'dev') ? 'dev' : 'combined'
         this._app.use(morgan(morganFormat, {
             skip: function (req, res) {
-                return res.statusCode < 200;
+                return res.statusCode < 300;
             }
         }));
         this._app.use(bodyParser.json());

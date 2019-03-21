@@ -37,7 +37,7 @@ export class Swagger {
 
         // Create Swagger file and set Swagger Express Options
         const modulePath = `${docConf.path}/modules/${moduleName.toLowerCase()}`;
-        const url = `${serverConf.schema}://${serverConf.public}:${serverConf.port}/${this._config.version}/${modulePath}`;
+        const url = `${serverConf.schema}://${serverConf.public.host}:${serverConf.public.port}/${this._config.version}/${modulePath}`;
         this.opts.swaggerOptions.urls.push({ url, name: capitalize(moduleName) });
 
         if (!this.opts.swaggerUrl) {

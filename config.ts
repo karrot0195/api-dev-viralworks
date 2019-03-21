@@ -14,7 +14,10 @@ export const config: Config = {
     server: {
         host: process.env.SERVER_HOST || '127.0.0.1',
         port: normalizePort(process.env.SERVER_PORT || 8080),
-        public: process.env.SERVER_PUBLIC || process.env.SERVER_HOST || '127.0.0.1',
+        public: {
+            host: process.env.SERVER_PUBLIC_HOST || process.env.SERVER_HOST || '127.0.0.1',
+            port: normalizePort(process.env.SERVER_PUBLIC_HOST_PORT || 8080)
+        },
         schema: process.env.SERVER_SCHEMA || 'http'
     },
     document: {

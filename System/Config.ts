@@ -8,7 +8,10 @@ export abstract class Config {
     readonly server: {
         readonly host: string;
         readonly port: number;
-        readonly public: string;
+        readonly public: {
+            readonly host: string;
+            readonly port: number;
+        };
         readonly schema: string;
     };
     readonly document: {

@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "ts-node --files index.ts -- --service",
-    "watch": "nodemon -e ts,yaml,yml -w . --ignore './database/*.json'"
+    "watch": "nodemon -e ts,yaml,yml -w . --ignore './database/*.json'",
+    "build": "tsc --project . --outDir dist && cp tsconfig.json dist/tsconfig.json"
   },
   "author": {
     "name": "Daniel Huynh",
