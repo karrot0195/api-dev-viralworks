@@ -18,7 +18,7 @@ export const config: Config = {
             host: process.env.SERVER_PUBLIC_HOST || process.env.SERVER_HOST || '127.0.0.1',
             port: normalizePort(process.env.SERVER_PUBLIC_PORT || 8080)
         },
-        schema: process.env.SERVER_SCHEMA || 'http'
+        scheme: process.env.SERVER_SCHEMA || 'http'
     },
     document: {
         path: 'docs',

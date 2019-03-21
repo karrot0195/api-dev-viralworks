@@ -37,7 +37,7 @@ export class Swagger {
 
         // Create Swagger file and set Swagger Express Options
         const modulePath = `${docConf.path}/modules/${moduleName.toLowerCase()}`;
-        const url = `${serverConf.schema}://${serverConf.public.host}:${serverConf.public.port}/${this._config.version}/${modulePath}`;
+        const url = `${serverConf.scheme}://${serverConf.public.host}:${serverConf.public.port}/${this._config.version}/${modulePath}`;
         this.opts.swaggerOptions.urls.push({ url, name: capitalize(moduleName) });
 
         if (!this.opts.swaggerUrl) {
@@ -190,7 +190,7 @@ export class Swagger {
         return resolvedSchema;
     }
 
-    private _initSchema(opts?: { title?: string, description?: string, schema?: string[], version?: string, host?: string, port?: number, basePath?: string }) {
+    private _initSchema(opts?: { title?: string, description?: string, schemes?: string[], version?: string, host?: string, port?: number, basePath?: string }) {
         return {
             swagger: '2.0',
             info: {
@@ -198,7 +198,7 @@ export class Swagger {
                 description: opts!.description || '',
                 version: opts!.version || this._config.version
             },
-            schema: opts!.schema || [this._config.server.schema],
+            schemes: opts!.schemes || [this._config.server.scheme],
             host: `${opts!.host || this._config.server.public.host}:${opts!.port || this._config.server.public.port}`,
             basePath: `/${this._config.version}/${opts!.basePath || ''}`,
             securityDefinitions: {

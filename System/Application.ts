@@ -27,7 +27,7 @@ export class Application {
     private _publicPort: number;
     private _host: string;
     private _port: number;
-    private _schema: string;
+    private _scheme: string;
     private _docPath: string;
 
     constructor(
@@ -43,7 +43,7 @@ export class Application {
         this._publicPort = this._config.server.public.port;
         this._host = this._config.server.host;
         this._port = this._config.server.port;
-        this._schema = this._config.server.schema;
+        this._scheme = this._config.server.scheme;
         this._docPath = this._config.document.path;
     }
 
@@ -53,10 +53,10 @@ export class Application {
         this._startServer();
 
         console.log('-----------------------------------------------');
-        console.log(`Server has been running on: ${this._schema}://${this._publicHost}:${this._publicPort}/${this._config.version}`);
+        console.log(`Server has been running on: ${this._scheme}://${this._publicHost}:${this._publicPort}/${this._config.version}`);
 
         if (this._config.document.enable) {
-            console.log(`Document has been running on: ${this._schema}://${this._publicHost}:${this._publicPort}/${this._config.version}/${this._docPath}`);
+            console.log(`Document has been running on: ${this._scheme}://${this._publicHost}:${this._publicPort}/${this._config.version}/${this._docPath}`);
         }
     }
 

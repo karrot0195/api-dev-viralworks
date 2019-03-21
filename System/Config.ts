@@ -12,7 +12,7 @@ export abstract class Config {
             readonly host: string;
             readonly port: number;
         };
-        readonly schema: string;
+        readonly scheme: string;
     };
     readonly document: {
         readonly path: string;
