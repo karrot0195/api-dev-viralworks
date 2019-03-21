@@ -199,7 +199,7 @@ export class Swagger {
                 version: opts!.version || this._config.version
             },
             schema: opts!.schema || [this._config.server.schema],
-            host: `${opts!.host || this._config.server.public}:${opts!.port || this._config.server.port}`,
+            host: `${opts!.host || this._config.server.public.host}:${opts!.port || this._config.server.public.port}`,
             basePath: `/${this._config.version}/${opts!.basePath || ''}`,
             securityDefinitions: {
                 JWT: {
