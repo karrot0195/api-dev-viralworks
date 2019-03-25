@@ -106,9 +106,9 @@ export class Application {
             if (err instanceof MethodNotAllowed) {
                 res.status(err.status).send();
             } else if (err instanceof BaseError) {
-                res.status(err.status).json({ error: err.message });
+                res.status(err.status).json({code: err.status , error: err.message});
             } else {
-                res.status(500).json({ error: 'Internal Error' });
+                res.status(500).json({error: "Internal Error"});
                 console.log(err);
             }
         });

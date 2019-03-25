@@ -26,6 +26,7 @@ export class Router implements IRouter {
             {
                 middleware: [{ class: this.authenticationMiddleware }],
                 group: [
+                    { path: '/auth/check', method: HTTP.Get, handler: this.authController.getCheckToken },
                     { path: '/roles/paths', method: HTTP.Get, handler: this.roleController.getPaths },
                     { path: '/roles/{id}', method: HTTP.Get, handler: this.roleController.getRoleById },
                     { path: '/roles/{id}', method: HTTP.Put, handler: this.roleController.updateRole },

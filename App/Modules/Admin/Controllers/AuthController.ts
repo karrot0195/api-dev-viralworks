@@ -13,12 +13,12 @@ export class AuthController {
 
     postLogin: IHandler = {
         method: async (req: Request, res: Response) => {
-            const result = await this._authServ.login(req.body.email, req.body.password);
+            const result = await this._authServ.login(req.body.email, req.body.password, req.body.remember);
 
             if (result === false) {
                 throw new Unauthorized('Login Failed');
             } else {
-                return res.status(201).json({ token: result });
+                return res.status(201).json(result);
             }
         },
         validation: {
@@ -33,6 +33,9 @@ export class AuthController {
                     password: {
                         type: DataType.String,
                         required: true
+                    },
+                    remember: {
+                        type: DataType.Integer
                     }
                 }
             }
@@ -44,6 +47,21 @@ export class AuthController {
                 201: 'Created Token',
                 401: 'Login Failed'
             }
+        }
+    }
+
+    getCheckToken: IHandler = {
+        method: async (req: Request, res: Response) => {
+                return res.status(200).json({message: "Token is valid"});
+        },
+        document: {
+            tags: ['Authentication'],
+            summary: 'Check if token is still valid',
+            responses: {
+                200: 'Token is valid',
+                401: 'Login Failed'
+            },
+            security: true
         }
     }
 }
