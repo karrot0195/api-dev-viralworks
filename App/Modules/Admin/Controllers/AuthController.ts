@@ -51,4 +51,21 @@ export class AuthController {
             }
         }
     }
+    getCheckToken: IHandler = {
+        method: async (req: Request, res: Response) => {
+                return res.status(201).json(formatResult("Token is valid", 200));
+        },
+        validation: {
+           
+        },
+        document: {
+            tags: ['Authentication'],
+            summary: 'Check if token is still valid',
+            responses: {
+                200: 'Token is valid',
+                401: 'Login Failed'
+            },
+            security: true
+        }
+    }
 }
