@@ -9,7 +9,7 @@ export function compare(password: string, hashed: string) {
     return bcrypt.compareSync(password, hashed);
 }
 
-export function signToken(payload: any, secretKey: string, expiresIn: string = '2h') {
+export function signToken(payload: any, secretKey: string, expiresIn: string) {
     const key = Buffer.from(secretKey, 'base64');
     return jwt.sign(payload, key, { expiresIn });
 }
