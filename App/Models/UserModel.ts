@@ -8,6 +8,7 @@ export interface IUser {
     readonly email: string;
     password: string;
     readonly role: string;
+    readonly code: string;
 }
 
 @Injectable

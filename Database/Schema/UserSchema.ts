@@ -5,6 +5,7 @@ export interface User extends IDocument {
     email: string;
     password: string;
     role: string;
+    code: string;
 }
 
 export const UserSchema = {
@@ -22,6 +23,10 @@ export const UserSchema = {
         select: false
     },
     role: {
+        type: String,
+        required: true
+    },
+    code: {
         type: String,
         required: true
     }
