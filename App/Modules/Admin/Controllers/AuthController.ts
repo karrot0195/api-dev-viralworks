@@ -6,7 +6,6 @@ import { Injectable } from 'System/Injectable';
 import { IHandler } from 'System/Interface';
 import { DataType, FormatType } from 'System/Enum';
 import { AuthService } from '../Services/AuthService';
-import { formatResult } from '../../../Helpers/Format'
 
 @Injectable
 export class AuthController {
@@ -19,7 +18,7 @@ export class AuthController {
             if (result === false) {
                 throw new Unauthorized('Login Failed');
             } else {
-                return res.status(201).json(formatResult(result, 201));
+                return res.status(201).json(result);
             }
         },
         validation: {
@@ -36,8 +35,7 @@ export class AuthController {
                         required: true
                     },
                     remember: {
-                        type: DataType.Integer,
-                        required: false
+                        type: DataType.Integer
                     }
                 }
             }
@@ -54,7 +52,7 @@ export class AuthController {
 
     getCheckToken: IHandler = {
         method: async (req: Request, res: Response) => {
-                return res.status(200).json(formatResult("Token is valid"));
+                return res.status(200).json({message: "Token is valid"});
         },
         document: {
             tags: ['Authentication'],

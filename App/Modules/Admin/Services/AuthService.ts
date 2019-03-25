@@ -4,7 +4,6 @@ import { Injectable } from 'System/Injectable';
 import { Mongo } from 'System/Mongo';
 import { Config } from 'System/Config';
 import { UserModel } from 'App/Models/UserModel';
-import { stringify } from '@angular/core/src/util';
 
 @Injectable
 export class AuthService {
