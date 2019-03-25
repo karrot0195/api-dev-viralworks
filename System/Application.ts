@@ -13,6 +13,7 @@ import { Swagger } from './Swagger';
 import { Security } from './Security';
 import { Config } from './Config';
 import { BaseError, NotFound, MethodNotAllowed } from './Error';
+import { formatError } from 'App/Helpers/Format';
 
 import { Mongo } from './Mongo';
 import { InitDatabase } from 'Database';
@@ -106,9 +107,9 @@ export class Application {
             if (err instanceof MethodNotAllowed) {
                 res.status(err.status).send();
             } else if (err instanceof BaseError) {
-                res.status(err.status).json({ error: err.message });
+                res.status(err.status).json(formatError(err.message, err.status));
             } else {
-                res.status(500).json({ error: 'Internal Error' });
+                res.status(500).json(formatError('Internal Error', 500));
                 console.log(err);
             }
         });
