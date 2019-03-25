@@ -28,12 +28,12 @@ export class AuthService {
                 code: user.code,
                 role: user.role,
                 email: user.email,
-                access: 'Feature is unavailable',
+                access: ["feature/is/not/available"],
                 dateAdded: user.created_at
             }            
 
             return {info: userInfo, token: token};
-            
+
         } else {
             return false;
         }

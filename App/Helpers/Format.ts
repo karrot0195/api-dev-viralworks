@@ -14,7 +14,7 @@ export function formatError(err:any, status:number = 500) {
     };
 }
 
-export function formatResult(result:any, status:number = 500) {
+export function formatResult(result:any, status:number = 200) {
     if (typeof result  == 'string') { 
         return {
             status: status,

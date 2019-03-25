@@ -51,12 +51,10 @@ export class AuthController {
             }
         }
     }
+
     getCheckToken: IHandler = {
         method: async (req: Request, res: Response) => {
-                return res.status(201).json(formatResult("Token is valid", 200));
-        },
-        validation: {
-           
+                return res.status(200).json(formatResult("Token is valid"));
         },
         document: {
             tags: ['Authentication'],
