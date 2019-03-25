@@ -42,7 +42,7 @@ export class AuthService {
                 role: user.role,
                 email: user.email,
                 access: ["feature/is/not/available"],
-                dateAdded: user.created_at
+                created_at: user.created_at
             };
 
             return { info: userInfo, token: token };
