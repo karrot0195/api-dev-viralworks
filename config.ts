@@ -9,7 +9,8 @@ export const config: Config = {
     version: 'v1.0',
     jwt: {
         key: process.env.JWT_KEY || 'ViralWorks@2018#',
-        expire: process.env.JWT_EXPIRE || '2h'
+        expire: process.env.JWT_EXPIRE || '2h',
+        remember: process.env.JWT_REMEMBER || '90d'
     },
     server: {
         host: process.env.SERVER_HOST || '127.0.0.1',
