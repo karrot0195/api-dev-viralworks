@@ -1,22 +1,26 @@
-import { Request, Response, NextFunction } from 'express';
-import * as jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from "express";
+import * as jwt from "jsonwebtoken";
 
-import { Unauthorized } from 'System/Error/Unauthorized';
-import { Injectable } from 'System/Injectable';
-import { IHandler } from 'System/Interface';
-import { DataType, FormatType } from 'System/Enum';
-import { AuthService } from '../Services/AuthService';
+import { Unauthorized } from "System/Error/Unauthorized";
+import { Injectable } from "System/Injectable";
+import { IHandler } from "System/Interface";
+import { DataType, FormatType } from "System/Enum";
+import { AuthService } from "../Services/AuthService";
 
 @Injectable
 export class AuthController {
-    constructor(private readonly _authServ: AuthService) { }
+    constructor(private readonly _authServ: AuthService) {}
 
     postLogin: IHandler = {
         method: async (req: Request, res: Response) => {
-            const result = await this._authServ.login(req.body.email, req.body.password, req.body.remember);
+            const result = await this._authServ.login(
+                req.body.email,
+                req.body.password,
+                req.body.remember
+            );
 
             if (result === false) {
-                throw new Unauthorized('Login Failed');
+                throw new Unauthorized("Login Failed");
             } else {
                 return res.status(201).json(result);
             }
@@ -41,27 +45,27 @@ export class AuthController {
             }
         },
         document: {
-            tags: ['Authentication'],
-            summary: 'Create an authentication token',
+            tags: ["Authentication"],
+            summary: "Create an authentication token",
             responses: {
-                201: 'Created Token',
-                401: 'Login Failed'
+                201: "Created Token",
+                401: "Login Failed"
             }
         }
-    }
+    };
 
     getCheckToken: IHandler = {
         method: async (req: Request, res: Response) => {
-                return res.status(200).json({message: "Token is valid"});
+            return res.status(200).json({ message: "Token is valid" });
         },
         document: {
-            tags: ['Authentication'],
-            summary: 'Check if token is still valid',
+            tags: ["Authentication"],
+            summary: "Check if token is still valid",
             responses: {
-                200: 'Token is valid',
-                401: 'Login Failed'
+                200: "Token is valid",
+                401: "Login Failed"
             },
             security: true
         }
-    }
+    };
 }
