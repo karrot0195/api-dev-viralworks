@@ -63,7 +63,7 @@ export class AuthController {
             summary: "Check if token is still valid",
             responses: {
                 200: "Token is valid",
-                401: "Login Failed"
+                401: "Token is invalid"
             },
             security: true
         }
