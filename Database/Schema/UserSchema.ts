@@ -28,6 +28,7 @@ export const UserSchema = {
     },
     code: {
         type: String,
+        unique: true,
         required: true
     }
 }
