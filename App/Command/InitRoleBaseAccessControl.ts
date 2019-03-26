@@ -2,21 +2,38 @@ import { HTTP } from 'System/Enum/HTTP';
 import { Injectable } from 'System/Injectable';
 import { ICommand } from 'System/Interface';
 import { RoleBasedAccessControlService as RBACService } from 'System/RBAC/Service';
+import { rootRenderNodes } from '@angular/core/src/view';
+import { SSL_OP_EPHEMERAL_RSA } from 'constants';
 
 @Injectable
 export class InitRoleBaseAccessControl implements ICommand {
-    constructor(private readonly service: RBACService) { }
+    constructor(private readonly service: RBACService) {}
 
     public async run() {
-        // await this.service.deletePermission();
-        const permission = await this.service.createPermission({
-            route: {
-                path: '/admin/roles/{id}',
-                method: HTTP.Get
-            },
-            roles: ['5c8f3ff7b59bfc158cec3829']
+        // TODO: resolve this magic
+        const roles = await this.service.findPermissions();
+
+        const user = await this.service.createRole({
+            name: 'User',
+            description: 'Base user for all user',
         });
 
-        return permission;
+        const entry = await this.service.createEntry({
+            route: {
+                path: '/auth/check',
+                method: HTTP.Get,
+            },
+            roles: [user._id],
+        });
+
+        const entry2 = await this.service.createEntry({
+            route: {
+                path: '/test',
+                method: HTTP.Get,
+            },
+            roles: [user._id],
+        });
+
+        return [user, entry, entry2];
     }
 }
