@@ -98,10 +98,12 @@ export class FaqController {
                         type: DataType.String,
                     },
                     type: {
-                        type: DataType.Number
+                        type: DataType.Number,
+                        enum: [0, 1, 2]
                     },
                     status: {
-                        type: DataType.Number
+                        type: DataType.Number,
+                        enum: [0, 1, 2]
                     }
                 }
             }
