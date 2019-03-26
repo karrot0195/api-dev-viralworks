@@ -28,6 +28,36 @@ export class RoleController {
         }
     };
 
+    public readonly getEntries: IHandler = {
+        method: async (req: Request, res: Response) => {
+            return res.json('Under construction');
+        },
+        document: {
+            tags: ['Role Manager'],
+            responses: {
+                200: 'Found Data',
+                403: 'Forbidden'
+            },
+            security: true,
+            summary: 'Get all access control entries'
+        }
+    };
+
+    public readonly searchEntries: IHandler = {
+        method: async (req: Request, res: Response) => {
+            return res.json('Under construction');
+        },
+        document: {
+            tags: ['Role Manager'],
+            responses: {
+                200: 'Found Data',
+                403: 'Forbidden'
+            },
+            security: true,
+            summary: 'Search access control entries'
+        }
+    };
+
     public readonly getRoles: IHandler = {
         method: async (req: Request, res: Response) => {
             return res.json(await this.service.findRoles());
@@ -143,7 +173,7 @@ export class RoleController {
         }
     };
 
-    public readonly setPermission: IHandler = {
+    public readonly setEntries: IHandler = {
         method: this.setPermissionHandler.bind(this),
         validation: {
             path: {

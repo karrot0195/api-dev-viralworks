@@ -122,7 +122,7 @@ export class RoleBasedAccessControlService {
         });
     }
 
-    async createPermission(permissionData: IPermission) {
+    async createEntry(permissionData: IPermission) {
         return this._mongo.transaction(async (session) => {
             const permission = await new this._permissionModel(permissionData).save({ session });
 
