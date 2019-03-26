@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import * as jwt from 'jsonwebtoken';
 
 import { Unauthorized } from 'System/Error/Unauthorized';
 import { Injectable } from 'System/Injectable';
@@ -9,7 +8,7 @@ import { AuthService } from '../Services/AuthService';
 
 @Injectable
 export class AuthController {
-    constructor(private readonly _authServ: AuthService) { }
+    constructor(private readonly _authServ: AuthService) {}
 
     postLogin: IHandler = {
         method: async (req: Request, res: Response) => {
@@ -28,40 +27,40 @@ export class AuthController {
                     email: {
                         type: DataType.String,
                         format: FormatType.Email,
-                        required: true
+                        required: true,
                     },
                     password: {
                         type: DataType.String,
-                        required: true
+                        required: true,
                     },
                     remember: {
-                        type: DataType.Integer
-                    }
-                }
-            }
+                        type: DataType.Integer,
+                    },
+                },
+            },
         },
         document: {
             tags: ['Authentication'],
             summary: 'Create an authentication token',
             responses: {
                 201: 'Created Token',
-                401: 'Login Failed'
-            }
-        }
-    }
+                401: 'Login Failed',
+            },
+        },
+    };
 
     getCheckToken: IHandler = {
         method: async (req: Request, res: Response) => {
-                return res.status(200).json({message: "Token is valid"});
+            return res.status(200).json({ message: 'Token is valid' });
         },
         document: {
             tags: ['Authentication'],
             summary: 'Check if token is still valid',
             responses: {
                 200: 'Token is valid',
-                401: 'Login Failed'
+                401: 'Token is invalid',
             },
-            security: true
-        }
-    }
+            security: true,
+        },
+    };
 }
