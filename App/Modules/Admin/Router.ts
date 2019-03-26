@@ -28,9 +28,9 @@ export class Router implements IRouter {
                 group: [
                     { path: '/auth/check', method: HTTP.Get, handler: this.authController.getCheckToken },
                     { path: '/paths', method: HTTP.Get, handler: this.roleController.getPaths },
-                    { path: '/rules', method: HTTP.Get, handler: this.roleController.getRules },
-                    { path: '/rules', method: HTTP.Post, handler: this.roleController.setPermission },
-                    { path: '/rules/search/{term}', method: HTTP.Get, handler: this.roleController.searchRules },
+                    { path: '/entries', method: HTTP.Get, handler: this.roleController.getEntries },
+                    { path: '/entries', method: HTTP.Post, handler: this.roleController.setEntries },
+                    { path: '/entries/search/{term}', method: HTTP.Get, handler: this.roleController.searchEntries },
                     { path: '/roles/{id}', method: HTTP.Get, handler: this.roleController.getRoleById },
                     { path: '/roles/{id}', method: HTTP.Put, handler: this.roleController.updateRole },
                     { path: '/roles/{id}', method: HTTP.Delete, handler: this.roleController.deleteRoleById },
