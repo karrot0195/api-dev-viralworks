@@ -5,7 +5,7 @@ import { Injectable } from '../Injectable';
 import { Mongo } from '../Mongo';
 import { IPermission, IRole } from '../Interface/RBAC';
 import { Role, RoleSchema } from './Schema/RoleSchema';
-import { Permission, PermissionSchema } from './Schema/PermissionSchema';
+import { Permission, PermisisonSchema } from './Schema/PermissionSchema';
 
 @Injectable
 export class RoleBasedAccessControlService {
@@ -18,7 +18,7 @@ export class RoleBasedAccessControlService {
         _mongo.define('role', { schema: RoleSchema });
         this._roleModel = _mongo.models['role'] as Model<Role>;
 
-        _mongo.define('permission', { schema: PermissionSchema });
+        _mongo.define('permission', { schema: PermisisonSchema });
         this._permissionModel = _mongo.models['permission'] as Model<Permission>;
     }
 
@@ -122,7 +122,7 @@ export class RoleBasedAccessControlService {
         });
     }
 
-    async createEntry(permissionData: IPermission) {
+    async createPermission(permissionData: IPermission) {
         return this._mongo.transaction(async (session) => {
             const permission = await new this._permissionModel(permissionData).save({ session });
 

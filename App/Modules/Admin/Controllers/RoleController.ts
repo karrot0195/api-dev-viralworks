@@ -30,7 +30,7 @@ export class RoleController {
 
     public readonly getEntries: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json('Under construction');
+            return res.json(this.service.findPermissions());
         },
         document: {
             tags: ['Role Manager'],

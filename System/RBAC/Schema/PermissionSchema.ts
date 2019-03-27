@@ -10,7 +10,7 @@ export interface Permission extends IDocument {
     roles: string[];
 }
 
-export const PermissionSchema = {
+export const PermisisonSchema = {
     route: {
         type: {
             path: {
