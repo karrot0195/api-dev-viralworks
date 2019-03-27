@@ -13,9 +13,12 @@ import { Swagger } from './Swagger';
 import { Security } from './Security';
 import { Config } from './Config';
 import { BaseError, NotFound, MethodNotAllowed } from './Error';
+import { log } from 'Helpers/Log'
 
 import { Mongo } from './Mongo';
 import { InitDatabase } from 'Database';
+import { createDiffieHellman } from 'crypto';
+import { Logger } from 'mongodb';
 
 var debug = require('debug')('shopback-test:server');
 
@@ -48,20 +51,20 @@ export class Application {
     }
 
     public async start() {
-        console.log('------------------INITIALIZE-------------------');
+        log('------------------INITIALIZE-------------------');
         await this._configExpress();
         this._startServer();
 
-        console.log('-----------------------------------------------');
-        console.log(`Server has been running on: ${this._scheme}://${this._publicHost}:${this._publicPort}/${this._config.version}`);
+        log('-----------------------------------------------');
+        log(`Server has been running on: ${this._scheme}://${this._publicHost}:${this._publicPort}/${this._config.version}`);
 
         if (this._config.document.enable) {
-            console.log(`Document has been running on: ${this._scheme}://${this._publicHost}:${this._publicPort}/${this._config.version}/${this._docPath}`);
+            log(`Document has been running on: ${this._scheme}://${this._publicHost}:${this._publicPort}/${this._config.version}/${this._docPath}`);
         }
     }
 
     private async _configExpress() {
-        console.log('Configuring ExpressJS...');
+        log('Configuring ExpressJS...');
         // Config Logger
         const morganFormat = (this._config.env == 'dev') ? 'dev' : 'combined'
         this._app.use(morgan(morganFormat, {
@@ -109,18 +112,18 @@ export class Application {
                 res.status(err.status).json({code: err.status , error: err.message});
             } else {
                 res.status(500).json({error: "Internal Error"});
-                console.log(err);
+                log(err);
             }
         });
-        console.log('- DONE');
+        log('- DONE');
     }
 
     private _startServer() {
-        console.log('Starting Server...');
+        log('Starting Server...');
         this._server.listen(this._port, this._host);
         this._server.on('listening', this._serverListening.bind(this));
         this._server.on('error', this._serverListenError.bind(this));
-        console.log('- DONE');
+        log('- DONE');
     }
 
     private _serverListenError(error: any) {

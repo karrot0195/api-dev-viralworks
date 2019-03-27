@@ -4,6 +4,7 @@ import { singular } from 'pluralize';
 import { Injectable } from './Injectable';
 import { Config } from './Config';
 import { ModelDict } from 'Database';
+import { log } from 'Helpers/Log';
 
 @Injectable
 export class Mongo {
@@ -18,7 +19,9 @@ export class Mongo {
         Mongoose.set('useCreateIndex', true);
 
         if (mongoConfig.debug) {
-            Mongoose.set('debug', true);
+            Mongoose.set('debug', function (coll, method, query, doc) {
+                log(coll, method, query, doc)
+            });
         }
 
         this._mongodb = Mongoose.connection;
