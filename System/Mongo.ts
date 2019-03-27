@@ -20,7 +20,7 @@ export class Mongo {
 
         if (mongoConfig.debug) {
             Mongoose.set('debug', function (coll, method, query, doc) {
-                log(coll, method, query, doc)
+                log(`DEBUG: MONGOOSE: ${coll}.${method} ${JSON.stringify(query)} ${JSON.stringify(doc)}`);
             });
         }
 
