@@ -28,7 +28,7 @@ export class RoleController {
         }
     };
 
-    public readonly getEntries: IHandler = {
+    public readonly getPermissions: IHandler = {
         method: async (req: Request, res: Response) => {
             return res.json(this.service.findPermissions());
         },
@@ -43,7 +43,7 @@ export class RoleController {
         }
     };
 
-    public readonly searchEntries: IHandler = {
+    public readonly searchPermissions: IHandler = {
         method: async (req: Request, res: Response) => {
             return res.json('Under construction');
         },
