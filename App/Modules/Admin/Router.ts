@@ -30,7 +30,7 @@ export class Router implements IRouter {
                     { path: '/paths', method: HTTP.Get, handler: this.roleController.getPaths },
                     { path: '/entries', method: HTTP.Get, handler: this.roleController.getPermissions },
                     { path: '/entries', method: HTTP.Post, handler: this.roleController.setEntries },
-                    { path: '/entries/search/{term}', method: HTTP.Get, handler: this.roleController.searchEntries },
+                    { path: '/entries/search/{term}', method: HTTP.Get, handler: this.roleController.searchPermissions },
                     { path: '/roles/{id}', method: HTTP.Get, handler: this.roleController.getRoleById },
                     { path: '/roles/{id}', method: HTTP.Put, handler: this.roleController.updateRole },
                     { path: '/roles/{id}', method: HTTP.Delete, handler: this.roleController.deleteRoleById },
