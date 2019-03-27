@@ -57,6 +57,9 @@ export class Mongo {
 
     define(modelName: string, schemaObject: { schema: {}; index?: {}; class?: Function; }) {
         const schema = new Mongoose.Schema(schemaObject.schema, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
+        
+        // allow text index for all collection
+        schema.index({"$**": "text"});
 
         if (schemaObject.index) {
             schema.index(schemaObject.index);
