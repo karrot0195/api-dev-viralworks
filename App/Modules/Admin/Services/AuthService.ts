@@ -1,4 +1,4 @@
-import * as Security from 'App/Helpers/Security';
+import * as Security from 'Helpers/Security';
 
 import { Injectable } from 'System/Injectable';
 import { Mongo } from 'System/Mongo';

@@ -7,7 +7,6 @@ import { IHandler } from 'System/Interface';
 import { RoleBasedAccessControl as RBAC } from 'System/RBAC';
 import { RoleBasedAccessControlService as RBACService } from 'System/RBAC/Service';
 import * as RE from 'System/RegularExpression';
-import { NotFound } from 'System/Error';
 
 @Injectable
 export class RoleController {
@@ -30,7 +29,7 @@ export class RoleController {
 
     public readonly getPermissions: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(this.service.findPermissions());
+            return res.json(await this.service.findPermissions());
         },
         document: {
             tags: ['Role Manager'],
