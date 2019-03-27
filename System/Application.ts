@@ -74,8 +74,9 @@ export class Application {
 
         // Config CORS
         this._app.use((req: Request, res: Response, next: NextFunction) => {
-            res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+            res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
             next();
         });
 
@@ -108,7 +109,7 @@ export class Application {
             } else if (err instanceof BaseError) {
                 res.status(err.status).json({code: err.status , error: err.message});
             } else {
-                res.status(500).json({error: "Internal Error"});
+                res.status(500).json({error: 'Internal Error'});
                 console.log(err);
             }
         });
