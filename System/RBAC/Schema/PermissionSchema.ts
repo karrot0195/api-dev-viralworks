@@ -10,6 +10,13 @@ export interface Permission extends IDocument {
     roles: string[];
 }
 
+export const PermissionSearchField = [
+    'route.path',
+    'route.method',
+    'description',
+    'roles'
+]
+
 export const PermisisonSchema = {
     route: {
         type: {
