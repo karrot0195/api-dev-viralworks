@@ -16,6 +16,19 @@ export abstract class BaseModel<I, T extends Document> {
         return this._model.find(conditions);
     }
 
+    async findWithPagination(queryData?: any) {
+        let result: any;
+
+        let count: number = await this._model.countDocuments(queryData.search);
+        if (count > 0) {
+            result = await this._model.find(queryData.search, {}, queryData.options);
+        } else {
+            result = [];
+        }
+
+        return { total: count, results: result, limit: queryData.options.limit, page: queryData.options.page };
+    }
+
     findById(id: string) {
         return this._model.findById(id);
     }
