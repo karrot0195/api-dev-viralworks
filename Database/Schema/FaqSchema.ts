@@ -15,7 +15,8 @@ export const FaqSchema = {
         type: String
     },
     status: {
-        type: Number
+        type: Number,
+        default: 0
     },
     type: {
         type: Number

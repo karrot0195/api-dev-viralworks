@@ -32,7 +32,7 @@ export class FaqController {
                 },
                 type: {
                     type: DataType.String,
-                    enum: [0, 1, 2],
+                    enum: ["0", "1", "2"],
                     description: 'type of faq'
                 }
             }

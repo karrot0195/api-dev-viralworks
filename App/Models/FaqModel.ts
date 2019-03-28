@@ -20,7 +20,7 @@ export interface IFaq {
     readonly question: string;
     readonly answer: string;
     readonly type: number;
-    status: number;
+    readonly status: number;
 }
 
 @Injectable
@@ -30,7 +30,6 @@ export class FaqModel extends BaseModel<IFaq, Faq> {
     }
 
     createFaq(data: IFaq) {
-        data.status = StatusFaq.Publish;
         return this.create(data);
     }
 

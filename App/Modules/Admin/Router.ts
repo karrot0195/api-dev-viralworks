@@ -6,7 +6,9 @@ import { AuthController } from './Controllers/AuthController';
 import { RoleController } from './Controllers/RoleController';
 import { UserController } from './Controllers/UserController';
 import { FaqController } from './Controllers/FaqController';
+
 import { AuthenticationMiddleware } from './Middleware/AuthenticationMiddleware';
+import { KolAuthController } from './Controllers/KolAuthController';
 
 @Injectable
 export class Router implements IRouter {
@@ -17,6 +19,7 @@ export class Router implements IRouter {
         readonly authController: AuthController,
         readonly userController: UserController,
         readonly faqController: FaqController,
+        readonly kolAuthController: KolAuthController,
 
         // Middleware
         readonly authenticationMiddleware: AuthenticationMiddleware
@@ -44,6 +47,15 @@ export class Router implements IRouter {
                     { path: '/faqs', method: HTTP.Get, handler: this.faqController.getFaqs },
                     { path: '/faqs', method: HTTP.Post, handler: this.faqController.createFaq },
                     { path: '/faqs/{id}', method: HTTP.Put, handler: this.faqController.updateFaq }
+                ]
+            },
+            {
+                middleware: [{ class: this.authenticationMiddleware }],
+                group: [
+                    { path: '/kol-users', method: HTTP.Get, handler: this.kolAuthController.getKolUsers },
+                    { path: '/kol-users', method: HTTP.Post, handler: this.kolAuthController.createKolUser },
+                    { path: '/kol-users/{id}', method: HTTP.Get, handler: this.kolAuthController.getKolUser },
+                    { path: '/kol-users/{id}/basic', method: HTTP.Put, handler: this.kolAuthController.updateKolInfoBase }
                 ]
             }
         ];
