@@ -1,26 +1,20 @@
 import * as _ from 'lodash';
-import { Model, ClientSession } from 'mongoose';
+import { ClientSession } from 'mongoose';
 
 import { Injectable } from '../Injectable';
 import { Mongo } from '../Mongo';
-import { IPermission, IRole } from '../Interface/RBAC';
-import { Role, RoleSchema } from './Schema/RoleSchema';
-import { Permission, PermisisonSchema } from './Schema/PermissionSchema';
+import { IRole, IPermission } from 'System/Interface/RBAC';
+import { PermissionModel } from "./Models/PermissionModel";
+import { RoleModel } from "./Models/RoleModel";
 
 @Injectable
 export class RoleBasedAccessControlService {
-    private readonly _roleModel: Model<Role>;
-    private readonly _permissionModel: Model<Permission>;
 
     constructor(
         private readonly _mongo: Mongo,
-    ) {
-        _mongo.define('role', { schema: RoleSchema });
-        this._roleModel = _mongo.models['role'] as Model<Role>;
-
-        _mongo.define('permission', { schema: PermisisonSchema });
-        this._permissionModel = _mongo.models['permission'] as Model<Permission>;
-    }
+        private readonly _roleModel: RoleModel,
+        private readonly _permissionModel: PermissionModel
+    ) {}
 
     private async _resolveParentRoles(roleId: string, session: ClientSession | null = null): Promise<string[]> {
         const role = await this._roleModel.findById(roleId).session(session);
@@ -44,7 +38,7 @@ export class RoleBasedAccessControlService {
             temp.parents = await this._resolveParentRoles(role.parentId);
         }
 
-        return new this._roleModel(temp).save();
+        return this._roleModel.create(role);
     }
 
     async findRoleById(id: string) {
@@ -124,7 +118,7 @@ export class RoleBasedAccessControlService {
 
     async createPermission(permissionData: IPermission) {
         return this._mongo.transaction(async (session) => {
-            const permission = await new this._permissionModel(permissionData).save({ session });
+            const permission = await this._permissionModel.create(permissionData,session);
 
             if (permissionData.roles && permissionData.roles.length > 0) {
                 const roleInstances = await this._roleModel.find({ _id: { $in: permissionData.roles } }).session(session);
