@@ -6,6 +6,7 @@ import { Mongo } from '../Mongo';
 import { IRole, IPermission } from 'System/Interface/RBAC';
 import { PermissionModel } from "./Models/PermissionModel";
 import { RoleModel } from "./Models/RoleModel";
+import { PermissionSearchField } from './Schema/PermissionSchema';
 
 @Injectable
 export class RoleBasedAccessControlService {
@@ -142,6 +143,10 @@ export class RoleBasedAccessControlService {
 
     async findPermissions(conditions?: any) {
         return this._permissionModel.find(conditions);
+    }
+
+    async findGET(query?: any) {
+        return this._permissionModel.findGET(query, PermissionSearchField);
     }
 
     async setRolesForPermissionById(permissionId: string, roles: string[]) {
