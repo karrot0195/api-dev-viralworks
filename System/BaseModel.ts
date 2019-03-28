@@ -1,6 +1,7 @@
 import { Model, Document, ClientSession, ModelUpdateOptions } from 'mongoose';
 
 import { Mongo } from './Mongo';
+import { processQuery } from 'Helpers/Format';
 
 export abstract class BaseModel<I, T extends Document> {
     protected readonly _model: Model<T>;
@@ -16,12 +17,14 @@ export abstract class BaseModel<I, T extends Document> {
         return this._model.find(conditions);
     }
 
-    async findWithPagination(queryData?: any) {
+    async findGET(query: any, modelSearchField: Array<string>) {
         let result: any;
 
-        let count: number = await this._model.countDocuments(queryData.search);
+        let queryData = processQuery(query, modelSearchField);
+
+        let count: number = await this._model.countDocuments(queryData.conditions);
         if (count > 0) {
-            result = await this._model.find(queryData.search, {}, queryData.options);
+            result = await this._model.find(queryData.conditions, {}, queryData.options);
         } else {
             result = [];
         }
