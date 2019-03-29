@@ -4,7 +4,6 @@ import { singular } from 'pluralize';
 import { Injectable } from './Injectable';
 import { Config } from './Config';
 import { ModelDict } from 'Database';
-import { log } from 'Helpers/Log';
 
 @Injectable
 export class Mongo {
@@ -18,11 +17,7 @@ export class Mongo {
         Mongoose.connect(this._connectionString, { useNewUrlParser: true, replicaSet: 'rs0' });
         Mongoose.set('useCreateIndex', true);
 
-        if (mongoConfig.debug) {
-            Mongoose.set('debug', function (coll, method, query, doc) {
-                log(`DEBUG: MONGOOSE: ${coll}.${method} ${JSON.stringify(query)} ${JSON.stringify(doc)}`);
-            });
-        }
+        if (mongoConfig.debug) Mongoose.set('debug', true);
 
         this._mongodb = Mongoose.connection;
         // this.mongodb.useDb('main_vw_v3');
