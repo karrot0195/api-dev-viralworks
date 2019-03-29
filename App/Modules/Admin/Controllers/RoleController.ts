@@ -27,7 +27,7 @@ export class RoleController {
         },
     };
 
-    public readonly createEntry: IHandler = {
+    public readonly createPermission: IHandler = {
         method: async (req: Request, res: Response) => {
             return res.json(await this.service.createPermission(req.body));
         },
@@ -64,14 +64,54 @@ export class RoleController {
             },
         },
         document: {
-            tags: ['Role Manager'],
+            tags: ['Entry Manager'],
             responses: {
-                201: 'Role was created successfully',
+                201: 'Entry was created successfully',
                 403: 'Forbidden',
                 400: 'Bad Request',
             },
             security: true,
-            summary: 'Create a new role',
+            summary: 'Create a new entry',
+        },
+    };
+
+    public readonly updatePermission: IHandler = {
+        method: async (req: Request, res: Response) => {
+            return res.json(await this.service.updatePermissionById(req.params.id, req.body));
+        },
+        validation: {
+            path: {
+                id: {
+                    type: DataType.String,
+                    pattern: RE.checkMongoId.source,
+                    required: true,
+                },
+            },
+            body: {
+                type: DataType.Object,
+                properties: {
+                    description: {
+                        type: DataType.String,
+                    },
+                    roles: {
+                        type: DataType.Array,
+                        items: {
+                            type: DataType.String,
+                            pattern: RE.checkMongoId.source,
+                        },
+                    },
+                },
+            },
+        },
+        document: {
+            tags: ['Entry Manager'],
+            responses: {
+                200: 'Entry was updated successfully',
+                403: 'Forbidden',
+                400: 'Bad Request',
+            },
+            security: true,
+            summary: 'Update a entry by specified ID',
         },
     };
 

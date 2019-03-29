@@ -128,7 +128,8 @@ export class RoleBasedAccessControlService {
     }
 
     async createPermission(permissionData: IPermission) {
-        await this.validatePermissionData(permissionData);
+        await this.validatePath(permissionData);
+        await this.validateRole(permissionData);
 
         return this._mongo.transaction(async session => {
             const permission = await this._permissionModel.create(permissionData, session);
@@ -145,6 +146,34 @@ export class RoleBasedAccessControlService {
                     availableRoleIds.push(role.id);
                 }
                 permission.roles = availableRoleIds;
+                return permission.save({ session });
+            }
+            return permission;
+        });
+    }
+
+    async updatePermissionById(PermissionId: string, permissionData: IPermission) {
+        await this.validateRole(permissionData);
+
+        return this._mongo.transaction(async session => {
+            const permission = await this._permissionModel.findById(PermissionId).session(session);
+
+            if (permission) {
+                permission.description = permissionData.description;
+
+                if (permissionData.roles && permissionData.roles.length > 0) {
+                    const roleInstances = await this._roleModel
+                        .find({ _id: { $in: permissionData.roles } })
+                        .session(session);
+                    const availableRoleIds: string[] = [];
+
+                    for (const role of roleInstances) {
+                        role.permissions = _.unionWith(role.permissions, [permission.id]);
+                        await role.save({ session });
+                        availableRoleIds.push(role.id);
+                    }
+                    permission.roles = availableRoleIds;
+                }
                 return permission.save({ session });
             }
             return permission;
@@ -336,13 +365,17 @@ export class RoleBasedAccessControlService {
         return this._permissionModel.deleteMany(conditions);
     }
 
-    private async validatePermissionData(permissionData: IPermission) {
+    private async validatePath(permissionData: IPermission) {
         let checkRoute: any = this.routePaths.find(element => {
             return element.path === permissionData.route.path && element.method === permissionData.route.method;
         });
 
         if (!checkRoute) throw new BadRequest(RBACErrorMessage.PATH_NOT_FOUND);
 
+        return;
+    }
+
+    private async validateRole(permissionData: IPermission) {
         if (!permissionData.roles) return;
 
         let checkRole = await this._roleModel.find({ _id: { $in: permissionData.roles } });
