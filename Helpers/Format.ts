@@ -26,7 +26,7 @@ export function processQuery(query: any, searchFields: Array<string>): any {
     return result;
 }
 
-function processValue(value: any, term: any, fields: Array<string>) {
+function processValue(value: string, term: string, fields: Array<string>) {
     let result: any = {};
 
     if (term && fields) {
@@ -51,7 +51,7 @@ function processValue(value: any, term: any, fields: Array<string>) {
     return result;
 }
 
-function processSort(sort: any) {
+function processSort(sort: string) {
     let result = {};
 
     if (sort) {
@@ -64,7 +64,7 @@ function processSort(sort: any) {
     return result;
 }
 
-function processField(fields: any) {
+export function processField(fields: string) {
     let result = {};
 
     if (fields) {
