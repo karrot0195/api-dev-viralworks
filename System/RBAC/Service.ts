@@ -39,7 +39,7 @@ export class RoleBasedAccessControlService {
             temp.parents = await this._resolveParentRoles(role.parentId);
         }
 
-        return this._roleModel.create(role);
+        return this._roleModel.create(temp);
     }
 
     async findRoleById(id: string) {
