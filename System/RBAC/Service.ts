@@ -145,7 +145,7 @@ export class RoleBasedAccessControlService {
         return this._permissionModel.find(conditions);
     }
 
-    async findGET(query?: any) {
+    async findPermissionGET(query?: any) {
         return this._permissionModel.findGET(query, PermissionSearchField);
     }
 
