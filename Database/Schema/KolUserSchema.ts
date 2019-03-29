@@ -1,293 +1,292 @@
 import { IDocument } from 'System/Interface';
 
-
 interface KolUser extends IDocument {
-    email: string,
-    code: string,
-    password: string,
-    setting: object,
-    status: string,
-    facebook: object,
-    kol_info: object,
-    summary_info: string,
-    verify_email: object,
-    verify_password: object,
-    product_tour: number,
-    invites: object,
-    joins: object,
-    num_rate: number,
-    num_rate_evaluate: number,
-    income: object,
-    payment_info: object,
-    delivery_info: object,
-    history_action: object
+    email: string;
+    code: string;
+    password: string;
+    setting: object;
+    status: string;
+    facebook: object;
+    kol_info: object;
+    summary_info: string;
+    verify_email: object;
+    verify_password: object;
+    product_tour: number;
+    invites: object;
+    joins: object;
+    num_rate: number;
+    num_rate_evaluate: number;
+    income: object;
+    payment_info: object;
+    delivery_info: object;
+    history_action: object;
 }
 
 const PaymentSchema = {
     account_name: {
-        type: String
+        type: String,
     },
     account_id: {
-        type: String
+        type: String,
     },
     bank_name: {
-        type: String
+        type: String,
     },
     bank_province: {
-        type: String
+        type: String,
     },
     bank_branch: {
-        type: String
-    } 
-}
+        type: String,
+    },
+};
 
 const FacebookSchema = {
     entity_id: {
-        type: String
+        type: String,
     },
     name: {
-        type: String
+        type: String,
     },
     profile_link: {
-        type: String
+        type: String,
     },
     app_scoped_id: {
-        type: String
+        type: String,
     },
     app_scoped_token: {
-        type: String
+        type: String,
     },
     page: {
-        type: Array
+        type: Array,
     },
     analytic: {
         total_follower: {
-            type: Number
+            type: Number,
         },
         total_post_last_3_month: {
-            type: Number
+            type: Number,
         },
         avg_reaction_last_3_month: {
-            type: Number
+            type: Number,
         },
         avg_comment_last_3_month: {
-            type: Number
+            type: Number,
         },
         avg_sharing_last_3_month: {
-            type: Number
+            type: Number,
         },
         avg_engagement_last_3_month: {
-            type: Number
+            type: Number,
         },
         latest_updated: {
-            type: Date
-        }
-    }
-}
+            type: Date,
+        },
+    },
+};
 
 const EvaluateSchema = {
     fb: {
         frequency: {
-            type: Number
+            type: Number,
         },
         style: {
-            type: Number
+            type: Number,
         },
         content: {
-            type: Array
-        }
+            type: Array,
+        },
     },
     text: {
         length: {
-            type: Number
+            type: Number,
         },
         interactivity: {
-            type: Number
+            type: Number,
         },
         swearing_happy: {
-            type: Number
-        }
+            type: Number,
+        },
     },
     image: {
         content: {
-            type: Array
+            type: Array,
         },
         personal_style: {
-            type: Array
+            type: Array,
         },
         scenery: {
-            type: Number
+            type: Number,
         },
         refine_content: {
-            type: Number
-        }
+            type: Number,
+        },
     },
     general_style: {
         appearence: {
-            type: Number
+            type: Number,
         },
         brand: {
-            type: Number
-        }
-    }
-}
+            type: Number,
+        },
+    },
+};
 
 const PriceSchema = {
     photo: {
-        type: Number
+        type: Number,
     },
     livestream: {
-        type: Number
+        type: Number,
     },
     have_video: {
-        type: Number
+        type: Number,
     },
     share_link: {
-        type: Number
-    }
-}
+        type: Number,
+    },
+};
 
 const KolInfoSchema = {
     mobile: {
-        type: String
+        type: String,
     },
     sex: {
-        type: Number
+        type: Number,
     },
     dob: {
-        type: Number
+        type: Number,
     },
     matrimony: {
-        type: Number
+        type: Number,
     },
     num_child: {
-        type: Number
+        type: Number,
     },
     job: {
-        type: Array
+        type: Array,
     },
     job_other: {
-        type: Array
+        type: Array,
     },
     share_story: {
-        type: Array
+        type: Array,
     },
     share_story_other: {
-        type: Array
+        type: Array,
     },
     price: PriceSchema,
     notification_job: {
-        type: Boolean
+        type: Boolean,
     },
     step: {
-        type: String
+        type: String,
     },
     status: {
         type: Number,
-        default: 0
+        default: 0,
     },
     reject_note: {
         reason_id: {
-            type: String
+            type: String,
         },
         description: {
-            type: String
-        }
+            type: String,
+        },
     },
-    evaluate: EvaluateSchema
-}
+    evaluate: EvaluateSchema,
+};
 
 const TokenSchema = {
     token: {
-        type: String
+        type: String,
     },
     status: {
         type: Number,
-        default: 0
+        default: 0,
     },
     created_at: {
-        type: Date
+        type: Date,
     },
     updated_at: {
-        type: Date
-    }
-}
+        type: Date,
+    },
+};
 
 const IncomeSchema = {
     pending: {
         type: Number,
         default: 0,
-        min: 0
+        min: 0,
     },
     approved: {
         type: Number,
         default: 0,
-        min: 0
-    }
-}
+        min: 0,
+    },
+};
 
 const DeliverySchema = {
     city: {
-        type: String
+        type: String,
     },
     district: {
-        type: String
+        type: String,
     },
     address: {
-        type: String
-    }
-}
+        type: String,
+    },
+};
 
 const KolUserSchema = {
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     code: {
         type: String,
-        unique: true
+        unique: true,
     },
     password: {
-        type: String
+        type: String,
     },
     setting: {
         receive_newsletter: {
-            type: Boolean
-        }
+            type: Boolean,
+        },
     },
     status: {
         type: Number,
-        default: 1
+        default: 1,
     },
     facebook: FacebookSchema,
     kol_info: KolInfoSchema,
     summary_info: {
-        type: String
+        type: String,
     },
     verify_email: TokenSchema,
     verify_password: TokenSchema,
     product_tour: {
-        type: Number
+        type: Number,
     },
     invites: {
-        type: Array
+        type: Array,
     },
     joins: {
-        type: Array
+        type: Array,
     },
     num_rate: {
-        type: Number
+        type: Number,
     },
     num_rate_evaluate: {
-        type: Number
+        type: Number,
     },
     income: IncomeSchema,
     payment_info: PaymentSchema,
     delivery_info: DeliverySchema,
     history_action: {
-        type: Array
-    }
-}
+        type: Array,
+    },
+};
 
-export {KolUser, KolUserSchema}
+export { KolUser, KolUserSchema };

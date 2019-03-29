@@ -5,12 +5,16 @@ import { Mongo } from 'System/Mongo';
 
 import { User, UserSchema } from './Schema/UserSchema';
 import { Faq, FaqSchema } from './Schema/FaqSchema';
+import { KolUserSchema } from './Schema/KolUserSchema';
+import { CategoryReasonSchema } from './Schema/CategoryReasonSchema';
 
 @Injectable
 export class InitDatabase {
     constructor(mongo: Mongo) {
         mongo.define('user', { schema: UserSchema });
         mongo.define('faq', { schema: FaqSchema });
+        mongo.define('kol_user', { schema: KolUserSchema });
+        mongo.define('category_reasons', { schema: CategoryReasonSchema });
     }
 }
 
