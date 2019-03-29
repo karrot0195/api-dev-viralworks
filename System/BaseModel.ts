@@ -1,7 +1,7 @@
 import { Model, Document, ClientSession, ModelUpdateOptions } from 'mongoose';
 
 import { Mongo } from './Mongo';
-import { processQuery } from 'Helpers/Format';
+import { processQuery, processField } from 'Helpers/Format';
 
 export abstract class BaseModel<I, T extends Document> {
     protected readonly _model: Model<T>;
@@ -32,8 +32,8 @@ export abstract class BaseModel<I, T extends Document> {
         return { total: count, results: result, limit: queryData.options.limit, page: queryData.options.page };
     }
 
-    findById(id: string) {
-        return this._model.findById(id);
+    findById(id: string, fields: string = '') {
+        return this._model.findById(id).select(processField(fields));
     }
 
     findOne(conditions?: any) {
