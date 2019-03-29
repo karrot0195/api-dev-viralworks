@@ -2,7 +2,7 @@ import { IDocument } from 'System/Interface';
 import * as mongoose from 'mongoose';
 
 
-interface Reason extends IDocument {
+interface Reason {
     readonly _id: string;
     readonly name: string;
 }
@@ -23,6 +23,10 @@ const ReasonSchema = {
         require: true,
         unique: true
     },
+    created_at: {
+        type: Date,
+        default: new Date()
+    }
 };
 
 const CategoryReasonSchema = {

@@ -4,11 +4,11 @@ import { BaseModel } from 'System/BaseModel';
 import { KolUser } from 'Database/Schema/KolUserSchema';
 
 // BASIC INFO
-interface IKolEvalute {
+interface IKolEvalute {String
     readonly fb: {
-        readonly frequency: number;
-        readonly content: Array<number>;
-        readonly style: number;
+        readonly frequeString
+        readonly contenString
+        readonly style:String
     };
     readonly text: {
         readonly length: number;
@@ -26,7 +26,6 @@ interface IKolEvalute {
         readonly brand: number;
     };
 }
-
 interface IKolBasicInfo {
     readonly mobile: string;
     readonly sex: number;
@@ -50,6 +49,7 @@ interface IKolBasicInfo {
         readonly description: string;
     };
     readonly evaluate: IKolEvalute;
+    readonly history_action: Array<{readonly causer_id: string, readonly type: number}>;
 }
 
 // FACEBOOK
@@ -102,10 +102,25 @@ interface IKolUser {
     readonly income: object;
     readonly payment_info: object;
     readonly delivery_info: object;
-    readonly history_action: object;
 }
 
 export { IKolUser, IKolBasicInfo, IKolFacebookInfo, IKolEvalute };
+
+export enum KolInfoStatus {
+    Raw = 0,
+    Verified = 1,
+    Rejected = 2
+};
+
+export enum KolStatus {
+    Enable = 1,
+    Disable = 0
+}
+
+export enum HistoryActionType {
+    Status = 1,
+    Mail = 2
+}
 
 @Injectable
 export class KolUserModel extends BaseModel<IKolUser, KolUser> {

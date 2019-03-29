@@ -1,25 +1,48 @@
 import { IDocument } from 'System/Interface';
+import * as mongoose from 'mongoose';
+
+interface HistoryActionItem {
+    readonly causer_id: string, 
+    readonly type: number
+}
 
 interface KolUser extends IDocument {
-    email: string;
-    code: string;
-    password: string;
-    setting: object;
-    status: string;
-    facebook: object;
-    kol_info: object;
-    summary_info: string;
-    verify_email: object;
-    verify_password: object;
-    product_tour: number;
-    invites: object;
-    joins: object;
-    num_rate: number;
-    num_rate_evaluate: number;
-    income: object;
-    payment_info: object;
-    delivery_info: object;
-    history_action: object;
+    readonly email: string;
+    readonly code: string;
+    readonly password: string;
+    readonly setting: object;
+    readonly status: string;
+    readonly facebook: object;
+    readonly kol_info: object;
+    readonly summary_info: string;
+    readonly verify_email: object;
+    readonly verify_password: object;
+    readonly product_tour: number;
+    readonly invites: object;
+    readonly joins: object;
+    readonly num_rate: number;
+    readonly num_rate_evaluate: number;
+    readonly income: object;
+    readonly payment_info: object;
+    readonly delivery_info: object
+}
+
+const HistoryActionItemSchema =  {
+    causer_id: {
+        type: mongoose.SchemaTypes.ObjectId,
+        required: true
+    },
+    type: {
+        type: Number,
+        required: true
+    },
+    kol_status: {
+        type: Number
+    },
+    created_at: {
+        type: Date,
+        default: new Date()
+    }
 }
 
 const PaymentSchema = {
@@ -194,6 +217,7 @@ const KolInfoSchema = {
         },
     },
     evaluate: EvaluateSchema,
+    history_action: [HistoryActionItemSchema]
 };
 
 const TokenSchema = {
@@ -284,9 +308,6 @@ const KolUserSchema = {
     income: IncomeSchema,
     payment_info: PaymentSchema,
     delivery_info: DeliverySchema,
-    history_action: {
-        type: Array,
-    },
 };
 
 export { KolUser, KolUserSchema };

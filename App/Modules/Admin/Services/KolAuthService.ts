@@ -3,8 +3,9 @@ import * as _ from 'lodash';
 import { Injectable } from 'System/Injectable';
 import { Mongo } from 'System/Mongo';
 import { Config } from 'System/Config';
-import { IKolUser, KolUserModel, IKolBasicInfo, IKolFacebookInfo, IKolEvalute } from 'App/Models/KolUserModel';
-import { isString } from 'util';
+import { IKolUser, KolUserModel, IKolBasicInfo, IKolFacebookInfo, IKolEvalute, HistoryActionType } from 'App/Models/KolUserModel';
+import * as mongoose from 'mongoose';
+import { InternalError, SystemError } from 'System/Error';
 
 @Injectable
 export class KolAuthService {
@@ -156,5 +157,28 @@ export class KolAuthService {
         });
         const result = await kolUser.save();
         return _.get(result.kol_info, 'evaluate');
+    }
+
+    async updateKolInfoStatus(kolUser: any, causer_id: string, status: number) {
+        this.addHistoryAction(kolUser, causer_id, _.get(kolUser, 'kol_info.status'));
+        this.setKolInfoStatus(kolUser, status);
+        const result = await kolUser.save();
+        if (!result) {
+            throw new SystemError('Not save data');
+        }
+        return kolUser;
+    }
+
+    addHistoryAction(kolUser: any, causer_id: string, status: number) {
+        const obj = {
+            causer_id: causer_id,
+            type: HistoryActionType.Status,
+            kol_status: status
+        }
+        _.get(kolUser, 'kol_info.history_action', []).push(obj);
+    }
+
+    setKolInfoStatus(kolUser: any, status: number) {
+        _.set(kolUser, 'kol_info.status', status);
     }
 }

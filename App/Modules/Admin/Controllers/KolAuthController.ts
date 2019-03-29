@@ -10,6 +10,7 @@ import { KolAuthService } from '../Services/KolAuthService';
 import { Conflict, InternalError } from 'System/Error';
 import { async } from 'rxjs/internal/scheduler/async';
 import { json } from 'body-parser';
+import { KolInfoStatus } from 'App/Models/KolUserModel';
 
 @Injectable
 export class KolAuthController {
@@ -422,14 +423,38 @@ export class KolAuthController {
         },
     };
 
-    updateKolStatus: IHandler = {
-        method: async (req: Request, res: Response, next: NextFunction) => {},
+    updateKolInfoStatus: IHandler = {
+        method: async (req: Request, res: Response, next: NextFunction) => {
+            const kolUser = await this._kolAuthService.findById(req.params.id);
+            if (kolUser) {
+                return res.json(await this._kolAuthService.updateKolInfoStatus(kolUser, req.auth.id, req.body.status));
+            }
+            throw new NotFound('Not found kol user');
+        },
+        validation: {
+            path: {
+                id: {
+                    type: DataType.String,
+                    pattern: RE.checkMongoId.source
+                }
+            },
+            body: {
+                type: DataType.Object,
+                properties: {
+                    status: {
+                        type: DataType.Number,
+                        required: true,
+                        enum: [KolInfoStatus.Raw, KolInfoStatus.Verified, KolInfoStatus.Rejected]
+                    }
+                }
+            }
+        },
         document: {
             tags: ['kol authenticate'],
             security: true,
-            summary: 'update kol status',
+            summary: 'update kol info status',
             responses: {
-                200: 'Kol status was updated successfully',
+                200: 'Kol info status was updated successfully',
             },
         },
     };
