@@ -75,7 +75,7 @@ function processField(fields: any) {
     return result;
 }
 
-// Convert id from params to queryData 
+// Convert id from params to query 
 export function processId(id: string, query: any){
     let result = {}
     if (typeof query !== 'object') query = {};
