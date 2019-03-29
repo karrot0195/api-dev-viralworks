@@ -4,14 +4,15 @@ import { ClientSession } from 'mongoose';
 import { Injectable } from '../Injectable';
 import { Mongo } from '../Mongo';
 import { IRole, IPermission } from 'System/Interface/RBAC';
-import { PermissionModel } from "./Models/PermissionModel";
-import { RoleModel } from "./Models/RoleModel";
+import { PermissionModel } from './Models/PermissionModel';
+import { RoleModel } from './Models/RoleModel';
 import { PermissionSearchField } from './Schema/PermissionSchema';
 import { RoleSearchField } from './Schema/RoleSchema';
+import { BadRequest } from 'System/Error/BadRequest';
+import { RBACErrorMessage } from 'System/Enum/Error';
 
 @Injectable
 export class RoleBasedAccessControlService {
-
     constructor(
         private readonly _mongo: Mongo,
         private readonly _roleModel: RoleModel,
@@ -26,14 +27,14 @@ export class RoleBasedAccessControlService {
             return temp;
         }
 
-        return [];
+        throw new BadRequest(RBACErrorMessage.PARENT_NOT_FOUND);
     }
 
     async createRole(role: IRole) {
         const temp = {
             name: role.name,
             description: role.description,
-            parents: [] as string[]
+            parents: [] as string[],
         };
 
         if (role.parentId) {
@@ -56,7 +57,7 @@ export class RoleBasedAccessControlService {
     }
 
     async updateRoleById(roleId: string, roleData: IRole) {
-        return this._mongo.transaction(async (session) => {
+        return this._mongo.transaction(async session => {
             const role = await this._roleModel.findById(roleId).session(session);
 
             if (role) {
@@ -81,12 +82,12 @@ export class RoleBasedAccessControlService {
 
                 return role.save();
             }
-            return role
+            return role;
         });
     }
 
     async deleteRoleById(roleId: string) {
-        return this._mongo.transaction(async (session) => {
+        return this._mongo.transaction(async session => {
             const role = await this._roleModel.findById(roleId).session(session);
 
             if (!role) {
@@ -117,17 +118,19 @@ export class RoleBasedAccessControlService {
     }
 
     async deleteRole(conditions?: any) {
-        return this._mongo.transaction(async (session) => {
+        return this._mongo.transaction(async session => {
             return this._roleModel.deleteMany(conditions).session(session);
         });
     }
 
     async createPermission(permissionData: IPermission) {
-        return this._mongo.transaction(async (session) => {
-            const permission = await this._permissionModel.create(permissionData,session);
+        return this._mongo.transaction(async session => {
+            const permission = await this._permissionModel.create(permissionData, session);
 
             if (permissionData.roles && permissionData.roles.length > 0) {
-                const roleInstances = await this._roleModel.find({ _id: { $in: permissionData.roles } }).session(session);
+                const roleInstances = await this._roleModel
+                    .find({ _id: { $in: permissionData.roles } })
+                    .session(session);
                 const availableRoleIds: string[] = [];
 
                 for (const role of roleInstances) {
@@ -155,7 +158,7 @@ export class RoleBasedAccessControlService {
     }
 
     async setRolesForPermissionById(permissionId: string, roles: string[]) {
-        return this._mongo.transaction(async (session) => {
+        return this._mongo.transaction(async session => {
             const permission = await this._permissionModel.findById(permissionId).session(session);
 
             if (permission) {
@@ -171,7 +174,9 @@ export class RoleBasedAccessControlService {
                 const diffRoleIds = _.differenceWith(permission.roles, availableRoleIds);
 
                 if (diffRoleIds) {
-                    const diffRoleInstances = await this._roleModel.find({ _id: { $in: diffRoleIds } }).session(session);
+                    const diffRoleInstances = await this._roleModel
+                        .find({ _id: { $in: diffRoleIds } })
+                        .session(session);
 
                     for (const diffRoleInstance of diffRoleInstances) {
                         diffRoleInstance.permissions = deleteInArray(permission.id, diffRoleInstance.permissions);
@@ -188,7 +193,7 @@ export class RoleBasedAccessControlService {
     }
 
     async addRolesForPermissionById(permissionId: string, roles: string[]) {
-        return this._mongo.transaction(async (session) => {
+        return this._mongo.transaction(async session => {
             const permission = await this._permissionModel.findById(permissionId).session(session);
 
             if (permission) {
@@ -210,7 +215,7 @@ export class RoleBasedAccessControlService {
     }
 
     async setRolesForPermissionByIds(permissionIds: string[], roles: string[]) {
-        return this._mongo.transaction(async (session) => {
+        return this._mongo.transaction(async session => {
             const permissions = await this._permissionModel.find({ _id: { $in: permissionIds } }).session(session);
 
             if (permissions) {
@@ -228,7 +233,9 @@ export class RoleBasedAccessControlService {
                     const diffRoleIds = _.differenceWith(permission.roles, availableRoleIds);
 
                     if (diffRoleIds) {
-                        const diffRoleInstances = await this._roleModel.find({ _id: { $in: diffRoleIds } }).session(session);
+                        const diffRoleInstances = await this._roleModel
+                            .find({ _id: { $in: diffRoleIds } })
+                            .session(session);
 
                         for (const diffRoleInstance of diffRoleInstances) {
                             diffRoleInstance.permissions = deleteInArray(permission.id, diffRoleInstance.permissions);
@@ -246,7 +253,7 @@ export class RoleBasedAccessControlService {
     }
 
     async addRolesForPermissionByIds(permissionIds: string[], roles: string[]) {
-        return this._mongo.transaction(async (session) => {
+        return this._mongo.transaction(async session => {
             const permissions = await this._permissionModel.find({ _id: { $in: permissionIds } }).session(session);
 
             if (permissions && permissions.length > 0) {
@@ -271,7 +278,7 @@ export class RoleBasedAccessControlService {
     }
 
     async deletePermissionById(permissionId: string) {
-        return this._mongo.transaction(async (session) => {
+        return this._mongo.transaction(async session => {
             const permission = await this._permissionModel.findById(permissionId).session(session);
 
             if (permission) {
@@ -290,7 +297,7 @@ export class RoleBasedAccessControlService {
     }
 
     async deletePermissionByIds(permissionIds: string[]) {
-        return this._mongo.transaction(async (session) => {
+        return this._mongo.transaction(async session => {
             const permissions = await this._permissionModel.find({ _id: { $in: permissionIds } }).session(session);
 
             if (permissions && permissions.length > 0) {
