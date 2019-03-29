@@ -13,9 +13,6 @@ import { RoleBasedAccessControlService as Service } from './RBAC/Service';
 
 @Injectable
 export class RoleBasedAccessControl {
-    readonly routePathsWithModule: { [module: string]: IRoutePath[] } = {};
-    readonly routePaths: IRoutePath[] = [];
-    readonly paths: string[] = [];
     private _roles: Role[];
     private _permissions: Permission[];
 
@@ -38,13 +35,13 @@ export class RoleBasedAccessControl {
             throw new SystemError(`Path "${path}" is invalid format. It must be ${RE.checkRoutePath}`);
         }
 
-        if (!this.routePathsWithModule[moduleName]) {
-            this.routePathsWithModule[moduleName] = [];
+        if (!this._service.routePathsWithModule[moduleName]) {
+            this._service.routePathsWithModule[moduleName] = [];
         }
 
-        this.routePathsWithModule[moduleName].push({ path, method, description });
-        this.routePaths.push({ path, method, description });
-        this.paths.push(path);
+        this._service.routePathsWithModule[moduleName].push({ path, method, description });
+        this._service.routePaths.push({ path, method, description });
+        this._service.paths.push(path);
     }
 
     private _handler(path: string, method: string, roleId?: string) {

@@ -7,7 +7,6 @@ import { IHandler } from 'System/Interface';
 import { RoleBasedAccessControl as RBAC } from 'System/RBAC';
 import { RoleBasedAccessControlService as RBACService } from 'System/RBAC/Service';
 import * as RE from 'System/RegularExpression';
-import { processId } from 'Helpers/Format';
 
 @Injectable
 export class RoleController {
@@ -15,7 +14,7 @@ export class RoleController {
 
     public readonly getPaths: IHandler = {
         method: (req: Request, res: Response) => {
-            return res.json(this.rbac.routePathsWithModule);
+            return res.json(this.service.routePathsWithModule);
         },
         document: {
             tags: ['Entry Manager'],
@@ -25,6 +24,54 @@ export class RoleController {
             },
             security: true,
             summary: 'Get all paths',
+        },
+    };
+
+    public readonly createEntry: IHandler = {
+        method: async (req: Request, res: Response) => {
+            return res.json(await this.service.createPermission(req.body));
+        },
+        validation: {
+            body: {
+                type: DataType.Object,
+                properties: {
+                    route: {
+                        type: DataType.Object,
+                        required: true,
+                        properties: {
+                            path: {
+                                type: DataType.String,
+                                required: true,
+                            },
+                            method: {
+                                type: DataType.String,
+                                required: true,
+                            },
+                        },
+                    },
+                    description: {
+                        type: DataType.String,
+                        required: true,
+                    },
+                    roles: {
+                        type: DataType.Array,
+                        items: {
+                            type: DataType.String,
+                            pattern: RE.checkMongoId.source,
+                        },
+                    },
+                },
+            },
+        },
+        document: {
+            tags: ['Role Manager'],
+            responses: {
+                201: 'Role was created successfully',
+                403: 'Forbidden',
+                400: 'Bad Request',
+            },
+            security: true,
+            summary: 'Create a new role',
         },
     };
 
@@ -89,8 +136,8 @@ export class RoleController {
                     type: DataType.String,
                     required: true,
                     pattern: RE.checkMongoId.source,
-                }
-            }
+                },
+            },
         },
         document: {
             tags: ['Entry Manager'],

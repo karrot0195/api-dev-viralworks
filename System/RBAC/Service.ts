@@ -3,7 +3,7 @@ import { ClientSession } from 'mongoose';
 
 import { Injectable } from '../Injectable';
 import { Mongo } from '../Mongo';
-import { IRole, IPermission } from 'System/Interface/RBAC';
+import { IRole, IPermission, IRoutePath } from 'System/Interface/RBAC';
 import { PermissionModel } from './Models/PermissionModel';
 import { RoleModel } from './Models/RoleModel';
 import { PermissionSearchField } from './Schema/PermissionSchema';
@@ -13,6 +13,10 @@ import { RBACErrorMessage } from 'System/Enum/Error';
 
 @Injectable
 export class RoleBasedAccessControlService {
+    readonly routePathsWithModule: { [module: string]: IRoutePath[] } = {};
+    readonly routePaths: IRoutePath[] = [];
+    readonly paths: string[] = [];
+
     constructor(
         private readonly _mongo: Mongo,
         private readonly _roleModel: RoleModel,
