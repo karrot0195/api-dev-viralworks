@@ -30,7 +30,7 @@ export class RoleController {
 
     public readonly getPermissions: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this.service.findGET(req.query));
+            return res.json(await this.service.findPermissionGET(req.query));
         },
         validation: {
             query: {
@@ -75,7 +75,7 @@ export class RoleController {
 
     public readonly getPermissionById: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this.service.findGET(
+            return res.json(await this.service.findPermissionGET(
                 processId(req.params.id, req.query)));
         },
         validation: {
@@ -121,7 +121,37 @@ export class RoleController {
 
     public readonly getRoles: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this.service.findRoles());
+            return res.json(await this.service.findRolesGET(req.query));
+        },
+        validation: {
+            query: {
+                sort: {
+                    type: DataType.String,
+                    description: 'List of fields that wil be sorted. Example: roles|asc,parentId|desc',
+                },
+                page: {
+                    type: DataType.Number,
+                    description: 'Page number of result',
+                    default: 0,
+                },
+                limit: {
+                    type: DataType.Number,
+                    description: 'Limit per page',
+                    default: 0,
+                },
+                term: {
+                    type: DataType.String,
+                    description: 'Term that will be searched on all fields',
+                },
+                value: {
+                    type: DataType.String,
+                    description: 'List of exact match value. Example: name|user,description|test',
+                },
+                fields: {
+                    type: DataType.String,
+                    description: 'List of fields that will be returned. Example: name,description',
+                },
+            },
         },
         document: {
             tags: ['Role Manager'],

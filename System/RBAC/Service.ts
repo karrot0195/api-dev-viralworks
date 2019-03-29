@@ -7,6 +7,7 @@ import { IRole, IPermission } from 'System/Interface/RBAC';
 import { PermissionModel } from "./Models/PermissionModel";
 import { RoleModel } from "./Models/RoleModel";
 import { PermissionSearchField } from './Schema/PermissionSchema';
+import { RoleSearchField } from './Schema/RoleSchema';
 
 @Injectable
 export class RoleBasedAccessControlService {
@@ -48,6 +49,10 @@ export class RoleBasedAccessControlService {
 
     async findRoles(conditions?: any) {
         return this._roleModel.find(conditions);
+    }
+
+    async findRolesGET(conditions?: any) {
+        return this._roleModel.findGET(conditions, RoleSearchField);
     }
 
     async updateRoleById(roleId: string, roleData: IRole) {

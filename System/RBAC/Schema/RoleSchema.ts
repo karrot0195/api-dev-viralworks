@@ -7,6 +7,13 @@ export interface Role extends IDocument {
     permissions: string[];
 }
 
+export const RoleSearchField = [
+    'name',
+    'description',
+    'parents',
+    'permissions'
+]
+
 export const RoleSchema = {
     name: {
         type: String,
