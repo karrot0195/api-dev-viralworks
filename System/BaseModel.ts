@@ -24,7 +24,7 @@ export abstract class BaseModel<I, T extends Document> {
 
         let count: number = await this._model.countDocuments(queryData.conditions);
         if (count > 0) {
-            result = await this._model.find(queryData.conditions, queryData.projections , queryData.options);
+            result = await this._model.find(queryData.conditions, queryData.projections, queryData.options);
         } else {
             result = [];
         }
