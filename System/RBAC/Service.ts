@@ -43,8 +43,8 @@ export class RoleBasedAccessControlService {
         return this._roleModel.create(temp);
     }
 
-    async findRoleById(id: string) {
-        return this._roleModel.findById(id);
+    async findRoleById(id: string, fields?: string) {
+        return this._roleModel.findById(id, fields);
     }
 
     async findRoles(conditions?: any) {
@@ -142,8 +142,8 @@ export class RoleBasedAccessControlService {
         });
     }
 
-    async findPermissionById(permissionId: string) {
-        return this._permissionModel.findById(permissionId);
+    async findPermissionById(permissionId: string, fields?: string) {
+        return this._permissionModel.findById(permissionId, fields);
     }
 
     async findPermissions(conditions?: any) {

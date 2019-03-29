@@ -75,8 +75,7 @@ export class RoleController {
 
     public readonly getPermissionById: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this.service.findPermissionGET(
-                processId(req.params.id, req.query)));
+            return res.json(await this.service.findPermissionById(req.params.id, req.query.fields));
         },
         validation: {
             query: {
@@ -166,9 +165,15 @@ export class RoleController {
 
     public readonly getRoleById: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this.service.findRoleById(req.params.id));
+            return res.json(await this.service.findRoleById(req.params.id, req.query.fields));
         },
         validation: {
+            query: {
+                fields: {
+                    type: DataType.String,
+                    description: 'List of fields that will be returned. Example: name,description',
+                },
+            },
             path: {
                 id: {
                     type: DataType.String,
