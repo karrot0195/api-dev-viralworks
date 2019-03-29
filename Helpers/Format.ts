@@ -5,7 +5,7 @@ Example: Model.find(conditions, projections, options)
 
 Code above will find value match conditions, paginate and sort using options, select fields on projections
 */
-export function processQuery(query: any, fields: Array<string>): any {
+export function processQuery(query: any, searchFields: Array<string>): any {
     const result: any = {};
 
     result.options = {};
@@ -18,9 +18,9 @@ export function processQuery(query: any, fields: Array<string>): any {
         result.options.skip = result.options.page * result.options.limit;
         result.options.sort = processSort(query.sort);
 
-        result.conditions = processValue(query.value, query.term, fields);
+        result.conditions = processValue(query.value, query.term, searchFields);
 
-        result.projections = processField(query.field);
+        result.projections = processField(query.fields);
     }
 
     return result;
