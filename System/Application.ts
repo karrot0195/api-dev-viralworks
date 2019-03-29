@@ -17,8 +17,7 @@ import { log } from 'Helpers/Log'
 
 import { Mongo } from './Mongo';
 import { InitDatabase } from 'Database';
-import { createDiffieHellman } from 'crypto';
-import { Logger } from 'mongodb';
+import { MorganFormat } from './Enum/Morgan';
 
 var debug = require('debug')('shopback-test:server');
 
@@ -61,12 +60,16 @@ export class Application {
         if (this._config.document.enable) {
             log(`Document has been running on: ${this._scheme}://${this._publicHost}:${this._publicPort}/${this._config.version}/${this._docPath}`);
         }
+
+        log('')
+        log('--------------------PROCESS--------------------');
+        log('Waiting for log...')
     }
 
     private async _configExpress() {
         log('Configuring ExpressJS...');
         // Config Logger
-        const morganFormat = (this._config.env == 'dev') ? 'dev' : 'combined'
+        const morganFormat = (this._config.env == 'dev') ? MorganFormat.dev : MorganFormat.full
         this._app.use(morgan(morganFormat, {
             skip: function (req, res) {
                 return res.statusCode < 300;
