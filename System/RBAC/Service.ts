@@ -128,6 +128,8 @@ export class RoleBasedAccessControlService {
     }
 
     async createPermission(permissionData: IPermission) {
+        await this.validatePermissionData(permissionData);
+
         return this._mongo.transaction(async session => {
             const permission = await this._permissionModel.create(permissionData, session);
 
@@ -332,6 +334,22 @@ export class RoleBasedAccessControlService {
 
     async deletePermission(conditions?: any) {
         return this._permissionModel.deleteMany(conditions);
+    }
+
+    private async validatePermissionData(permissionData: IPermission) {
+        let checkRoute: any = this.routePaths.find(element => {
+            return element.path === permissionData.route.path && element.method === permissionData.route.method;
+        });
+
+        if (!checkRoute) throw new BadRequest(RBACErrorMessage.PATH_NOT_FOUND);
+
+        if (!permissionData.roles) return;
+
+        let checkRole = await this._roleModel.find({ _id: { $in: permissionData.roles } });
+
+        if (checkRole.length === 0) throw new BadRequest(RBACErrorMessage.ROLE_NOT_FOUND);
+
+        return;
     }
 }
 
