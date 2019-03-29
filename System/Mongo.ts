@@ -4,6 +4,7 @@ import { singular } from 'pluralize';
 import { Injectable } from './Injectable';
 import { Config } from './Config';
 import { ModelDict } from 'Database';
+import { Duplicate } from './Error/Duplicate';
 
 @Injectable
 export class Mongo {
@@ -64,6 +65,12 @@ export class Mongo {
             schema.loadClass(schemaObject.class);
         }
 
+        // middleware that handle error
+        schema.post('save', handleError);
+        schema.post('update', handleError);
+        schema.post('findOneAndUpdate', handleError);
+        schema.post('insertMany', handleError);
+
         const model = Mongoose.model(modelName, schema);
 
         if (this.models) {
@@ -75,3 +82,11 @@ export class Mongo {
         return model;
     }
 }
+
+function handleError(error, doc, next) {
+    if (error.name === 'MongoError' && error.code === 11000) {
+      next(new Duplicate());
+    } else {
+      next();
+    }
+};
