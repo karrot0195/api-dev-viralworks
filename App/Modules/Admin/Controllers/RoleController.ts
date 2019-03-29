@@ -7,8 +7,7 @@ import { IHandler } from 'System/Interface';
 import { RoleBasedAccessControl as RBAC } from 'System/RBAC';
 import { RoleBasedAccessControlService as RBACService } from 'System/RBAC/Service';
 import * as RE from 'System/RegularExpression';
-import { processQuery } from 'Helpers/Format';
-import { log } from 'Helpers/Log';
+import { processId } from 'Helpers/Format';
 
 @Injectable
 export class RoleController {
@@ -19,7 +18,7 @@ export class RoleController {
             return res.json(this.rbac.routePathsWithModule);
         },
         document: {
-            tags: ['Role Manager'],
+            tags: ['Entry Manager'],
             responses: {
                 200: 'Found Data',
                 403: 'Forbidden',
@@ -37,11 +36,11 @@ export class RoleController {
             query: {
                 sort: {
                     type: DataType.String,
-                    description: 'Sort multi fields and order'
+                    description: 'List of fields that wil be sorted. Example: roles|asc,route|desc',
                 },
                 page: {
                     type: DataType.Number,
-                    description: 'Page of result',
+                    description: 'Page number of result',
                     default: 0,
                 },
                 limit: {
@@ -51,16 +50,20 @@ export class RoleController {
                 },
                 term: {
                     type: DataType.String,
-                    description: 'A text search in all fields',
+                    description: 'Term that will be searched on all fields',
                 },
                 value: {
                     type: DataType.String,
-                    description: 'Value condition for fields'
+                    description: 'List of exact match value. Example: roles|user,route.path|/test',
+                },
+                fields: {
+                    type: DataType.String,
+                    description: 'List of fields that will be returned. Example: roles,route.path',
                 },
             },
         },
         document: {
-            tags: ['Role Manager'],
+            tags: ['Entry Manager'],
             responses: {
                 200: 'Found Data',
                 403: 'Forbidden',
@@ -70,12 +73,43 @@ export class RoleController {
         },
     };
 
+    public readonly getPermissionById: IHandler = {
+        method: async (req: Request, res: Response) => {
+            return res.json(await this.service.findGET(
+                processId(req.params.id, req.query)));
+        },
+        validation: {
+            query: {
+                fields: {
+                    type: DataType.String,
+                    description: 'List of fields that will be returned. Example: roles,route.path',
+                },
+            },
+            path: {
+                id: {
+                    type: DataType.String,
+                    required: true,
+                    pattern: RE.checkMongoId.source,
+                }
+            }
+        },
+        document: {
+            tags: ['Entry Manager'],
+            responses: {
+                200: 'Found Data',
+                403: 'Forbidden',
+            },
+            security: true,
+            summary: 'Get access control entries by id',
+        },
+    };
+
     public readonly searchPermissions: IHandler = {
         method: async (req: Request, res: Response) => {
             return res.json('Under construction');
         },
         document: {
-            tags: ['Role Manager'],
+            tags: ['Entry Manager'],
             responses: {
                 200: 'Found Data',
                 403: 'Forbidden',
@@ -220,7 +254,7 @@ export class RoleController {
             },
         },
         document: {
-            tags: ['Role Manager'],
+            tags: ['Entry Manager'],
             responses: {
                 200: 'Role was updated successfully',
                 403: 'Forbidden',
