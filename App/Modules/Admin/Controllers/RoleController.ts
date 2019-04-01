@@ -29,7 +29,9 @@ export class RoleController {
 
     public readonly createPermission: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this.service.createPermission(req.body));
+            let permission = await this.service.createPermission(req.body);
+            if (permission) await this.rbac.load();
+            return res.json(permission);
         },
         validation: {
             body: {
@@ -79,7 +81,9 @@ export class RoleController {
 
     public readonly updatePermission: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this.service.updatePermissionById(req.params.id, req.body));
+            let permission = await this.service.updatePermissionById(req.params.id, req.body);
+            if (permission) await this.rbac.load();
+            return res.json(permission);
         },
         validation: {
             path: {
@@ -296,7 +300,9 @@ export class RoleController {
 
     public readonly updateRole: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this.service.updateRoleById(req.params.id, req.body));
+            let role = await this.service.updateRoleById(req.params.id, req.body);
+            if (role) await this.rbac.load();
+            return res.json(role);
         },
         validation: {
             path: {
@@ -339,7 +345,11 @@ export class RoleController {
 
     public readonly createRole: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this.service.createRole(req.body));
+            let role = await this.service.createRole(req.body);
+
+            if (role) await this.rbac.load();
+
+            return res.json(role);
         },
         validation: {
             body: {
