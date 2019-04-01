@@ -10,6 +10,7 @@ import { IRoutePath } from './Interface/RBAC';
 import { Role } from './RBAC/Schema/RoleSchema';
 import { Permission } from './RBAC/Schema/PermissionSchema';
 import { RoleBasedAccessControlService as Service } from './RBAC/Service';
+import { log } from 'Helpers/Log';
 
 @Injectable
 export class RoleBasedAccessControl {
@@ -19,8 +20,10 @@ export class RoleBasedAccessControl {
     constructor(private readonly _config: Config, private readonly _service: Service) {}
 
     async load() {
+        log('Updating RBAC system...')
         this._roles = await this._service.findRoles();
         this._permissions = await this._service.findPermissions();
+        log('Updating RBAC system - DONE')
     }
 
     addRoutePath(moduleName: string, path: string, method: HTTP, description?: string) {

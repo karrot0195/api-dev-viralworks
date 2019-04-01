@@ -133,7 +133,7 @@ export class Application {
                 log(err);
             }
         });
-        log('- DONE');
+        log('Configuring ExpressJS - DONE');
     }
 
     private _startServer() {
@@ -141,7 +141,7 @@ export class Application {
         this._server.listen(this._port, this._host);
         this._server.on('listening', this._serverListening.bind(this));
         this._server.on('error', this._serverListenError.bind(this));
-        log('- DONE');
+        log('Starting Server - DONE');
     }
 
     private _serverListenError(error: any) {
