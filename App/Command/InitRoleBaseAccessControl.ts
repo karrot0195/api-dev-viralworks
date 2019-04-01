@@ -15,23 +15,23 @@ export class InitRoleBaseAccessControl implements ICommand {
 
         const user = await this.service.createRole({
             name: 'User',
-            description: 'Base user for all user',
+            description: 'Base user for all user'
         });
 
         const entry = await this.service.createPermission({
             route: {
                 path: '/auth/check',
-                method: HTTP.Get,
+                method: HTTP.Get
             },
-            roles: [user._id],
+            roles: [user._id]
         });
 
         const entry2 = await this.service.createPermission({
             route: {
                 path: '/test',
-                method: HTTP.Get,
+                method: HTTP.Get
             },
-            roles: [user._id],
+            roles: [user._id]
         });
 
         return [user, entry, entry2];
