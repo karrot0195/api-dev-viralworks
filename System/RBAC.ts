@@ -16,10 +16,7 @@ export class RoleBasedAccessControl {
     private _roles: Role[];
     private _permissions: Permission[];
 
-    constructor(
-        private readonly _config: Config,
-        private readonly _service: Service,
-    ) { }
+    constructor(private readonly _config: Config, private readonly _service: Service) {}
 
     async load() {
         this._roles = await this._service.findRoles();
@@ -84,7 +81,7 @@ export class RoleBasedAccessControl {
         if (result == true) {
             return next();
         } else {
-            return next(new Unauthorized('Please authorize your request before do this action'));
+            return next(new Unauthorized());
         }
     }
 }

@@ -38,7 +38,7 @@ export class RoleBasedAccessControlService {
         const temp = {
             name: role.name,
             description: role.description,
-            parents: [] as string[],
+            parents: [] as string[]
         };
 
         if (role.parentId) {

@@ -4,7 +4,7 @@ export enum DataType {
     Integer = 'integer',
     Boolean = 'boolean',
     Array = 'array',
-    Object = 'object',
+    Object = 'object'
 }
 
 export enum FormatType {

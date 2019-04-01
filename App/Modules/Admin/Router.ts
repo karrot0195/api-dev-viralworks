@@ -15,7 +15,6 @@ export class Router implements IRouter {
         readonly roleController: RoleController,
         readonly authController: AuthController,
         readonly userController: UserController,
-
         // Middleware
         readonly authenticationMiddleware: AuthenticationMiddleware
     ) {
@@ -31,13 +30,13 @@ export class Router implements IRouter {
                     { path: '/paths', method: HTTP.Get, handler: this.roleController.getPaths },
 
                     { path: '/entries/create', method: HTTP.Post, handler: this.roleController.createPermission },
-                    { path: '/entries/update/{id}', method: HTTP.Put, handler: this.roleController.updatePermission },                    
+                    { path: '/entries/update/{id}', method: HTTP.Put, handler: this.roleController.updatePermission },
                     { path: '/entries/{id}', method: HTTP.Get, handler: this.roleController.getPermissionById },
                     { path: '/entries', method: HTTP.Get, handler: this.roleController.getPermissions },
 
                     { path: '/roles/create', method: HTTP.Post, handler: this.roleController.createRole },
                     { path: '/roles/update/{id}', method: HTTP.Put, handler: this.roleController.updateRole },
-                    { path: '/roles/delete/{id}', method: HTTP.Delete, handler: this.roleController.deleteRoleById },                    
+                    { path: '/roles/delete/{id}', method: HTTP.Delete, handler: this.roleController.deleteRoleById },
                     { path: '/roles/{id}', method: HTTP.Get, handler: this.roleController.getRoleById },
                     { path: '/roles', method: HTTP.Get, handler: this.roleController.getRoles }
                 ]
