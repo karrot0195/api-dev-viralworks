@@ -18,6 +18,7 @@ import { log } from 'Helpers/Log'
 import { Mongo } from './Mongo';
 import { InitDatabase } from 'Database';
 import { MorganFormat } from './Enum/Morgan';
+import { CommonErrorMessage } from './Enum/Error';
 
 var debug = require('debug')('shopback-test:server');
 
@@ -103,7 +104,7 @@ export class Application {
 
         // Config Not Found
         this._app.use((req: Request, res: Response, next: NextFunction) => {
-            const err = new NotFound('Not Found');
+            const err = new NotFound();
             next(err);
         });
 
@@ -114,7 +115,7 @@ export class Application {
             } else if (err instanceof BaseError) {
                 res.status(err.status).json({code: err.status , error: err.message});
             } else {
-                res.status(500).json({error: "Internal Error"});
+                res.status(500).json({error: CommonErrorMessage.E500});
                 log(err);
             }
         });

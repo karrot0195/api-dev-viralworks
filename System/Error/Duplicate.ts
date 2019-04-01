@@ -1,7 +1,8 @@
 import { BaseError } from '../Error';
+import { CommonErrorMessage } from 'System/Enum/Error';
 
 export class Duplicate extends BaseError {
     constructor() {
-        super('Some keys are duplicated', 700);
+        super(CommonErrorMessage.E700, 700);
     }
 }

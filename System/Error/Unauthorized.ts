@@ -1,7 +1,8 @@
 import { BaseError } from '../Error';
+import { CommonErrorMessage } from 'System/Enum/Error';
 
 export class Unauthorized extends BaseError {
-    constructor(message: string) {
-        super(message, 401);
+    constructor() {
+        super(CommonErrorMessage.E401, 401);
     }
 }
