@@ -20,11 +20,11 @@ export class RoleController {
             tags: ['Entry Manager'],
             responses: {
                 200: 'Found Data',
-                403: 'Forbidden',
+                403: 'Forbidden'
             },
             security: true,
-            summary: 'Get all paths',
-        },
+            summary: 'Get all paths'
+        }
     };
 
     public readonly createPermission: IHandler = {
@@ -41,38 +41,40 @@ export class RoleController {
                         properties: {
                             path: {
                                 type: DataType.String,
-                                required: true,
+                                required: true
                             },
                             method: {
                                 type: DataType.String,
                                 required: true,
-                            },
-                        },
+                                pattern: RE.checkMethod.source
+                            }
+                        }
                     },
                     description: {
                         type: DataType.String,
                         required: true,
+                        pattern: RE.checkString.source
                     },
                     roles: {
                         type: DataType.Array,
                         items: {
                             type: DataType.String,
-                            pattern: RE.checkMongoId.source,
-                        },
-                    },
-                },
-            },
+                            pattern: RE.checkMongoId.source
+                        }
+                    }
+                }
+            }
         },
         document: {
             tags: ['Entry Manager'],
             responses: {
                 201: 'Entry was created successfully',
                 403: 'Forbidden',
-                400: 'Bad Request',
+                400: 'Bad Request'
             },
             security: true,
-            summary: 'Create a new entry',
-        },
+            summary: 'Create a new entry'
+        }
     };
 
     public readonly updatePermission: IHandler = {
@@ -84,35 +86,36 @@ export class RoleController {
                 id: {
                     type: DataType.String,
                     pattern: RE.checkMongoId.source,
-                    required: true,
-                },
+                    required: true
+                }
             },
             body: {
                 type: DataType.Object,
                 properties: {
                     description: {
                         type: DataType.String,
+                        pattern: RE.checkString.source
                     },
                     roles: {
                         type: DataType.Array,
                         items: {
                             type: DataType.String,
-                            pattern: RE.checkMongoId.source,
-                        },
-                    },
-                },
-            },
+                            pattern: RE.checkMongoId.source
+                        }
+                    }
+                }
+            }
         },
         document: {
             tags: ['Entry Manager'],
             responses: {
                 200: 'Entry was updated successfully',
                 403: 'Forbidden',
-                400: 'Bad Request',
+                400: 'Bad Request'
             },
             security: true,
-            summary: 'Update a entry by specified ID',
-        },
+            summary: 'Update a entry by specified ID'
+        }
     };
 
     public readonly getPermissions: IHandler = {
@@ -123,41 +126,45 @@ export class RoleController {
             query: {
                 sort: {
                     type: DataType.String,
-                    description: 'List of fields that wil be sorted. Example: roles|asc,route|desc',
+                    description: 'List of fields that wil be sorted. (example: roles|asc,route|desc )',
+                    pattern: RE.checkSortArrayString.source
                 },
                 page: {
                     type: DataType.Number,
                     description: 'Page number of result',
-                    default: 0,
+                    default: 0
                 },
                 limit: {
                     type: DataType.Number,
                     description: 'Limit per page',
-                    default: 0,
+                    default: 0
                 },
                 term: {
                     type: DataType.String,
                     description: 'Term that will be searched on all fields',
+                    pattern: RE.checkString.source
                 },
                 value: {
                     type: DataType.String,
-                    description: 'List of exact match value. Example: roles|user,route.path|/test',
+                    description: 'List of exact match value. (example: roles|user,route.path|/test )',
+                    pattern: RE.checkValueArrayString.source
                 },
                 fields: {
                     type: DataType.String,
-                    description: 'List of fields that will be returned. Example: roles,route.path',
-                },
-            },
+                    description: 'List of fields that will be returned. (example: roles,route.path )',
+                    pattern: RE.checkFields.source
+                }
+            }
         },
         document: {
             tags: ['Entry Manager'],
             responses: {
                 200: 'Found Data',
-                403: 'Forbidden',
+                403: 'Forbidden'
             },
             security: true,
-            summary: 'Get access control entries by conditions',
-        },
+            summary: 'Get access control entries by conditions'
+        }
     };
 
     public readonly getPermissionById: IHandler = {
@@ -168,26 +175,27 @@ export class RoleController {
             query: {
                 fields: {
                     type: DataType.String,
-                    description: 'List of fields that will be returned. Example: roles,route.path',
-                },
+                    description: 'List of fields that will be returned. (example: roles,route.path )',
+                    pattern: RE.checkFields.source
+                }
             },
             path: {
                 id: {
                     type: DataType.String,
                     required: true,
-                    pattern: RE.checkMongoId.source,
-                },
-            },
+                    pattern: RE.checkMongoId.source
+                }
+            }
         },
         document: {
             tags: ['Entry Manager'],
             responses: {
                 200: 'Found Data',
-                403: 'Forbidden',
+                403: 'Forbidden'
             },
             security: true,
-            summary: 'Get access control entries by id',
-        },
+            summary: 'Get access control entries by id'
+        }
     };
 
     public readonly searchPermissions: IHandler = {
@@ -198,11 +206,11 @@ export class RoleController {
             tags: ['Entry Manager'],
             responses: {
                 200: 'Found Data',
-                403: 'Forbidden',
+                403: 'Forbidden'
             },
             security: true,
-            summary: 'Search access control entries',
-        },
+            summary: 'Search access control entries'
+        }
     };
 
     public readonly getRoles: IHandler = {
@@ -213,41 +221,45 @@ export class RoleController {
             query: {
                 sort: {
                     type: DataType.String,
-                    description: 'List of fields that wil be sorted. Example: roles|asc,parentId|desc',
+                    description: 'List of fields that wil be sorted. (example: roles|asc,parentId|desc )',
+                    pattern: RE.checkSortArrayString.source
                 },
                 page: {
                     type: DataType.Number,
                     description: 'Page number of result',
-                    default: 0,
+                    default: 0
                 },
                 limit: {
                     type: DataType.Number,
                     description: 'Limit per page',
-                    default: 0,
+                    default: 0
                 },
                 term: {
                     type: DataType.String,
                     description: 'Term that will be searched on all fields',
+                    pattern: RE.checkString.source
                 },
                 value: {
                     type: DataType.String,
-                    description: 'List of exact match value. Example: name|user,description|test',
+                    description: 'List of exact match value. (example: name|user,description|test )',
+                    pattern: RE.checkValueArrayString.source
                 },
                 fields: {
                     type: DataType.String,
-                    description: 'List of fields that will be returned. Example: name,description',
-                },
-            },
+                    description: 'List of fields that will be returned. (example: name,description )',
+                    pattern: RE.checkFields.source
+                }
+            }
         },
         document: {
             tags: ['Role Manager'],
             responses: {
                 200: 'Found Data',
-                403: 'Forbidden',
+                403: 'Forbidden'
             },
             security: true,
-            summary: 'Get all roles',
-        },
+            summary: 'Get all roles'
+        }
     };
 
     public readonly getRoleById: IHandler = {
@@ -258,27 +270,28 @@ export class RoleController {
             query: {
                 fields: {
                     type: DataType.String,
-                    description: 'List of fields that will be returned. Example: name,description',
-                },
+                    description: 'List of fields that will be returned. (example: name,description )',
+                    pattern: RE.checkFields.source
+                }
             },
             path: {
                 id: {
                     type: DataType.String,
                     required: true,
-                    pattern: RE.checkMongoId.source,
-                },
-            },
+                    pattern: RE.checkMongoId.source
+                }
+            }
         },
         document: {
             tags: ['Role Manager'],
             responses: {
                 200: 'Found Data',
                 403: 'Forbidden',
-                404: 'This role is not exist',
+                404: 'This role is not exist'
             },
             security: true,
-            summary: 'Get a role by specified ID',
-        },
+            summary: 'Get a role by specified ID'
+        }
     };
 
     public readonly updateRole: IHandler = {
@@ -290,8 +303,8 @@ export class RoleController {
                 id: {
                     type: DataType.String,
                     pattern: RE.checkMongoId.source,
-                    required: true,
-                },
+                    required: true
+                }
             },
             body: {
                 type: DataType.Object,
@@ -299,27 +312,29 @@ export class RoleController {
                     name: {
                         type: DataType.String,
                         required: true,
+                        pattern: RE.checkString.source
                     },
                     description: {
                         type: DataType.String,
+                        pattern: RE.checkString.source
                     },
                     parentId: {
                         type: DataType.String,
-                        pattern: RE.checkMongoId.source,
-                    },
-                },
-            },
+                        pattern: RE.checkMongoId.source
+                    }
+                }
+            }
         },
         document: {
             tags: ['Role Manager'],
             responses: {
                 200: 'Role was updated successfully',
                 403: 'Forbidden',
-                400: 'Bad Request',
+                400: 'Bad Request'
             },
             security: true,
-            summary: 'Update a role by specified ID',
-        },
+            summary: 'Update a role by specified ID'
+        }
     };
 
     public readonly createRole: IHandler = {
@@ -333,27 +348,29 @@ export class RoleController {
                     name: {
                         type: DataType.String,
                         required: true,
+                        pattern: RE.checkString.source
                     },
                     description: {
                         type: DataType.String,
+                        pattern: RE.checkString.source
                     },
                     parentId: {
                         type: DataType.String,
-                        pattern: RE.checkMongoId.source,
-                    },
-                },
-            },
+                        pattern: RE.checkMongoId.source
+                    }
+                }
+            }
         },
         document: {
             tags: ['Role Manager'],
             responses: {
                 201: 'Role was created successfully',
                 403: 'Forbidden',
-                400: 'Bad Request',
+                400: 'Bad Request'
             },
             security: true,
-            summary: 'Create a new role',
-        },
+            summary: 'Create a new role'
+        }
     };
 
     public readonly setEntries: IHandler = {
@@ -363,28 +380,28 @@ export class RoleController {
                 id: {
                     type: DataType.String,
                     required: true,
-                    pattern: RE.checkMongoId.source,
-                },
+                    pattern: RE.checkMongoId.source
+                }
             },
             body: {
                 type: DataType.Array,
                 uniqueItems: true,
                 items: {
                     type: DataType.String,
-                    pattern: RE.checkMongoId.source,
-                },
-            },
+                    pattern: RE.checkMongoId.source
+                }
+            }
         },
         document: {
             tags: ['Entry Manager'],
             responses: {
                 200: 'Role was updated successfully',
                 403: 'Forbidden',
-                400: 'Bad Request',
+                400: 'Bad Request'
             },
             security: true,
-            summary: 'Set permission for a role by specified ID',
-        },
+            summary: 'Set permission for a role by specified ID'
+        }
     };
 
     public readonly deleteRoleById: IHandler = {
@@ -396,9 +413,9 @@ export class RoleController {
                 id: {
                     type: DataType.String,
                     pattern: RE.checkMongoId.source,
-                    required: true,
-                },
-            },
+                    required: true
+                }
+            }
         },
         document: {
             tags: ['Role Manager'],
@@ -407,9 +424,9 @@ export class RoleController {
             responses: {
                 200: 'Role was deleted successfully',
                 403: 'Forbidden',
-                400: 'Bad Request',
-            },
-        },
+                400: 'Bad Request'
+            }
+        }
     };
 
     private async setPermissionHandler(req: Request, res: Response) {

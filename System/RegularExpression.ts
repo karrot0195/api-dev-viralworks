@@ -2,3 +2,8 @@ export const checkRoutePath = /^((\/[a-z0-9-]+)|(\/{[a-zA-Z_]+}))+$/;
 export const checkModuleName = /^[a-z]+$/;
 export const getParamsInRoutePath = /{([a-zA-Z]+)}/g;
 export const checkMongoId = /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i;
+export const checkSortArrayString = /^([a-z0-9-_]+\|(asc|desc),)*([a-z0-9-_]+\|(asc|desc))$/i;
+export const checkValueArrayString = /^([a-z0-9-_]+\|[^{};$,]+,)*([a-z0-9-_]+\|[^{};$,]+)$/i;
+export const checkString = /^[^{};$]+$/i;
+export const checkFields = /^([a-z0-9-_]+,)*([a-z0-9-_]+)$/i;
+export const checkMethod = /^(get|post|put|delete)$/i;
