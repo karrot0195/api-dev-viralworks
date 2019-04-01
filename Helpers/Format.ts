@@ -75,10 +75,10 @@ export function processField(fields: string) {
     return result;
 }
 
-// Convert id from params to query 
-export function processId(id: string, query: any){
-    let result = {}
+// Convert id from params to query
+export function processId(id: string, query: any) {
+    let result = {};
     if (typeof query !== 'object') query = {};
-    if (id) query.value = `_id|${id}`
-    return query
+    if (id) query.value = `_id|${id}`;
+    return query;
 }
