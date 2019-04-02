@@ -131,7 +131,7 @@ export class Application {
             } else if (err instanceof BaseError) {
                 res.status(err.status).json({ code: err.status, error: err.message });
             } else if (err instanceof SyntaxError) {
-                res.status(701).json({ code: 701, error: err.message });
+                res.status(400).json({ code: 400, error: err.message });
             } else {
                 res.status(500).json({ code: 500, error: CommonErrorMessage.E500 });
                 console.log(err);

@@ -4,7 +4,8 @@ import { singular } from 'pluralize';
 import { Injectable } from './Injectable';
 import { Config } from './Config';
 import { ModelDict } from 'Database';
-import { Duplicate } from './Error/Duplicate';
+import { BadRequest } from './Error/BadRequest';
+import { CommonErrorMessage } from './Enum/Error';
 
 require('./Helpers/Log');
 
@@ -98,7 +99,7 @@ export class Mongo {
 
 function handleError(error, doc, next) {
     if (error.name === 'MongoError' && error.code === 11000) {
-        next(new Duplicate());
+        next(new BadRequest(CommonErrorMessage.E700));
     } else {
         next();
     }
