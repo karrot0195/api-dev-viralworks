@@ -56,8 +56,8 @@ export class RoleBasedAccessControlService {
         return this._roleModel.find(conditions);
     }
 
-    async findRolesGET(conditions?: any) {
-        return this._roleModel.findGET(conditions, RoleSearchField);
+    async findRolesWithFilter(conditions?: any) {
+        return this._roleModel.findWithFilter(conditions, RoleSearchField);
     }
 
     async updateRoleById(roleId: string, roleData: IRole) {
@@ -188,8 +188,8 @@ export class RoleBasedAccessControlService {
         return this._permissionModel.find(conditions);
     }
 
-    async findPermissionGET(query?: any) {
-        return this._permissionModel.findGET(query, PermissionSearchField);
+    async findPermissionWithFilter(query?: any) {
+        return this._permissionModel.findWithFilter(query, PermissionSearchField);
     }
 
     async setRolesForPermissionById(permissionId: string, roles: string[]) {

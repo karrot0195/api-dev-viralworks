@@ -124,7 +124,7 @@ export class RoleController {
 
     public readonly getPermissions: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this.service.findPermissionGET(req.query));
+            return res.json(await this.service.findPermissionWithFilter(req.query));
         },
         validation: {
             query: {
@@ -219,7 +219,7 @@ export class RoleController {
 
     public readonly getRoles: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this.service.findRolesGET(req.query));
+            return res.json(await this.service.findRolesWithFilter(req.query));
         },
         validation: {
             query: {

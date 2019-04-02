@@ -2,6 +2,7 @@ import { Model, Document, ClientSession, ModelUpdateOptions } from 'mongoose';
 
 import { Mongo } from './Mongo';
 import { processQuery, processField } from 'Helpers/Format';
+import {Request} from 'express';
 
 export abstract class BaseModel<I, T extends Document> {
     protected readonly _model: Model<T>;
@@ -17,7 +18,7 @@ export abstract class BaseModel<I, T extends Document> {
         return this._model.find(conditions);
     }
 
-    async findGET(query: any, modelSearchField: Array<string>) {
+    async findWithFilter(query: any, modelSearchField: Array<string>) {
         let result: any;
 
         let queryData = processQuery(query, modelSearchField);
