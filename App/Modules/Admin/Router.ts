@@ -23,8 +23,6 @@ export class Router implements IRouter {
     ) {
         this.routes = [
             { path: '/auth', method: HTTP.Post, handler: this.authController.postLogin },
-            { path: '/users/create', method: HTTP.Post, handler: this.userController.createUser },
-            { path: '/users/{id}', method: HTTP.Get, handler: this.userController.getUserById },
             {
                 middleware: [{ class: this.authenticationMiddleware }],
                 group: [
@@ -39,7 +37,6 @@ export class Router implements IRouter {
 
                     { path: '/roles/create', method: HTTP.Post, handler: this.roleController.createRole },
                     { path: '/roles/update/{id}', method: HTTP.Put, handler: this.roleController.updateRole },
-                    { path: '/roles/delete/{id}', method: HTTP.Delete, handler: this.roleController.deleteRoleById },
                     { path: '/roles/{id}', method: HTTP.Get, handler: this.roleController.getRoleById },
                     { path: '/roles', method: HTTP.Get, handler: this.roleController.getRoles }
                 ]
