@@ -5,7 +5,8 @@ import { Injectable } from './Injectable';
 import { Config } from './Config';
 import { ModelDict } from 'Database';
 import { Duplicate } from './Error/Duplicate';
-import { log } from './Helpers/Log';
+
+require('./Helpers/Log');
 
 @Injectable
 export class Mongo {
@@ -23,7 +24,7 @@ export class Mongo {
 
         if (mongoConfig.debug) {
             Mongoose.set('debug', function(coll, method, query) {
-                log(`Mongoose: ${coll}.${method} ${JSON.stringify(query)}`);
+                console.log(`DEBUG: Mongoose: ${coll}.${method} ${JSON.stringify(query)}`);
             });
         }
 

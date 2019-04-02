@@ -13,7 +13,7 @@ import { Swagger } from './Swagger';
 import { Security } from './Security';
 import { Config } from './Config';
 import { BaseError, NotFound, MethodNotAllowed } from './Error';
-import { log } from './Helpers/Log';
+// import { log } from './Helpers/Log';
 
 import { Mongo } from './Mongo';
 import { InitDatabase } from 'Database';
@@ -21,6 +21,7 @@ import { MorganFormat } from './Enum/Morgan';
 import { CommonErrorMessage } from './Enum/Error';
 
 var debug = require('debug')('shopback-test:server');
+require('./Helpers/Log');
 
 @Injectable
 export class Application {
@@ -51,32 +52,32 @@ export class Application {
     }
 
     public async start() {
-        log('------------------INITIALIZE-------------------');
+        console.log('------------------INITIALIZE-------------------');
         await this._configExpress();
         this._startServer();
 
-        log('-----------------------------------------------');
-        log(
+        console.log('-----------------------------------------------');
+        console.log(
             `Server has been running on: ${this._scheme}://${this._publicHost}:${this._publicPort}/${
                 this._config.version
             }`
         );
 
         if (this._config.document.enable) {
-            log(
+            console.log(
                 `Document has been running on: ${this._scheme}://${this._publicHost}:${this._publicPort}/${
                     this._config.version
                 }/${this._docPath}`
             );
         }
 
-        log('');
-        log('--------------------PROCESS--------------------');
-        log('Waiting for log...');
+        console.log('');
+        console.log('--------------------PROCESS--------------------');
+        console.log('Waiting for log...');
     }
 
     private async _configExpress() {
-        log('Configuring ExpressJS...');
+        console.log('Configuring ExpressJS...');
         // Config Logger
         const morganFormat = this._config.env == 'dev' ? MorganFormat.dev : MorganFormat.full;
         this._app.use(
@@ -133,18 +134,18 @@ export class Application {
                 res.status(701).json({ code: 701, error: err.message });
             } else {
                 res.status(500).json({ code: 500, error: CommonErrorMessage.E500 });
-                log(err);
+                console.log(err);
             }
         });
-        log('Configuring ExpressJS - DONE');
+        console.log('Configuring ExpressJS - DONE');
     }
 
     private _startServer() {
-        log('Starting Server...');
+        console.log('Starting Server...');
         this._server.listen(this._port, this._host);
         this._server.on('listening', this._serverListening.bind(this));
         this._server.on('error', this._serverListenError.bind(this));
-        log('Starting Server - DONE');
+        console.log('Starting Server - DONE');
     }
 
     private _serverListenError(error: any) {

@@ -1,7 +1,6 @@
 import { HTTP } from 'System/Enum/HTTP';
 import { Injectable } from 'System/Injectable';
 import { ICommand, IRole } from 'System/Interface';
-import { RoleBasedAccessControlService as RBACService } from 'System/RBAC/Service';
 import { Mongo } from 'System/Mongo';
 import { RoleModel } from 'System/RBAC/Models/RoleModel';
 import { PermissionModel } from 'System/RBAC/Models/PermissionModel';
