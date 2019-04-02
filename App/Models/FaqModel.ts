@@ -4,7 +4,6 @@ import { BaseModel } from 'System/BaseModel';
 import { Faq } from 'Database/Schema/FaqSchema';
 
 enum StatusFaq {
-    Trash = -1,
     Pending = 0,
     Publish = 1
 }
@@ -14,7 +13,6 @@ export enum TypeFaq {
     Brand = 1,
     KOLUser = 2
 }
-
 
 export interface IFaq {
     readonly question: string;

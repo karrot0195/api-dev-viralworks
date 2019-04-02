@@ -17,7 +17,6 @@ export class Router implements IRouter {
         readonly authController: AuthController,
         readonly userController: UserController,
         readonly faqController: FaqController,
-
         // Middleware
         readonly authenticationMiddleware: AuthenticationMiddleware
     ) {
@@ -46,7 +45,8 @@ export class Router implements IRouter {
                 group: [
                     { path: '/faqs', method: HTTP.Get, handler: this.faqController.getFaqs },
                     { path: '/faqs', method: HTTP.Post, handler: this.faqController.createFaq },
-                    { path: '/faqs/{id}', method: HTTP.Put, handler: this.faqController.updateFaq }
+                    { path: '/faqs/{id}', method: HTTP.Put, handler: this.faqController.updateFaq },
+                    { path: '/faqs/{id}', method: HTTP.Delete, handler: this.faqController.removeFaq }
                 ]
             }
         ];
