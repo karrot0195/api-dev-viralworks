@@ -160,22 +160,23 @@ export class KolAuthService {
     }
 
     async updateKolInfoStatus(kolUser: any, causer_id: string, status: number) {
-        this.addHistoryAction(kolUser, causer_id, _.get(kolUser, 'kol_info.status'));
-        this.setKolInfoStatus(kolUser, status);
-        const result = await kolUser.save();
-        if (!result) {
-            throw new SystemError('Not save data');
-        }
-        return kolUser;
+        return this._mongo.transaction(async (session) => {
+            this.addHistoryAction(kolUser, causer_id, _.get(kolUser, 'kol_info.status'));
+            this.setKolInfoStatus(kolUser, status);
+            const result = await kolUser.save({ session });
+            if (!result) {
+                throw new SystemError('Not save data');
+            }
+            return kolUser.kol_info;
+        });
     }
 
     addHistoryAction(kolUser: any, causer_id: string, status: number) {
-        const obj = {
+        _.get(kolUser, 'kol_info.history_action', []).push({
             causer_id: causer_id,
             type: HistoryActionType.Status,
             kol_status: status
-        }
-        _.get(kolUser, 'kol_info.history_action', []).push(obj);
+        });
     }
 
     setKolInfoStatus(kolUser: any, status: number) {
