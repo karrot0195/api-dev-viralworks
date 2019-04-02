@@ -13,7 +13,7 @@ import { Swagger } from './Swagger';
 import { Security } from './Security';
 import { Config } from './Config';
 import { BaseError, NotFound, MethodNotAllowed } from './Error';
-import { log } from 'Helpers/Log';
+import { log } from './Helpers/Log';
 
 import { Mongo } from './Mongo';
 import { InitDatabase } from 'Database';

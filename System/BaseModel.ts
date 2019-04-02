@@ -1,8 +1,7 @@
 import { Model, Document, ClientSession, ModelUpdateOptions } from 'mongoose';
 
 import { Mongo } from './Mongo';
-import { processQuery, processField } from 'Helpers/Format';
-import {Request} from 'express';
+import { processQuery, processField } from './Helpers/Format';
 
 export abstract class BaseModel<I, T extends Document> {
     protected readonly _model: Model<T>;

@@ -5,7 +5,7 @@ import { Injectable } from './Injectable';
 import { Config } from './Config';
 import { ModelDict } from 'Database';
 import { Duplicate } from './Error/Duplicate';
-import { log } from 'Helpers/Log';
+import { log } from './Helpers/Log';
 
 @Injectable
 export class Mongo {

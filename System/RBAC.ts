@@ -10,7 +10,7 @@ import { IRoutePath } from './Interface/RBAC';
 import { Role } from './RBAC/Schema/RoleSchema';
 import { Permission } from './RBAC/Schema/PermissionSchema';
 import { RoleBasedAccessControlService as Service } from './RBAC/Service';
-import { log } from 'Helpers/Log';
+import { log } from './Helpers/Log';
 
 @Injectable
 export class RoleBasedAccessControl {
