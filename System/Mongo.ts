@@ -21,10 +21,11 @@ export class Mongo {
         Mongoose.connect(this._connectionString, { useNewUrlParser: true, replicaSet: 'rs0' });
         Mongoose.set('useCreateIndex', true);
 
-        if (mongoConfig.debug)
+        if (mongoConfig.debug) {
             Mongoose.set('debug', function(coll, method, query) {
                 log(`Mongoose: ${coll}.${method} ${JSON.stringify(query)}`);
             });
+        }
 
         this._mongodb = Mongoose.connection;
         // this.mongodb.useDb('main_vw_v3');
