@@ -3,7 +3,14 @@ import * as _ from 'lodash';
 import { Injectable } from 'System/Injectable';
 import { Mongo } from 'System/Mongo';
 import { Config } from 'System/Config';
-import { IKolUser, KolUserModel, IKolBasicInfo, IKolFacebookInfo, IKolEvalute, HistoryActionType } from 'App/Models/KolUserModel';
+import {
+    IKolUser,
+    KolUserModel,
+    IKolBasicInfo,
+    IKolFacebookInfo,
+    IKolEvalute,
+    HistoryActionType,
+} from 'App/Models/KolUserModel';
 import * as mongoose from 'mongoose';
 import { InternalError, SystemError } from 'System/Error';
 
@@ -160,9 +167,10 @@ export class KolAuthService {
     }
 
     async updateKolInfoStatus(kolUser: any, causer_id: string, status: number) {
-        return this._mongo.transaction(async (session) => {
-            this.addHistoryAction(kolUser, causer_id, _.get(kolUser, 'kol_info.status'));
+        return this._mongo.transaction(async session => {
             this.setKolInfoStatus(kolUser, status);
+            this.addHistoryAction(kolUser, causer_id, status);
+
             const result = await kolUser.save({ session });
             if (!result) {
                 throw new SystemError('Not save data');
@@ -175,7 +183,7 @@ export class KolAuthService {
         _.get(kolUser, 'kol_info.history_action', []).push({
             causer_id: causer_id,
             type: HistoryActionType.Status,
-            kol_status: status
+            kol_status: status,
         });
     }
 
