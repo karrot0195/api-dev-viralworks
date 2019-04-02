@@ -1,5 +1,3 @@
-import * as Security from 'App/Helpers/Security';
-
 import { Injectable } from 'System/Injectable';
 import { Mongo } from 'System/Mongo';
 import { Config } from 'System/Config';

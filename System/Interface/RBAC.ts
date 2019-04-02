@@ -4,7 +4,7 @@ export interface IPermission {
     readonly route: {
         readonly path: string;
         readonly method: HTTP;
-    }
+    };
     readonly description?: string;
     readonly roles?: string[];
 }

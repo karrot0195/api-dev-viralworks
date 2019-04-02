@@ -13,11 +13,15 @@ import { Swagger } from './Swagger';
 import { Security } from './Security';
 import { Config } from './Config';
 import { BaseError, NotFound, MethodNotAllowed } from './Error';
+// import { log } from './Helpers/Log';
 
 import { Mongo } from './Mongo';
 import { InitDatabase } from 'Database';
+import { MorganFormat } from './Enum/Morgan';
+import { CommonErrorMessage } from './Enum/Error';
 
 var debug = require('debug')('shopback-test:server');
+require('./Helpers/Log');
 
 @Injectable
 export class Application {
@@ -37,7 +41,7 @@ export class Application {
         private readonly _router: Router,
         private readonly _rbac: RBAC,
         private readonly _swagger: Swagger,
-        private readonly _security: Security,
+        private readonly _security: Security
     ) {
         this._publicHost = this._config.server.public.host;
         this._publicPort = this._config.server.public.port;
@@ -53,22 +57,36 @@ export class Application {
         this._startServer();
 
         console.log('-----------------------------------------------');
-        console.log(`Server has been running on: ${this._scheme}://${this._publicHost}:${this._publicPort}/${this._config.version}`);
+        console.log(
+            `Server has been running on: ${this._scheme}://${this._publicHost}:${this._publicPort}/${
+                this._config.version
+            }`
+        );
 
         if (this._config.document.enable) {
-            console.log(`Document has been running on: ${this._scheme}://${this._publicHost}:${this._publicPort}/${this._config.version}/${this._docPath}`);
+            console.log(
+                `Document has been running on: ${this._scheme}://${this._publicHost}:${this._publicPort}/${
+                    this._config.version
+                }/${this._docPath}`
+            );
         }
+
+        console.log('');
+        console.log('--------------------PROCESS--------------------');
+        console.log('Waiting for log...');
     }
 
     private async _configExpress() {
         console.log('Configuring ExpressJS...');
         // Config Logger
-        const morganFormat = (this._config.env == 'dev') ? 'dev' : 'combined'
-        this._app.use(morgan(morganFormat, {
-            skip: function (req, res) {
-                return res.statusCode < 300;
-            }
-        }));
+        const morganFormat = this._config.env == 'dev' ? MorganFormat.dev : MorganFormat.full;
+        this._app.use(
+            morgan(morganFormat, {
+                skip: function(req, res) {
+                    return res.statusCode < 300;
+                }
+            })
+        );
         this._app.use(bodyParser.json());
         this._app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -93,12 +111,16 @@ export class Application {
 
         // Swagger Document URL
         if (this._config.document.enable) {
-            this._app.use(`/${this._config.version}/${this._docPath}`, swaggerUi.serve, swaggerUi.setup(null, this._swagger.opts));
+            this._app.use(
+                `/${this._config.version}/${this._docPath}`,
+                swaggerUi.serve,
+                swaggerUi.setup(null, this._swagger.opts)
+            );
         }
 
         // Config Not Found
         this._app.use((req: Request, res: Response, next: NextFunction) => {
-            const err = new NotFound('Not Found');
+            const err = new NotFound();
             next(err);
         });
 
@@ -107,13 +129,15 @@ export class Application {
             if (err instanceof MethodNotAllowed) {
                 res.status(err.status).send();
             } else if (err instanceof BaseError) {
-                res.status(err.status).json({code: err.status , error: err.message});
+                res.status(err.status).json({ code: err.status, error: err.message });
+            } else if (err instanceof SyntaxError) {
+                res.status(400).json({ code: 400, error: err.message });
             } else {
-                res.status(500).json({error: 'Internal Error'});
+                res.status(500).json({ code: 500, error: CommonErrorMessage.E500 });
                 console.log(err);
             }
         });
-        console.log('- DONE');
+        console.log('Configuring ExpressJS - DONE');
     }
 
     private _startServer() {
@@ -121,7 +145,7 @@ export class Application {
         this._server.listen(this._port, this._host);
         this._server.on('listening', this._serverListening.bind(this));
         this._server.on('error', this._serverListenError.bind(this));
-        console.log('- DONE');
+        console.log('Starting Server - DONE');
     }
 
     private _serverListenError(error: any) {
@@ -129,9 +153,7 @@ export class Application {
             throw error;
         }
 
-        const bind = typeof this._port === 'string'
-            ? 'Pipe ' + this._port
-            : 'Port ' + this._port;
+        const bind = typeof this._port === 'string' ? 'Pipe ' + this._port : 'Port ' + this._port;
 
         // Handle specific listen errors with friendly messages
         switch (error.code) {
@@ -150,9 +172,7 @@ export class Application {
 
     private _serverListening() {
         var addr = this._server.address();
-        var bind = typeof addr === 'string'
-            ? 'pipe ' + addr
-            : 'port ' + addr.port;
+        var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
         debug('Listening on ' + bind);
     }
 }

@@ -15,7 +15,7 @@ export class AuthController {
             const result = await this._authServ.login(req.body.email, req.body.password, req.body.remember);
 
             if (result === false) {
-                throw new Unauthorized('Login Failed');
+                throw new Unauthorized();
             } else {
                 return res.status(201).json(result);
             }
@@ -27,26 +27,26 @@ export class AuthController {
                     email: {
                         type: DataType.String,
                         format: FormatType.Email,
-                        required: true,
+                        required: true
                     },
                     password: {
                         type: DataType.String,
-                        required: true,
+                        required: true
                     },
                     remember: {
-                        type: DataType.Integer,
-                    },
-                },
-            },
+                        type: DataType.Integer
+                    }
+                }
+            }
         },
         document: {
             tags: ['Authentication'],
             summary: 'Create an authentication token',
             responses: {
                 201: 'Created Token',
-                401: 'Login Failed',
-            },
-        },
+                401: 'Login Failed'
+            }
+        }
     };
 
     getCheckToken: IHandler = {
@@ -58,9 +58,9 @@ export class AuthController {
             summary: 'Check if token is still valid',
             responses: {
                 200: 'Token is valid',
-                401: 'Token is invalid',
+                401: 'Token is invalid'
             },
-            security: true,
-        },
+            security: true
+        }
     };
 }

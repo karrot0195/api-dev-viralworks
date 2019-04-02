@@ -4,6 +4,10 @@ import { singular } from 'pluralize';
 import { Injectable } from './Injectable';
 import { Config } from './Config';
 import { ModelDict } from 'Database';
+import { BadRequest } from './Error/BadRequest';
+import { CommonErrorMessage } from './Enum/Error';
+
+require('./Helpers/Log');
 
 @Injectable
 export class Mongo {
@@ -12,28 +16,35 @@ export class Mongo {
     private _connectionString: string;
     constructor(private readonly _config: Config) {
         const mongoConfig = this._config.mongodb;
-        this._connectionString = `mongodb://${mongoConfig.username}:${encodeURIComponent(mongoConfig.password)}@${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.database}`;
+        this._connectionString = `mongodb://${mongoConfig.username}:${encodeURIComponent(mongoConfig.password)}@${
+            mongoConfig.host
+        }:${mongoConfig.port}/${mongoConfig.database}`;
 
         Mongoose.connect(this._connectionString, { useNewUrlParser: true, replicaSet: 'rs0' });
         Mongoose.set('useCreateIndex', true);
 
         if (mongoConfig.debug) {
-            Mongoose.set('debug', true);
+            Mongoose.set('debug', function(coll, method, query) {
+                console.log(`DEBUG: Mongoose: ${coll}.${method} ${JSON.stringify(query)}`);
+            });
         }
 
         this._mongodb = Mongoose.connection;
         // this.mongodb.useDb('main_vw_v3');
-        this._mongodb.on('error', (error) => {
+        this._mongodb.on('error', error => {
             console.error.bind(console, 'MogoDB connection error')(error);
             process.exit();
         });
 
-        this._mongodb.on('open', async (ref) => {
+        this._mongodb.on('open', async ref => {
             const collections = await this._mongodb.db.listCollections().toArray();
 
             for (const collection of collections) {
                 if (!this.models[collection.name] && !this.models[singular(collection.name)]) {
-                    (this.models[collection.name] as any) = Mongoose.model(collection.name, new Mongoose.Schema({}, { strict: false }));
+                    (this.models[collection.name] as any) = Mongoose.model(
+                        collection.name,
+                        new Mongoose.Schema({}, { strict: false })
+                    );
                 }
             }
         });
@@ -55,8 +66,10 @@ export class Mongo {
         }
     }
 
-    define(modelName: string, schemaObject: { schema: {}; index?: {}; class?: Function; }) {
-        const schema = new Mongoose.Schema(schemaObject.schema, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
+    define(modelName: string, schemaObject: { schema: {}; index?: {}; class?: Function }) {
+        const schema = new Mongoose.Schema(schemaObject.schema, {
+            timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
+        });
 
         if (schemaObject.index) {
             schema.index(schemaObject.index);
@@ -65,6 +78,12 @@ export class Mongo {
         if (schemaObject.class) {
             schema.loadClass(schemaObject.class);
         }
+
+        // middleware that handle error
+        schema.post('save', handleError);
+        schema.post('update', handleError);
+        schema.post('findOneAndUpdate', handleError);
+        schema.post('insertMany', handleError);
 
         const model = Mongoose.model(modelName, schema);
 
@@ -75,5 +94,13 @@ export class Mongo {
         }
 
         return model;
+    }
+}
+
+function handleError(error, doc, next) {
+    if (error.name === 'MongoError' && error.code === 11000) {
+        next(new BadRequest(CommonErrorMessage.E700));
+    } else {
+        next();
     }
 }

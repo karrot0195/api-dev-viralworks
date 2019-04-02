@@ -10,7 +10,7 @@ export class TestController {
 
     public readonly getTest: IHandler = {
         method: (req: Request, res: Response) => {
-            return res.json({ roles: this.rbac.routePathsWithModule });
+            return res.json('Under construction');
         },
         document: {
             tags: ['Test'],
