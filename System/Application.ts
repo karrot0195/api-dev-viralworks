@@ -129,8 +129,10 @@ export class Application {
                 res.status(err.status).send();
             } else if (err instanceof BaseError) {
                 res.status(err.status).json({ code: err.status, error: err.message });
+            } else if (err instanceof SyntaxError) {
+                res.status(701).json({ code: 701, error: err.message });
             } else {
-                res.status(500).json({ error: CommonErrorMessage.E500 });
+                res.status(500).json({ code: 500, error: CommonErrorMessage.E500 });
                 log(err);
             }
         });
