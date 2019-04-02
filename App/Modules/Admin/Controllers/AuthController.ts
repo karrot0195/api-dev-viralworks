@@ -51,7 +51,7 @@ export class AuthController {
 
     getCheckToken: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.status(200).json({ message: 'Token is valid' });
+            return res.status(200).json(await this._authServ.getUserInfo(req.get('Authorization')));
         },
         document: {
             tags: ['Authentication'],
