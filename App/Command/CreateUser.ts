@@ -12,8 +12,7 @@ export class CreateUser implements ICommand {
             name: 'Admin',
             email: 'admin@vw.com',
             password: 'abc@123',
-            role: 'admin',
-            code: '007'
+            role: 'admin'
         });
 
         // const user = await this.service.findById('5c91241273086216cc06c70e');
