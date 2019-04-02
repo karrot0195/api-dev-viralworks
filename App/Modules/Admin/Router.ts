@@ -44,7 +44,7 @@ export class Router implements IRouter {
                     { path: '/roles/{id}', method: HTTP.Get, handler: this.roleController.getRoleById },
                     { path: '/roles/{id}', method: HTTP.Put, handler: this.roleController.updateRole },
                     { path: '/roles/{id}', method: HTTP.Delete, handler: this.roleController.deleteRoleById },
-                    { path: '/roles/{id}/permission', method: HTTP.Put, handler: this.roleController.setPermission },
+                    { path: '/roles/{id}/permission', method: HTTP.Put, handler: this.roleController.setEntries },
                     { path: '/roles', method: HTTP.Post, handler: this.roleController.createRole },
                     { path: '/roles', method: HTTP.Get, handler: this.roleController.getRoles },
                 ],

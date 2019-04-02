@@ -8,8 +8,6 @@ import * as RE from 'System/RegularExpression';
 
 import { KolAuthService } from '../Services/KolAuthService';
 import { Conflict, InternalError } from 'System/Error';
-import { async } from 'rxjs/internal/scheduler/async';
-import { json } from 'body-parser';
 import { KolInfoStatus } from 'App/Models/KolUserModel';
 
 @Injectable
@@ -34,84 +32,99 @@ export class KolAuthController {
                 properties: {
                     email: {
                         type: DataType.String,
-                        required: true,
-                    },
-                },
-            },
+                        required: true
+                    }
+                }
+            }
         },
         document: {
             tags: ['kol authenticate'],
             summary: 'create new kol user',
             security: true,
             responses: {
-                200: 'Kol user was created successfully',
-            },
-        },
+                200: 'Kol user was created successfully'
+            }
+        }
     };
 
     getKolUsers: IHandler = {
         method: async (req: Request, res: Response, next: NextFunction) => {
-            const embedded = _.get(req.query, 'fields', '')
-                .trim()
-                .split(',');
-            return res.json(await this._kolAuthService.findAll(req.query).select(embedded));
+            return res.json(await this._kolAuthService.findCondition(req.query));
         },
         document: {
             tags: ['kol authenticate'],
             summary: 'get list kol register by condition',
             security: true,
             responses: {
-                200: 'Found data',
-            },
+                200: 'Found data'
+            }
         },
         validation: {
             query: {
-                page: {
+                sort: {
                     type: DataType.String,
-                    description: 'page of faq list',
+                    description: 'List of fields that wil be sorted. (example: field1|asc,field2|desc )',
+                    pattern: RE.checkSortArrayString.source
+                },
+                page: {
+                    type: DataType.Number,
+                    description: 'Page number of result',
+                    default: 0
                 },
                 limit: {
+                    type: DataType.Number,
+                    description: 'Limit per page',
+                    default: 0
+                },
+                term: {
                     type: DataType.String,
-                    description: 'number of returned faqs',
+                    description: 'Term that will be searched on all fields',
+                    pattern: RE.checkString.source
+                },
+                value: {
+                    type: DataType.String,
+                    description: 'List of exact match value. (example: field1|value1,field|value2 )',
+                    pattern: RE.checkValueArrayString.source
                 },
                 fields: {
                     type: DataType.String,
-                    description: 'fields result',
-                },
-            },
-        },
+                    description: 'List of fields that will be returned. (example: field1,field2 )',
+                    pattern: RE.checkFields.source
+                }
+            }
+        }
     };
 
     getKolUser: IHandler = {
         method: async (req: Request, res: Response, next: NextFunction) => {
-            const embedded = _.get(req.query, 'fields', '')
+            const fields = _.get(req.query, 'fields', '')
                 .trim()
                 .split(',');
-            return res.json(await this._kolAuthService.findById(req.params.id).select(embedded));
+            return res.json(await this._kolAuthService.findById(req.params.id).select(fields));
         },
         document: {
             tags: ['kol authenticate'],
             summary: 'get info of kol user',
             security: true,
             responses: {
-                200: 'Get a kol user by specified ID',
-            },
+                200: 'Get a kol user by specified ID'
+            }
         },
         validation: {
             path: {
                 id: {
                     type: DataType.String,
                     required: true,
-                    pattern: RE.checkMongoId.source,
-                },
+                    pattern: RE.checkMongoId.source
+                }
             },
             query: {
                 fields: {
                     type: DataType.String,
-                    description: 'fields result',
-                },
-            },
-        },
+                    description: 'fields result'
+                }
+            }
+        }
     };
 
     updateKolInfoBase: IHandler = {
@@ -131,90 +144,90 @@ export class KolAuthController {
             summary: 'update base info',
             security: true,
             responses: {
-                200: 'Kol user was updated successfully',
-            },
+                200: 'Kol user was updated successfully'
+            }
         },
         validation: {
             path: {
                 id: {
                     type: DataType.String,
                     required: true,
-                    pattern: RE.checkMongoId.source,
-                },
+                    pattern: RE.checkMongoId.source
+                }
             },
             body: {
                 type: DataType.Object,
                 properties: {
                     mobile: {
-                        type: DataType.String,
+                        type: DataType.String
                     },
                     sex: {
                         type: DataType.Number,
-                        enum: [-1, 0, 1],
+                        enum: [-1, 0, 1]
                     },
                     dob: {
-                        type: DataType.Number,
+                        type: DataType.Number
                     },
                     matrimony: {
                         type: DataType.Number,
-                        enum: [-1, 0, 1],
+                        enum: [-1, 0, 1]
                     },
                     num_child: {
                         type: DataType.Number,
-                        minimum: 0,
+                        minimum: 0
                     },
                     job: {
                         type: DataType.Array,
                         uniqueItems: true,
                         items: {
                             type: DataType.Number,
-                            pattern: RE.checkMongoId.source,
-                        },
+                            pattern: RE.checkMongoId.source
+                        }
                     },
                     job_other: {
                         type: DataType.Array,
                         uniqueItems: true,
                         items: {
                             type: DataType.Number,
-                            pattern: RE.checkMongoId.source,
-                        },
+                            pattern: RE.checkMongoId.source
+                        }
                     },
                     share_story: {
                         type: DataType.Array,
                         uniqueItems: true,
                         items: {
                             type: DataType.Number,
-                            pattern: RE.checkMongoId.source,
-                        },
+                            pattern: RE.checkMongoId.source
+                        }
                     },
                     share_story_other: {
                         type: DataType.Array,
                         uniqueItems: true,
                         items: {
                             type: DataType.Number,
-                            pattern: RE.checkMongoId.source,
-                        },
+                            pattern: RE.checkMongoId.source
+                        }
                     },
                     price: {
                         type: DataType.Object,
                         properties: {
                             photo: {
-                                type: DataType.Number,
+                                type: DataType.Number
                             },
                             livestream: {
-                                type: DataType.Number,
+                                type: DataType.Number
                             },
                             have_video: {
-                                type: DataType.Number,
+                                type: DataType.Number
                             },
                             share_link: {
-                                type: DataType.Number,
-                            },
-                        },
-                    },
-                },
-            },
-        },
+                                type: DataType.Number
+                            }
+                        }
+                    }
+                }
+            }
+        }
     };
 
     updateKolInfoFacebook: IHandler = {
@@ -234,27 +247,27 @@ export class KolAuthController {
             summary: 'update info facebook',
             security: true,
             responses: {
-                200: 'Kol user was updated successfully',
-            },
+                200: 'Kol user was updated successfully'
+            }
         },
         validation: {
             body: {
                 type: DataType.Object,
                 properties: {
                     entity_id: {
-                        type: DataType.String,
+                        type: DataType.String
                     },
                     name: {
-                        type: DataType.String,
+                        type: DataType.String
                     },
                     profile_link: {
-                        type: DataType.String,
+                        type: DataType.String
                     },
                     app_scoped_id: {
-                        type: DataType.String,
+                        type: DataType.String
                     },
                     app_scoped_token: {
-                        type: DataType.String,
+                        type: DataType.String
                     },
                     page: {
                         type: DataType.Array,
@@ -262,46 +275,46 @@ export class KolAuthController {
                             type: DataType.Object,
                             properties: {
                                 access_token: {
-                                    type: DataType.String,
+                                    type: DataType.String
                                 },
                                 category: {
-                                    type: DataType.String,
+                                    type: DataType.String
                                 },
                                 name: {
-                                    type: DataType.String,
+                                    type: DataType.String
                                 },
                                 id: {
-                                    type: DataType.String,
-                                },
-                            },
-                        },
+                                    type: DataType.String
+                                }
+                            }
+                        }
                     },
                     analytic: {
                         type: DataType.Object,
                         properties: {
                             total_follower: {
-                                type: DataType.Number,
+                                type: DataType.Number
                             },
                             total_post_last_3_month: {
-                                type: DataType.Number,
+                                type: DataType.Number
                             },
                             avg_reaction_last_3_month: {
-                                type: DataType.Number,
+                                type: DataType.Number
                             },
                             avg_comment_last_3_month: {
-                                type: DataType.Number,
+                                type: DataType.Number
                             },
                             avg_sharing_last_3_month: {
-                                type: DataType.Number,
+                                type: DataType.Number
                             },
                             avg_engagement_last_3_month: {
-                                type: DataType.Number,
-                            },
-                        },
-                    },
-                },
-            },
-        },
+                                type: DataType.Number
+                            }
+                        }
+                    }
+                }
+            }
+        }
     };
 
     getOptionEvaluate: IHandler = {
@@ -316,17 +329,17 @@ export class KolAuthController {
             summary: 'get option evaluate',
             security: true,
             responses: {
-                200: 'Found data',
-            },
+                200: 'Found data'
+            }
         },
         validation: {
             query: {
                 fields: {
                     type: DataType.String,
-                    default: '',
-                },
-            },
-        },
+                    default: ''
+                }
+            }
+        }
     };
 
     updateKolInfoEvaluate: IHandler = {
@@ -346,8 +359,8 @@ export class KolAuthController {
             summary: 'update evaluate info',
             security: true,
             responses: {
-                200: 'Kol evaluate info was updated successfully',
-            },
+                200: 'Kol evaluate info was updated successfully'
+            }
         },
         validation: {
             body: {
@@ -357,32 +370,32 @@ export class KolAuthController {
                         type: DataType.Object,
                         properties: {
                             frequency: {
-                                type: DataType.Number,
+                                type: DataType.Number
                             },
                             style: {
-                                type: DataType.Number,
+                                type: DataType.Number
                             },
                             content: {
                                 type: DataType.Array,
                                 items: {
-                                    type: DataType.Number,
-                                },
-                            },
-                        },
+                                    type: DataType.Number
+                                }
+                            }
+                        }
                     },
                     text: {
                         type: DataType.Object,
                         properties: {
                             length: {
-                                type: DataType.Number,
+                                type: DataType.Number
                             },
                             interactivity: {
-                                type: DataType.Number,
+                                type: DataType.Number
                             },
                             swearing_happy: {
-                                type: DataType.Number,
-                            },
-                        },
+                                type: DataType.Number
+                            }
+                        }
                     },
                     image: {
                         type: DataType.Object,
@@ -390,37 +403,37 @@ export class KolAuthController {
                             content: {
                                 type: DataType.Array,
                                 items: {
-                                    type: DataType.Number,
-                                },
+                                    type: DataType.Number
+                                }
                             },
                             personal_style: {
                                 type: DataType.Array,
                                 items: {
-                                    type: DataType.Number,
-                                },
+                                    type: DataType.Number
+                                }
                             },
                             scenery: {
-                                type: DataType.Number,
+                                type: DataType.Number
                             },
                             refine_content: {
-                                type: DataType.Number,
-                            },
-                        },
+                                type: DataType.Number
+                            }
+                        }
                     },
                     general_style: {
                         type: DataType.Object,
                         properties: {
                             appearence: {
-                                type: DataType.Number,
+                                type: DataType.Number
                             },
                             brand: {
-                                type: DataType.Number,
-                            },
-                        },
-                    },
-                },
-            },
-        },
+                                type: DataType.Number
+                            }
+                        }
+                    }
+                }
+            }
+        }
     };
 
     updateKolInfoStatus: IHandler = {
@@ -472,8 +485,8 @@ export class KolAuthController {
             security: true,
             summary: 'update kol info status',
             responses: {
-                200: 'Kol info status was updated successfully',
-            },
-        },
+                200: 'Kol info status was updated successfully'
+            }
+        }
     };
 }

@@ -23,4 +23,4 @@ export const FaqSchema = {
     }
 }
 
-export const FaqSearchField = ['question', 'answer', 'type', 'status'];
+export const FaqSearchField = ['question', 'answer'];

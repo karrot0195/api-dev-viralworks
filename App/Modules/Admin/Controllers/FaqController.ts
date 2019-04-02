@@ -22,18 +22,35 @@ export class FaqController {
         },
         validation: {
             query: {
+                sort: {
+                    type: DataType.String,
+                    description: 'List of fields that wil be sorted. (example: field1|asc,field2|desc )',
+                    pattern: RE.checkSortArrayString.source
+                },
                 page: {
                     type: DataType.Number,
-                    description: 'page of faq list'
+                    description: 'Page number of result',
+                    default: 0
                 },
                 limit: {
                     type: DataType.Number,
-                    description: 'number of returned faqs'
+                    description: 'Limit per page',
+                    default: 0
                 },
-                type: {
+                term: {
                     type: DataType.String,
-                    enum: ["0", "1", "2"],
-                    description: 'type of faq'
+                    description: 'Term that will be searched on all fields',
+                    pattern: RE.checkString.source
+                },
+                value: {
+                    type: DataType.String,
+                    description: 'List of exact match value. (example: field1|value1,field|value2 )',
+                    pattern: RE.checkValueArrayString.source
+                },
+                fields: {
+                    type: DataType.String,
+                    description: 'List of fields that will be returned. (example: field1,field2 )',
+                    pattern: RE.checkFields.source
                 }
             }
         },

@@ -1,4 +1,4 @@
-import * as Security from 'App/Helpers/Security';
+import * as Security from 'System/Security';
 import * as _ from 'lodash';
 import { Injectable } from 'System/Injectable';
 import { Mongo } from 'System/Mongo';
@@ -15,6 +15,7 @@ import {
 import * as mongoose from 'mongoose';
 import { InternalError, SystemError } from 'System/Error';
 import { evaluateOption } from 'App/Constants/Evaluate';
+import { KolSearchField } from 'Database/Schema/KolUserSchema';
 
 @Injectable
 export class KolAuthService {
@@ -28,8 +29,8 @@ export class KolAuthService {
         return this._model.create(data);
     }
 
-    findAll(params: Object) {
-        return this._model.find();
+    findCondition(params: object) {
+        return this._model.findWithFilter(params, KolSearchField);
     }
 
     findById(id: string) {
