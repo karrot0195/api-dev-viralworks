@@ -11,20 +11,11 @@ import { Conflict, InternalError } from 'System/Error';
 
 @Injectable
 export class UserController {
-    constructor(private readonly _userServ: UserService) { }
+    constructor(private readonly _userServ: UserService) {}
 
     createUser: IHandler = {
         method: async (req: Request, res: Response, next: NextFunction) => {
-            try {
-                const user = await this._userServ.create(req.body);
-                return res.status(201).json(user);
-            } catch (err) {
-                if (err.code == 11000) {
-                    throw new Conflict('Duplicate Email');
-                } else {
-                    throw new InternalError(err);
-                }
-            }
+            return res.status(201).json(await this._userServ.create(req.body));
         },
         validation: {
             body: {
@@ -45,7 +36,8 @@ export class UserController {
                     },
                     role: {
                         type: DataType.String,
-                        required: true
+                        required: true,
+                        pattern: RE.checkMongoId.source
                     }
                 }
             }
@@ -58,7 +50,7 @@ export class UserController {
                 201: 'User was created'
             }
         }
-    }
+    };
 
     getUserById: IHandler = {
         method: async (req: Request, res: Response, next: NextFunction) => {
@@ -96,5 +88,5 @@ export class UserController {
                 return false;
             }
         }
-    }
+    };
 }
