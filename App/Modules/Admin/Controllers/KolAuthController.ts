@@ -427,7 +427,14 @@ export class KolAuthController {
         method: async (req: Request, res: Response, next: NextFunction) => {
             const kolUser = await this._kolAuthService.findById(req.params.id);
             if (kolUser) {
-                return res.json(await this._kolAuthService.updateKolInfoStatus(kolUser, req.auth.id, req.body.status));
+                const status = req.body.status;
+                var result: Object = {};
+                if (status === KolInfoStatus.Verified) {
+                    result = await this._kolAuthService.verifyKolInfo(kolUser, req.auth.id);
+                } else if (status === KolInfoStatus.Rejected) {
+                    result = await this._kolAuthService.rejectKolInfo(kolUser, req.auth.id, req.body.reason);
+                }
+                return res.json(result);
             }
             throw new NotFound('Not found kol user');
         },
@@ -444,7 +451,18 @@ export class KolAuthController {
                     status: {
                         type: DataType.Number,
                         required: true,
-                        enum: [KolInfoStatus.Raw, KolInfoStatus.Verified, KolInfoStatus.Rejected]
+                        enum: [KolInfoStatus.Verified, KolInfoStatus.Rejected]
+                    },
+                    reason: {
+                        type: DataType.Object,
+                        properties: {
+                            reason_id: {
+                                type: DataType.Number
+                            },
+                            description: {
+                                type: DataType.String
+                            }
+                        }
                     }
                 }
             }

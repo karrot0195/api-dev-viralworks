@@ -77,7 +77,7 @@ export class Router implements IRouter {
                         handler: this.kolAuthController.updateKolInfoEvaluate,
                     },
                     {
-                        path: '/kol-users/{id}/kol-info-status',
+                        path: '/kol-users/{id}/kol-status',
                         method: HTTP.Put,
                         handler: this.kolAuthController.updateKolInfoStatus,
                     },
