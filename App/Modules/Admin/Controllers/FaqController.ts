@@ -13,21 +13,21 @@ import { IQueryArraySchema } from 'System/Interface/Swagger';
 
 @Injectable
 export class FaqController {
-    constructor(private readonly _faqService: FaqService) { }
-    
+    constructor(private readonly _faqService: FaqService) {}
+
     public readonly getFaqs: IHandler = {
         method: async (req: Request, res: Response, next: NextFunction) => {
             const contacts = await this._faqService.findByCondition(req.query);
-            return res.json(contacts);
+            return res.status(200).json(contacts);
         },
         validation: {
             query: {
                 page: {
-                    type: DataType.String,
+                    type: DataType.Number,
                     description: 'page of faq list'
                 },
                 limit: {
-                    type: DataType.String,
+                    type: DataType.Number,
                     description: 'number of returned faqs'
                 },
                 type: {
@@ -45,11 +45,11 @@ export class FaqController {
                 200: 'list faq is successful'
             }
         }
-    }
+    };
 
     public readonly createFaq: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this._faqService.create(req.body));
+            return res.status(200).json(await this._faqService.create(req.body));
         },
         validation: {
             body: {
@@ -67,7 +67,7 @@ export class FaqController {
                         type: DataType.Number,
                         enum: [0, 1, 2],
                         required: true
-                    }   
+                    }
                 }
             }
         },
@@ -85,17 +85,23 @@ export class FaqController {
 
     public readonly updateFaq: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this._faqService.updateFaq(req.params.id, req.body));
+            return res.status(200).json(await this._faqService.updateFaq(req.params.id, req.body));
         },
         validation: {
+            path: {
+                id: {
+                    type: DataType.String,
+                    pattern: RE.checkMongoId.source
+                }
+            },
             body: {
                 type: DataType.Object,
                 properties: {
                     question: {
-                        type: DataType.String,
+                        type: DataType.String
                     },
                     answer: {
-                        type: DataType.String,
+                        type: DataType.String
                     },
                     type: {
                         type: DataType.Number,
@@ -103,7 +109,7 @@ export class FaqController {
                     },
                     status: {
                         type: DataType.Number,
-                        enum: [0, 1, 2]
+                        enum: [0, 1]
                     }
                 }
             }
@@ -118,6 +124,34 @@ export class FaqController {
             },
             security: true,
             summary: 'Update status of faq'
+        }
+    };
+
+    public readonly removeFaq: IHandler = {
+        method: async (req: Request, res: Response) => {
+            const faq = await this._faqService.findById(req.params.id);
+            if (faq) {
+                return res.status(200).json(await faq.remove());
+            }
+            throw new NotFound('Not found faq');
+        },
+        validation: {
+            path: {
+                id: {
+                    type: DataType.String,
+                    pattern: RE.checkMongoId.source
+                }
+            }
+        },
+        document: {
+            tags: ['Faq Manager'],
+            responses: {
+                200: 'Faq was delete successfully',
+                403: 'Forbidden',
+                400: 'Bad Request'
+            },
+            security: true,
+            summary: 'Delete faq'
         }
     };
 }
