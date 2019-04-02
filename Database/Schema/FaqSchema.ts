@@ -22,3 +22,5 @@ export const FaqSchema = {
         type: Number
     }
 }
+
+export const FaqSearchField = ['question', 'answer', 'type', 'status'];

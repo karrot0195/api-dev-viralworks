@@ -27,13 +27,20 @@ export class Router implements IRouter {
     ) {
         this.routes = [
             { path: '/auth', method: HTTP.Post, handler: this.authController.postLogin },
-            { path: '/users', method: HTTP.Post, handler: this.userController.createUser },
-            { path: '/users/{id}', method: HTTP.Get, handler: this.userController.getUserById },
             {
                 middleware: [{ class: this.authenticationMiddleware }],
                 group: [
                     { path: '/auth/check', method: HTTP.Get, handler: this.authController.getCheckToken },
-                    { path: '/roles/paths', method: HTTP.Get, handler: this.roleController.getPaths },
+
+                    { path: '/paths', method: HTTP.Get, handler: this.roleController.getPaths },
+
+                    { path: '/entries/create', method: HTTP.Post, handler: this.roleController.createPermission },
+                    { path: '/entries/update/{id}', method: HTTP.Put, handler: this.roleController.updatePermission },
+                    { path: '/entries/{id}', method: HTTP.Get, handler: this.roleController.getPermissionById },
+                    { path: '/entries', method: HTTP.Get, handler: this.roleController.getPermissions },
+
+                    { path: '/roles/create', method: HTTP.Post, handler: this.roleController.createRole },
+                    { path: '/roles/update/{id}', method: HTTP.Put, handler: this.roleController.updateRole },
                     { path: '/roles/{id}', method: HTTP.Get, handler: this.roleController.getRoleById },
                     { path: '/roles/{id}', method: HTTP.Put, handler: this.roleController.updateRole },
                     { path: '/roles/{id}', method: HTTP.Delete, handler: this.roleController.deleteRoleById },
@@ -48,6 +55,7 @@ export class Router implements IRouter {
                     { path: '/faqs', method: HTTP.Get, handler: this.faqController.getFaqs },
                     { path: '/faqs', method: HTTP.Post, handler: this.faqController.createFaq },
                     { path: '/faqs/{id}', method: HTTP.Put, handler: this.faqController.updateFaq },
+                    { path: '/faqs/{id}', method: HTTP.Delete, handler: this.faqController.removeFaq }
                 ],
             },
             {

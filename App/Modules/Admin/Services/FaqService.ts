@@ -1,9 +1,8 @@
-import * as Security from 'App/Helpers/Security';
-
 import { Injectable } from 'System/Injectable';
 import { Mongo } from 'System/Mongo';
 import { Config } from 'System/Config';
 import { IFaq, FaqModel } from 'App/Models/FaqModel';
+import { FaqSearchField } from 'Database/Schema/FaqSchema';
 
 @Injectable
 export class FaqService {
@@ -18,32 +17,7 @@ export class FaqService {
     }
 
     findByCondition(params: Object) {
-        let limit = 10, offset = 0, optConditions = {}, optSort = {};
-
-        if (params['limit']) {
-            limit = parseInt(params['limit']);
-        }
-
-        if (params['page']) {
-            let page = parseInt(params['page']);
-            offset = (page - 1) * limit;
-        }
-
-        if (params['type']) {
-            optConditions['type'] = parseInt(params['type']);
-        }
-
-        if (params['sort']) {
-            Object.keys(params['sort']).forEach(key => {
-                if (parseInt(params['sort'][key])) {
-                    optSort[key] = 'asc'; 
-                } else {
-                    optSort[key] = 'desc'; 
-                }
-            });
-        }
-
-        return this._faqModel.find(optConditions).limit(limit).skip(offset).sort(optSort);
+        return this._faqModel.findWithFilter(params, FaqSearchField);
     }
 
     async updateFaq(id: string, params: Object) {

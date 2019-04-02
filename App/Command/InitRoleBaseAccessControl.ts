@@ -1,22 +1,38 @@
 import { HTTP } from 'System/Enum/HTTP';
 import { Injectable } from 'System/Injectable';
-import { ICommand } from 'System/Interface';
-import { RoleBasedAccessControlService as RBACService } from 'System/RBAC/Service';
+import { ICommand, IRole } from 'System/Interface';
+import { Mongo } from 'System/Mongo';
+import { RoleModel } from 'System/RBAC/Models/RoleModel';
+import { PermissionModel } from 'System/RBAC/Models/PermissionModel';
 
 @Injectable
 export class InitRoleBaseAccessControl implements ICommand {
-    constructor(private readonly service: RBACService) { }
+    constructor(
+        private readonly _mongo: Mongo,
+        private readonly _roleModel: RoleModel,
+        private readonly _permissionModel: PermissionModel
+    ) {}
 
     public async run() {
-        // await this.service.deletePermission();
-        const permission = await this.service.createPermission({
+        let firstRole: IRole = {
+            name: 'Staff',
+            description: 'Base user for all dashboard user'
+        };
+
+        let firstEntry: any = {
             route: {
-                path: '/admin/roles/{id}',
+                path: '/admin/auth/check',
                 method: HTTP.Get
             },
-            roles: ['5c8f3ff7b59bfc158cec3829']
-        });
+            description: 'API check token'
+        };
 
-        return permission;
+        return this._mongo.transaction(async session => {
+            const role = await this._roleModel.create(firstRole, session);
+            firstEntry.roles = [role._id];
+            const entry = await this._permissionModel.create(firstEntry, session);
+
+            return [role, entry];
+        });
     }
 }
