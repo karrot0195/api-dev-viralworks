@@ -31,6 +31,8 @@ export class UserService {
                 throw new BadRequest(RBACErrorMessage.ROLE_NOT_FOUND);
         }
 
+        data.isDisabled = false;
+
         let result = await this._userModel.create(data);
         result.password = '';
 

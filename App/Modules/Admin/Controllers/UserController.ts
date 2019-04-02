@@ -7,7 +7,6 @@ import { NotFound } from 'System/Error';
 import * as RE from 'System/RegularExpression';
 
 import { UserService } from '../Services/UserService';
-import { Conflict, InternalError } from 'System/Error';
 
 @Injectable
 export class UserController {

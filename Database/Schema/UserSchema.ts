@@ -6,6 +6,7 @@ export interface User extends IDocument {
     password: string;
     role: string;
     code: string;
+    isDisable: boolean;
 }
 
 export const UserSchema = {
@@ -30,5 +31,9 @@ export const UserSchema = {
         type: String,
         unique: true,
         required: true
+    },
+    isDisabled: {
+        type: Boolean,
+        required: true
     }
-}
+};
