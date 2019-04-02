@@ -4,6 +4,7 @@ import { Injectable } from 'System/Injectable';
 import { Mongo } from 'System/Mongo';
 import { Config } from 'System/Config';
 import { UserModel } from 'App/Models/UserModel';
+import { BadRequest } from 'System/Error';
 
 @Injectable
 export class AuthService {
@@ -33,13 +34,33 @@ export class AuthService {
                 code: user.code,
                 role: user.role,
                 email: user.email,
-                access: ['feature/is/not/available'],
-                created_at: user.created_at
+                entries: ['feature/is/not/available'],
+                created_at: user.created_at,
             };
 
             return { info: userInfo, token: token };
         } else {
             return false;
+        }
+    }
+
+    async getUserInfo(token: string = '') {
+        let data = Security.decodeToken(token) || {};
+
+        const user = await this._userModel.findById(data['id']);
+
+        if (user) {
+            return {
+                id: user.id,
+                name: user.name,
+                code: user.code,
+                role: user.role,
+                email: user.email,
+                entries: ['feature/is/not/available'],
+                created_at: user.created_at,
+            };
+        } else {
+            throw new BadRequest('User is no longer valid');
         }
     }
 }
