@@ -13,8 +13,8 @@ export function processQuery(query: any, searchFields: Array<string>): any {
     result.projections = {};
 
     if (typeof query == 'object') {
-        result.options.page = query.page || 0;
-        result.options.limit = query.limit || 0;
+        result.options.page = +query.page || 0;
+        result.options.limit = +query.limit || 0;
         result.options.skip = result.options.page * result.options.limit;
         result.options.sort = processSort(query.sort);
 

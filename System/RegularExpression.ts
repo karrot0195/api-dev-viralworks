@@ -7,3 +7,4 @@ export const checkValueArrayString = /^([a-z0-9-_]+\|[^{};$,]+,)*([a-z0-9-_]+\|[
 export const checkString = /^[^{};$]+$/i;
 export const checkFields = /^([a-z0-9-_]+,)*([a-z0-9-_]+)$/i;
 export const checkMethod = /^(get|post|put|delete)$/i;
+export const checkNumberString = /^[0-9]+$/;

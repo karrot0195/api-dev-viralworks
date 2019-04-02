@@ -134,14 +134,14 @@ export class RoleController {
                     pattern: RE.checkSortArrayString.source
                 },
                 page: {
-                    type: DataType.Number,
+                    type: DataType.String,
                     description: 'Page number of result',
-                    default: 0
+                    pattern: RE.checkNumberString.source
                 },
                 limit: {
-                    type: DataType.Number,
+                    type: DataType.String,
                     description: 'Limit per page',
-                    default: 0
+                    pattern: RE.checkNumberString.source
                 },
                 term: {
                     type: DataType.String,
@@ -229,14 +229,14 @@ export class RoleController {
                     pattern: RE.checkSortArrayString.source
                 },
                 page: {
-                    type: DataType.Number,
+                    type: DataType.String,
                     description: 'Page number of result',
-                    default: 0
+                    pattern: RE.checkNumberString.source
                 },
                 limit: {
-                    type: DataType.Number,
+                    type: DataType.String,
                     description: 'Limit per page',
-                    default: 0
+                    pattern: RE.checkNumberString.source
                 },
                 term: {
                     type: DataType.String,
