@@ -47,7 +47,8 @@ export class Router implements IRouter {
             {
                 middleware: [{ class: this.authenticationMiddleware }],
                 group: [
-                    { path: '/users/create', method: HTTP.Post, handler: this.userController.createUser }
+                    { path: '/users/create', method: HTTP.Post, handler: this.userController.createUser },
+                    { path: '/users/update/{id}', method: HTTP.Post, handler: this.userController.updateUserById }
                 ]
             },
             {

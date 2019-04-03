@@ -39,6 +39,29 @@ export class UserService {
         return result;
     }
 
+    async updateUserById(id: string, userData: IUser) {
+        let user = await this.findById(id);
+
+        if (!user) throw new BadRequest(RBACErrorMessage.USER_NOT_FOUND);
+
+        if (userData.name) user.name = userData.name;
+        if (userData.email) user.email = userData.email;
+        if (userData.password) user.password = Security.hash(this._config.security.pepper + userData.password);
+        if (typeof userData.isDisabled !== 'undefined') user.isDisabled = userData.isDisabled;
+
+        if (userData.role) {
+            if (!(await this._RBACService.findRoleById(userData.role))) {
+                throw new BadRequest(RBACErrorMessage.ROLE_NOT_FOUND);
+            }
+            user.role = userData.role;
+        }
+
+        let tmp = await user.save();
+        tmp.password = '';
+
+        return tmp;
+    }
+
     async find(condition?: any) {
         return this._userModel.find(condition);
     }

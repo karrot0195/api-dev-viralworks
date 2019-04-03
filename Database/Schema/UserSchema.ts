@@ -6,7 +6,7 @@ export interface User extends IDocument {
     password: string;
     role: string;
     code: string;
-    isDisable: boolean;
+    isDisabled: boolean;
 }
 
 export const UserSchema = {

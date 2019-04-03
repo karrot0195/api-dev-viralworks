@@ -22,7 +22,8 @@ export class UserController {
                 properties: {
                     name: {
                         type: DataType.String,
-                        required: true
+                        required: true,
+                        pattern: RE.checkString.source
                     },
                     email: {
                         type: DataType.String,
@@ -46,7 +47,59 @@ export class UserController {
             summary: 'Create new user',
             security: true,
             responses: {
-                201: 'User was created'
+                201: 'User was created',
+                400: 'Bad request',
+                403: 'Failed authorization',
+                500: 'Internal Error'
+            }
+        }
+    };
+
+    updateUserById: IHandler = {
+        method: async (req: Request, res: Response, next: NextFunction) => {
+            return res.status(200).json(await this._userServ.updateUserById(req.params.id, req.body));
+        },
+        validation: {
+            path: {
+                id: {
+                    type: DataType.String,
+                    pattern: RE.checkMongoId.source,
+                    required: true
+                }
+            },
+            body: {
+                type: DataType.Object,
+                properties: {
+                    name: {
+                        type: DataType.String,
+                        pattern: RE.checkString.source
+                    },
+                    email: {
+                        type: DataType.String,
+                        format: FormatType.Email
+                    },
+                    password: {
+                        type: DataType.String
+                    },
+                    role: {
+                        type: DataType.String,
+                        pattern: RE.checkMongoId.source
+                    },
+                    isDisabled: {
+                        type: DataType.Boolean
+                    }
+                }
+            }
+        },
+        document: {
+            tags: ['User Management'],
+            summary: 'Update user by specific Id',
+            security: true,
+            responses: {
+                200: 'User was updated',
+                400: 'Bad request',
+                403: 'Failed authorization',
+                500: 'Internal Error'
             }
         }
     };
