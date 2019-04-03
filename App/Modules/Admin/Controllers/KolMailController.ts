@@ -13,9 +13,9 @@ export class KolMailController {
     public readonly sendMail: IHandler = {
         method: async (req: Request, res: Response, next: NextFunction) => {
             try {
-                return res.status(200).json(await this._mailService.sendMailTemplateKol(req.params.id, req.params.type));
+                return res.status(200).json(await this._mailService.sendMailTemplateKol(req.auth.id, req.params.id, req.params.type));
             } catch(err) {
-                throw new InternalError(err);
+                throw new InternalError(err.message);
             }
         },
         validation: {
@@ -45,7 +45,29 @@ export class KolMailController {
 
     public readonly  hookMail: IHandler = {
         method: async (req: Request, res: Response, next: NextFunction) => {
-            // return res.status(200).json(await this._mailService.createMail({data: req.body}));
+            return res.status(200).json(await this._mailService.addEventsMail(req.body));
+        },
+        validation: {
+            body: {
+                type: DataType.Array,
+                items: {
+                    type: DataType.Object,
+                    properties: {
+                        email: {
+                            type: DataType.String,
+                        },
+                        event: {
+                            type: DataType.String,
+                        },
+                        sg_message_id: {
+                            type: DataType.String
+                        },
+                        timestamp: {
+                            type: DataType.Number
+                        }
+                    }
+                }
+            }
         },
         document: {
             summary: 'Send mail template for kol user',

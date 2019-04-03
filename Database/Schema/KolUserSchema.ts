@@ -4,6 +4,7 @@ import * as mongoose from 'mongoose';
 interface HistoryActionItem {
     readonly causer_id: string;
     readonly type: number;
+    readonly ref_id: string;
 }
 
 interface KolUser extends IDocument {
@@ -38,6 +39,9 @@ const HistoryActionItemSchema = {
     },
     kol_status: {
         type: Number
+    },
+    ref_id: {
+        type: String
     },
     created_at: {
         type: Date,

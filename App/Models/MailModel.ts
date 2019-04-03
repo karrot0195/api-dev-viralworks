@@ -11,9 +11,15 @@ export enum MailStatus {
 export interface IMail {
     readonly message_id: string,
     readonly email: string,
-    readonly events: Array<string>,
+    readonly events: Array<IEventMail>,
     readonly event_latest: string,
     readonly status: number
+}
+
+export interface IEventMail {
+    readonly event: string,
+    readonly timestamp: number,
+
 }
 
 @Injectable

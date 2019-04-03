@@ -49,7 +49,7 @@ interface IKolBasicInfo {
         readonly description: string;
     };
     readonly evaluate: IKolEvalute;
-    readonly history_action: Array<{readonly causer_id: string, readonly type: number}>;
+    readonly history_action: Array<{readonly causer_id: string, readonly type: number, readonly ref_id: string}>;
 }
 
 // FACEBOOK
