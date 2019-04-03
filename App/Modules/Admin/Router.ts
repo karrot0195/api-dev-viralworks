@@ -25,8 +25,12 @@ export class Router implements IRouter {
             {
                 middleware: [{ class: this.authenticationMiddleware }],
                 group: [
-                    { path: '/auth/check', method: HTTP.Get, handler: this.authController.getCheckToken },
-
+                    { path: '/auth/check', method: HTTP.Get, handler: this.authController.getCheckToken }
+                ]
+            },
+            {
+                middleware: [{ class: this.authenticationMiddleware }],
+                group: [
                     { path: '/paths', method: HTTP.Get, handler: this.roleController.getPaths },
 
                     { path: '/entries/create', method: HTTP.Post, handler: this.roleController.createPermission },
@@ -38,6 +42,12 @@ export class Router implements IRouter {
                     { path: '/roles/update/{id}', method: HTTP.Put, handler: this.roleController.updateRole },
                     { path: '/roles/{id}', method: HTTP.Get, handler: this.roleController.getRoleById },
                     { path: '/roles', method: HTTP.Get, handler: this.roleController.getRoles }
+                ]
+            },
+            {
+                middleware: [{ class: this.authenticationMiddleware }],
+                group: [
+                    { path: '/users/create', method: HTTP.Post, handler: this.userController.createUser }
                 ]
             },
             {
