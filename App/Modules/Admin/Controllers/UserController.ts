@@ -133,4 +133,53 @@ export class UserController {
             }
         }
     };
+
+    public readonly getUsers: IHandler = {
+        method: async (req: Request, res: Response) => {
+            return res.status(200).json(await this._userServ.findUserWithFilter(req.query));
+        },
+        validation: {
+            query: {
+                sort: {
+                    type: DataType.String,
+                    description: 'List of fields that wil be sorted. (example: role|asc,email|desc )',
+                    pattern: RE.checkSortArrayString.source
+                },
+                page: {
+                    type: DataType.String,
+                    description: 'Page number of result',
+                    pattern: RE.checkNumberString.source
+                },
+                limit: {
+                    type: DataType.String,
+                    description: 'Limit per page',
+                    pattern: RE.checkNumberString.source
+                },
+                term: {
+                    type: DataType.String,
+                    description: 'Term that will be searched on all fields',
+                    pattern: RE.checkString.source
+                },
+                value: {
+                    type: DataType.String,
+                    description: 'List of exact match value. (example: email|abc@abc.com,code|SU-152 )',
+                    pattern: RE.checkValueArrayString.source
+                },
+                fields: {
+                    type: DataType.String,
+                    description: 'List of fields that will be returned. (example: email,code )',
+                    pattern: RE.checkFields.source
+                }
+            }
+        },
+        document: {
+            tags: ['User Management'],
+            responses: {
+                200: 'Found Data',
+                403: 'Forbidden'
+            },
+            security: true,
+            summary: 'Get users by conditions'
+        }
+    };
 }

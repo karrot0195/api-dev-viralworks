@@ -7,6 +7,7 @@ import { generateUserCode } from 'App/Helpers/Generator';
 import { RoleBasedAccessControlService } from 'System/RBAC/Service';
 import { BadRequest } from 'System/Error';
 import { RBACErrorMessage } from 'System/Enum/Error';
+import { UserSearchField } from 'Database/Schema/UserSchema';
 
 @Injectable
 export class UserService {
@@ -70,5 +71,9 @@ export class UserService {
         let user = await this._userModel.findById(id, fields);
         if (!user) throw new BadRequest(RBACErrorMessage.USER_NOT_FOUND);
         return user;
+    }
+
+    async findUserWithFilter(conditions?: any) {
+        return this._userModel.findWithFilter(conditions, UserSearchField);
     }
 }

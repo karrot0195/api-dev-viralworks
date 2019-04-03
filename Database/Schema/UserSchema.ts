@@ -9,6 +9,8 @@ export interface User extends IDocument {
     isDisabled: boolean;
 }
 
+export const UserSearchField = ['name', 'email', 'role', 'code'];
+
 export const UserSchema = {
     name: {
         type: String,

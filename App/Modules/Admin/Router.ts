@@ -50,6 +50,7 @@ export class Router implements IRouter {
                     { path: '/users/create', method: HTTP.Post, handler: this.userController.createUser },
                     { path: '/users/update/{id}', method: HTTP.Post, handler: this.userController.updateUserById },
                     { path: '/users/{id}', method: HTTP.Get, handler: this.userController.getUserById },
+                    { path: '/users', method: HTTP.Get, handler: this.userController.getUsers }
                 ]
             },
             {
