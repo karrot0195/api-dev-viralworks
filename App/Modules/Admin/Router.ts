@@ -10,6 +10,7 @@ import { CategoryReasonController } from './Controllers/CategoryReasonController
 
 import { AuthenticationMiddleware } from './Middleware/AuthenticationMiddleware';
 import { KolAuthController } from './Controllers/KolAuthController';
+import { KolMailController } from './Controllers/KolMailController';
 
 @Injectable
 export class Router implements IRouter {
@@ -22,11 +23,13 @@ export class Router implements IRouter {
         readonly faqController: FaqController,
         readonly kolAuthController: KolAuthController,
         readonly categoryReasonController: CategoryReasonController,
+        readonly kolMailController: KolMailController,
         // Middleware
         readonly authenticationMiddleware: AuthenticationMiddleware
     ) {
         this.routes = [
             { path: '/auth', method: HTTP.Post, handler: this.authController.postLogin },
+            { path: '/sendgrid', method: HTTP.Post, handler: this.kolMailController.hookMail },
             {
                 middleware: [{ class: this.authenticationMiddleware }],
                 group: [
@@ -98,6 +101,11 @@ export class Router implements IRouter {
                         path: '/kol-users/{id}/kol-status',
                         method: HTTP.Put,
                         handler: this.kolAuthController.updateKolInfoStatus,
+                    },
+                    {
+                        path: '/kol-users/{id}/mail/{type}',
+                        method: HTTP.Post,
+                        handler: this.kolMailController.sendMail,
                     },
                 ],
             },
