@@ -36,7 +36,7 @@ export class CategoryReasonController {
         },
         document: {
             tags: ['Category Reason'],
-            summary: 'get list reason',
+            summary: 'Create new category reason',
             security: true,
             responses: {
                 200: 'successfull',
@@ -51,7 +51,7 @@ export class CategoryReasonController {
         validation: {},
         document: {
             tags: ['Category Reason'],
-            summary: 'get list reason',
+            summary: 'Get list reason',
             security: true,
             responses: {
                 200: 'successfull',
@@ -70,7 +70,7 @@ export class CategoryReasonController {
         validation: {},
         document: {
             tags: ['Category Reason'],
-            summary: 'get info category reason',
+            summary: 'Get info category reason',
             security: true,
             responses: {
                 200: 'successfull',
@@ -109,7 +109,7 @@ export class CategoryReasonController {
         },
         document: {
             tags: ['Category Reason'],
-            summary: 'update data category reason',
+            summary: 'Update data category reason',
             security: true,
             responses: {
                 200: 'Category reason was updated successfully',
@@ -148,7 +148,7 @@ export class CategoryReasonController {
         },
         document: {
             tags: ['Category Reason'],
-            summary: 'update data category reason',
+            summary: 'Update data category reason',
             security: true,
             responses: {
                 200: 'Category reason was updated successfully',
@@ -196,7 +196,7 @@ export class CategoryReasonController {
         },
         document: {
             tags: ['Category Reason'],
-            summary: 'update data reason',
+            summary: 'Update data reason',
             security: true,
             responses: {
                 200: 'Reason was updated successfully'

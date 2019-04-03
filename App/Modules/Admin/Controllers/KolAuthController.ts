@@ -97,9 +97,11 @@ export class KolAuthController {
 
     getKolUser: IHandler = {
         method: async (req: Request, res: Response, next: NextFunction) => {
-            const fields = _.get(req.query, 'fields', '')
-                .trim()
-                .split(',');
+            const embedded = _.get(req.query, 'fields', '');
+            var fields: Array<string> = [];
+            if (embedded) {
+                fields = embedded.trim().split(',');
+            }
             return res.json(await this._kolAuthService.findById(req.params.id).select(fields));
         },
         document: {
@@ -319,10 +321,13 @@ export class KolAuthController {
 
     getOptionEvaluate: IHandler = {
         method: async (req: Request, res: Response, next: NextFunction) => {
-            const embedded = _.get(req.query, 'fields', '')
-                .trim()
-                .split(',');
-            return res.json(this._kolAuthService.getEvaluateOption(embedded));
+            const embedded = _.get(req.query, 'fields', '');
+            var fields: Array<string> = [];
+            if (embedded) {
+                fields = embedded.trim().split(',');
+            }
+
+            return res.json(this._kolAuthService.getEvaluateOption(fields));
         },
         document: {
             tags: ['kol authenticate'],
