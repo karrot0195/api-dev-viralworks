@@ -70,11 +70,11 @@ export class KolMailController {
             }
         },
         document: {
-            summary: 'Send mail template for kol user',
+            summary: 'Hook mail sendgrid',
             tags: ['Mail Template'],
             security: true,
             responses: {
-                200: 'Mail was sent successfully'
+                200: 'successfull'
             }
         }
     }

@@ -29,7 +29,7 @@ export class Router implements IRouter {
     ) {
         this.routes = [
             { path: '/auth', method: HTTP.Post, handler: this.authController.postLogin },
-            { path: '/sendgrid', method: HTTP.Post, handler: this.kolMailController.hookMail },
+            { path: '/hook-mail', method: HTTP.Post, handler: this.kolMailController.hookMail },
             {
                 middleware: [{ class: this.authenticationMiddleware }],
                 group: [
