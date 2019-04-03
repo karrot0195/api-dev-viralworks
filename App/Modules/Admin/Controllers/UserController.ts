@@ -106,7 +106,7 @@ export class UserController {
 
     getUserById: IHandler = {
         method: async (req: Request, res: Response, next: NextFunction) => {
-            return res.json(await this._userServ.findById(req.params.id, req.query.fields));
+            return res.status(200).json(await this._userServ.findById(req.params.id, req.query.fields));
         },
         validation: {
             query: {

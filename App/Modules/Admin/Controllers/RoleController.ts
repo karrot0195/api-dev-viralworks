@@ -14,7 +14,7 @@ export class RoleController {
 
     public readonly getPaths: IHandler = {
         method: (req: Request, res: Response) => {
-            return res.json(this.service.routePathsWithModule);
+            return res.status(200).json(this.service.routePathsWithModule);
         },
         document: {
             tags: ['Entry Manager'],
@@ -31,7 +31,7 @@ export class RoleController {
         method: async (req: Request, res: Response) => {
             let permission = await this.service.createPermission(req.body);
             if (permission) await this.rbac.load();
-            return res.json(permission);
+            return res.status(201).json(permission);
         },
         validation: {
             body: {
@@ -83,7 +83,7 @@ export class RoleController {
         method: async (req: Request, res: Response) => {
             let permission = await this.service.updatePermissionById(req.params.id, req.body);
             if (permission) await this.rbac.load();
-            return res.json(permission);
+            return res.status(200).json(permission);
         },
         validation: {
             path: {
@@ -124,7 +124,7 @@ export class RoleController {
 
     public readonly getPermissions: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this.service.findPermissionWithFilter(req.query));
+            return res.status(200).json(await this.service.findPermissionWithFilter(req.query));
         },
         validation: {
             query: {
@@ -173,7 +173,7 @@ export class RoleController {
 
     public readonly getPermissionById: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this.service.findPermissionById(req.params.id, req.query.fields));
+            return res.status(200).json(await this.service.findPermissionById(req.params.id, req.query.fields));
         },
         validation: {
             query: {
@@ -219,7 +219,7 @@ export class RoleController {
 
     public readonly getRoles: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this.service.findRolesWithFilter(req.query));
+            return res.status(200).json(await this.service.findRolesWithFilter(req.query));
         },
         validation: {
             query: {
@@ -268,7 +268,7 @@ export class RoleController {
 
     public readonly getRoleById: IHandler = {
         method: async (req: Request, res: Response) => {
-            return res.json(await this.service.findRoleById(req.params.id, req.query.fields));
+            return res.status(200).json(await this.service.findRoleById(req.params.id, req.query.fields));
         },
         validation: {
             query: {
@@ -302,7 +302,7 @@ export class RoleController {
         method: async (req: Request, res: Response) => {
             let role = await this.service.updateRoleById(req.params.id, req.body);
             if (role) await this.rbac.load();
-            return res.json(role);
+            return res.status(200).json(role);
         },
         validation: {
             path: {
@@ -349,7 +349,7 @@ export class RoleController {
 
             if (role) await this.rbac.load();
 
-            return res.json(role);
+            return res.status(201).json(role);
         },
         validation: {
             body: {
