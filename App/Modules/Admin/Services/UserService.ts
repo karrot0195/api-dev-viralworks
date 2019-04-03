@@ -66,7 +66,9 @@ export class UserService {
         return this._userModel.find(condition);
     }
 
-    findById(id: string) {
-        return this._userModel.findById(id);
+    async findById(id: string, fields?: string) {
+        let user = await this._userModel.findById(id, fields);
+        if (!user) throw new BadRequest(RBACErrorMessage.USER_NOT_FOUND);
+        return user;
     }
 }

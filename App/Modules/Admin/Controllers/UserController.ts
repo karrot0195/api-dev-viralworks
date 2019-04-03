@@ -106,15 +106,15 @@ export class UserController {
 
     getUserById: IHandler = {
         method: async (req: Request, res: Response, next: NextFunction) => {
-            const user = await this._userServ.findById(req.params.id);
-
-            if (user) {
-                return res.json(user);
-            } else {
-                return next(new NotFound('Not Found User'));
-            }
+            return res.json(await this._userServ.findById(req.params.id, req.query.fields));
         },
         validation: {
+            query: {
+                fields: {
+                    type: DataType.String,
+                    pattern: RE.checkFields.source
+                }
+            },
             path: {
                 id: {
                     type: DataType.String,
@@ -130,14 +130,6 @@ export class UserController {
             responses: {
                 200: 'Found User',
                 404: 'Not Found User'
-            }
-        },
-        policy: async (req: Request) => {
-            const user = await this._userServ.findById(req.params.id);
-            if (user && req.auth.id == user.id) {
-                return true;
-            } else {
-                return false;
             }
         }
     };
