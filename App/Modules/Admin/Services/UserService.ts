@@ -7,6 +7,7 @@ import { generateUserCode } from 'App/Helpers/Generator';
 import { RoleBasedAccessControlService } from 'System/RBAC/Service';
 import { BadRequest } from 'System/Error';
 import { RBACErrorMessage } from 'System/Enum/Error';
+import { UserSearchField } from 'Database/Schema/UserSchema';
 
 @Injectable
 export class UserService {
@@ -31,17 +32,48 @@ export class UserService {
                 throw new BadRequest(RBACErrorMessage.ROLE_NOT_FOUND);
         }
 
+        data.isDisabled = false;
+
         let result = await this._userModel.create(data);
         result.password = '';
 
         return result;
     }
 
+    async updateUserById(id: string, userData: IUser) {
+        let user = await this.findById(id);
+
+        if (!user) throw new BadRequest(RBACErrorMessage.USER_NOT_FOUND);
+
+        if (userData.name) user.name = userData.name;
+        if (userData.email) user.email = userData.email;
+        if (userData.password) user.password = Security.hash(this._config.security.pepper + userData.password);
+        if (typeof userData.isDisabled !== 'undefined') user.isDisabled = userData.isDisabled;
+
+        if (userData.role) {
+            if (!(await this._RBACService.findRoleById(userData.role))) {
+                throw new BadRequest(RBACErrorMessage.ROLE_NOT_FOUND);
+            }
+            user.role = userData.role;
+        }
+
+        let tmp = await user.save();
+        tmp.password = '';
+
+        return tmp;
+    }
+
     async find(condition?: any) {
         return this._userModel.find(condition);
     }
 
-    findById(id: string) {
-        return this._userModel.findById(id);
+    async findById(id: string, fields?: string) {
+        let user = await this._userModel.findById(id, fields);
+        if (!user) throw new BadRequest(RBACErrorMessage.USER_NOT_FOUND);
+        return user;
+    }
+
+    async findUserWithFilter(conditions?: any) {
+        return this._userModel.findWithFilter(conditions, UserSearchField);
     }
 }

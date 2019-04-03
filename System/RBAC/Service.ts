@@ -49,7 +49,9 @@ export class RoleBasedAccessControlService {
     }
 
     async findRoleById(id: string, fields?: string) {
-        return this._roleModel.findById(id, fields);
+        let role = await this._roleModel.findById(id, fields);
+        if (!role) throw new BadRequest(RBACErrorMessage.ROLE_NOT_FOUND);
+        return role;
     }
 
     async findRoles(conditions?: any) {
@@ -181,7 +183,9 @@ export class RoleBasedAccessControlService {
     }
 
     async findPermissionById(permissionId: string, fields?: string) {
-        return this._permissionModel.findById(permissionId, fields);
+        let permisison = await this._permissionModel.findById(permissionId, fields);
+        if (!permisison) throw new BadRequest(RBACErrorMessage.PERMISSION_NOT_FOUND);
+        return permisison;
     }
 
     async findPermissions(conditions?: any) {

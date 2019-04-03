@@ -7,7 +7,6 @@ import { NotFound } from 'System/Error';
 import * as RE from 'System/RegularExpression';
 
 import { UserService } from '../Services/UserService';
-import { Conflict, InternalError } from 'System/Error';
 
 @Injectable
 export class UserController {
@@ -23,7 +22,8 @@ export class UserController {
                 properties: {
                     name: {
                         type: DataType.String,
-                        required: true
+                        required: true,
+                        pattern: RE.checkString.source
                     },
                     email: {
                         type: DataType.String,
@@ -47,22 +47,74 @@ export class UserController {
             summary: 'Create new user',
             security: true,
             responses: {
-                201: 'User was created'
+                201: 'User was created',
+                400: 'Bad request',
+                403: 'Failed authorization',
+                500: 'Internal Error'
+            }
+        }
+    };
+
+    updateUserById: IHandler = {
+        method: async (req: Request, res: Response, next: NextFunction) => {
+            return res.status(200).json(await this._userServ.updateUserById(req.params.id, req.body));
+        },
+        validation: {
+            path: {
+                id: {
+                    type: DataType.String,
+                    pattern: RE.checkMongoId.source,
+                    required: true
+                }
+            },
+            body: {
+                type: DataType.Object,
+                properties: {
+                    name: {
+                        type: DataType.String,
+                        pattern: RE.checkString.source
+                    },
+                    email: {
+                        type: DataType.String,
+                        format: FormatType.Email
+                    },
+                    password: {
+                        type: DataType.String
+                    },
+                    role: {
+                        type: DataType.String,
+                        pattern: RE.checkMongoId.source
+                    },
+                    isDisabled: {
+                        type: DataType.Boolean
+                    }
+                }
+            }
+        },
+        document: {
+            tags: ['User Management'],
+            summary: 'Update user by specific Id',
+            security: true,
+            responses: {
+                200: 'User was updated',
+                400: 'Bad request',
+                403: 'Failed authorization',
+                500: 'Internal Error'
             }
         }
     };
 
     getUserById: IHandler = {
         method: async (req: Request, res: Response, next: NextFunction) => {
-            const user = await this._userServ.findById(req.params.id);
-
-            if (user) {
-                return res.json(user);
-            } else {
-                return next(new NotFound('Not Found User'));
-            }
+            return res.status(200).json(await this._userServ.findById(req.params.id, req.query.fields));
         },
         validation: {
+            query: {
+                fields: {
+                    type: DataType.String,
+                    pattern: RE.checkFields.source
+                }
+            },
             path: {
                 id: {
                     type: DataType.String,
@@ -79,14 +131,55 @@ export class UserController {
                 200: 'Found User',
                 404: 'Not Found User'
             }
+        }
+    };
+
+    public readonly getUsers: IHandler = {
+        method: async (req: Request, res: Response) => {
+            return res.status(200).json(await this._userServ.findUserWithFilter(req.query));
         },
-        policy: async (req: Request) => {
-            const user = await this._userServ.findById(req.params.id);
-            if (user && req.auth.id == user.id) {
-                return true;
-            } else {
-                return false;
+        validation: {
+            query: {
+                sort: {
+                    type: DataType.String,
+                    description: 'List of fields that wil be sorted. (example: role|asc,email|desc )',
+                    pattern: RE.checkSortArrayString.source
+                },
+                page: {
+                    type: DataType.String,
+                    description: 'Page number of result',
+                    pattern: RE.checkNumberString.source
+                },
+                limit: {
+                    type: DataType.String,
+                    description: 'Limit per page',
+                    pattern: RE.checkNumberString.source
+                },
+                term: {
+                    type: DataType.String,
+                    description: 'Term that will be searched on all fields',
+                    pattern: RE.checkString.source
+                },
+                value: {
+                    type: DataType.String,
+                    description: 'List of exact match value. (example: email|abc@abc.com,code|SU-152 )',
+                    pattern: RE.checkValueArrayString.source
+                },
+                fields: {
+                    type: DataType.String,
+                    description: 'List of fields that will be returned. (example: email,code )',
+                    pattern: RE.checkFields.source
+                }
             }
+        },
+        document: {
+            tags: ['User Management'],
+            responses: {
+                200: 'Found Data',
+                403: 'Forbidden'
+            },
+            security: true,
+            summary: 'Get users by conditions'
         }
     };
 }

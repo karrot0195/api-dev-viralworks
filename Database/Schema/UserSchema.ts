@@ -6,7 +6,10 @@ export interface User extends IDocument {
     password: string;
     role: string;
     code: string;
+    isDisabled: boolean;
 }
+
+export const UserSearchField = ['name', 'email', 'role', 'code'];
 
 export const UserSchema = {
     name: {
@@ -30,5 +33,9 @@ export const UserSchema = {
         type: String,
         unique: true,
         required: true
+    },
+    isDisabled: {
+        type: Boolean,
+        required: true
     }
-}
+};
