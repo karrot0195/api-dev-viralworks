@@ -19,7 +19,6 @@ import { Mongo } from './Mongo';
 import { InitDatabase } from 'Database';
 import { MorganFormat } from './Enum/Morgan';
 import { CommonErrorMessage } from './Enum/Error';
-import { FileStorage } from './FileStorage';
 
 var debug = require('debug')('shopback-test:server');
 require('./Helpers/Log');
@@ -88,7 +87,7 @@ export class Application {
                 }
             })
         );
-        
+
         this._app.use(formidableMiddleware({
             encoding : 'utf-8',
             uploadDir: this._config.storage.tmp
