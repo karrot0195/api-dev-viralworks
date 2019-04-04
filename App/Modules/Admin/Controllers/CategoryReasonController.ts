@@ -19,7 +19,7 @@ export class CategoryReasonController {
                 if (err.code == 11000) {
                     throw new Conflict('Duplicate category reason');
                 }
-                throw new InternalError(err);
+                throw new InternalError(err.message);
             }
         },
         validation: {
@@ -124,7 +124,7 @@ export class CategoryReasonController {
             if (catReason) {
                 return res.json(await this._categoryReasonService.createReason(catReason, req.body));
             }
-            throw new NotFound();
+            throw new NotFound('Not found reason');
         },
         validation: {
             path: {
