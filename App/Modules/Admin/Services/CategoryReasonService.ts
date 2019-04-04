@@ -39,7 +39,7 @@ export class CategoryReasonService {
             }
         });
         catReason.reasons.push(data);
-        const result = catReason.save();
+        const result = await catReason.save();
         return result.reasons[result.reasons.length-1];
     }
 
