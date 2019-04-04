@@ -19,7 +19,8 @@ export class MailService {
                 to: to,
                 from: process.env.MAIL_FROM || 'Viralworks',
                 subject: subject,
-                html: html
+                html: html,
+                text: 'Viralworks'
             };
             return this.sgMail.send(msg);
         } catch (err) {
@@ -30,7 +31,7 @@ export class MailService {
     async sendMailTemplateKol(causerId: string, kolId: string, mailType: string) {
         return this._mongo.transaction(async session => {
             const kolUser = await this._kolModel.findById(kolId);
-            const fs = require('fs');
+            const pug = require('pug');
 
             if (!kolUser) {
                 throw new NotFound('Not found kol user');
@@ -42,11 +43,13 @@ export class MailService {
             const { mailStatus, subject, templatePath } = this.getInfoTemplateMaileByType(parseInt(mailType));
 
             // render html
-            var fileHtml: string = '';
-            fileHtml = await fs.readFileSync(templatePath, 'utf-8');
+            const compiledFunction = pug.compileFile(templatePath);
 
             // send mail
-            const responseMail = await this.sendMail(email, subject, fileHtml);
+            const responseMail = await this.sendMail(email, subject, compiledFunction({
+                title: subject,
+                kol_name: _.get(kolUser, 'facebook.name', 'kol')
+            }));
 
             // add history
             const messageId = _.get(responseMail[0], 'headers.x-message-id', null);
@@ -70,20 +73,20 @@ export class MailService {
         var mailStatus: number;
 
         switch (mailType) {
-            case 0:
-                subject = 'Thông báo về việc đăng ký tài khoản';
-                templatePath = process.cwd() + '/Resources/Views/Mail/Kol/verified.html';
-                mailStatus = 0;
-                break;
             case 1:
-                subject = 'Thông báo về việc đăng ký tài khoản';
-                templatePath = process.cwd() + '/Resources/Views/Mail/Kol/rejected.html';
+                subject = '[ViralWorks] Thông báo về việc đăng ký tài khoản';
+                templatePath = process.cwd() + '/Resources/Views/Mail/Kol/verified.pug';
                 mailStatus = 1;
                 break;
             case 2:
-                subject = 'Thông báo về việc cập nhật đường dẫn facebook';
-                templatePath = process.cwd() + '/Resources/Views/Mail/Kol/update_facebook_link.html';
+                subject = '[ViralWorks] Thông báo về việc đăng ký tài khoản';
+                templatePath = process.cwd() + '/Resources/Views/Mail/Kol/rejected.pug';
                 mailStatus = 2;
+                break;
+            case 3:
+                subject = '[ViralWorks] Yêu cầu cập nhật link facebook';
+                templatePath = process.cwd() + '/Resources/Views/Mail/Kol/update_facebook_link.pug';
+                mailStatus = 3;
                 break;
             default:
                 throw new NotFound('Not found path template');
