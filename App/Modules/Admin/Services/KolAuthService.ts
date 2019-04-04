@@ -13,9 +13,10 @@ import {
     KolInfoStatus,
 } from 'App/Models/KolUserModel';
 import * as mongoose from 'mongoose';
-import { InternalError, SystemError } from 'System/Error';
+import { InternalError, SystemError, NotFound } from 'System/Error';
 import { evaluateOption } from 'App/Constants/Evaluate';
 import { KolSearchField } from 'Database/Schema/KolUserSchema';
+import { getEngagementUserPost } from 'App/Helpers/Facebook';
 
 @Injectable
 export class KolAuthService {
@@ -130,5 +131,35 @@ export class KolAuthService {
                 reason: _.get(kolUser, 'kol_info.reason_reject', null)
             };
         });
+    }
+
+    async updateEngagement(id: string) {
+        const kolUser = await this._model.findById(id);
+        if (!kolUser) {
+            throw new NotFound('Not found kol user by id');
+        }
+
+        const entityId = _.get(kolUser, 'facebook.entity_id', null);
+        if (!entityId) {
+            throw new InternalError('The kol user is miss entity_id field');
+        }
+
+        const dataPost = await getEngagementUserPost(entityId);
+        const totalPost = dataPost.total_post;
+        const avgReact = dataPost.num_reaction / totalPost;
+        const avgComment = dataPost.num_comment / totalPost;
+        const avgShare = dataPost.num_share / totalPost;
+
+        var analatic = _.get(kolUser, 'facebook.analytic', {});
+        analatic['total_post_last_3_month'] = Math.round(totalPost);
+        analatic['avg_reaction_last_3_month'] = Math.round(avgReact);
+        analatic['avg_comment_last_3_month'] = Math.round(avgComment);
+        analatic['avg_sharing_last_3_month'] = Math.round(avgShare);
+        analatic['avg_engagement_last_3_month'] = Math.round(avgReact + avgComment + avgShare);
+        _.set(kolUser, 'facebook.analytic', analatic);
+        if (await kolUser.save()) {
+            return analatic;
+        }
+        throw new InternalError('Error when save analytic');
     }
 }
