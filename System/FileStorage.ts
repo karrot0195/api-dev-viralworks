@@ -33,7 +33,10 @@ export class FileStorage {
 
     async getAbsoluteFilePath(folder: string, filename: string) {
         let tmp = path.join(__dirname, '..', this._config.storage.dir, folder, filename);
+        
         if (await fs.existsSync(tmp)) return tmp;
+        
+        return '';
     }
 
     async deleteFile(filePath: string) {

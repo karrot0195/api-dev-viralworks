@@ -10,6 +10,7 @@ import { UserSearchField } from 'Database/Schema/UserSchema';
 import { FileStorage } from 'System/FileStorage';
 import { ImageMIME } from 'System/Enum/MIME';
 import { UserError } from '../Enum/Error';
+import { Default } from '../Enum/Default';
 
 @Injectable
 export class UserService {
@@ -88,11 +89,23 @@ export class UserService {
             if (await this._storage.checkUploadFileType(avatar.path, ImageMIME)) {
                 return await this._storage.storeUploadFile(avatar.path, 'avatar', id);
             }
+
             throw new BadRequest(UserError.AVATAR_WRONG_TYPE);
         } catch (err) {
             throw err;
         } finally {
             await this._storage.deleteFile(avatar.path);
         }
+    }
+
+    async getAvatarAbsolutePath(id: string) {
+        let user = await this.findById(id);
+
+        if (!user) throw new BadRequest(UserError.USER_NOT_FOUND);
+
+        return (
+            (await this._storage.getAbsoluteFilePath('avatar', id)) ||
+            (await this._storage.getAbsoluteFilePath('avatar', Default.USER_AVATAR_IMAGE))
+        );
     }
 }

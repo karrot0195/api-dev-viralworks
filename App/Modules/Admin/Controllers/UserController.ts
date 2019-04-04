@@ -195,7 +195,7 @@ export class UserController {
                 }
             },
             formData: {
-                avatar : {
+                avatar: {
                     type: DataType.File,
                     required: true
                 }
@@ -209,6 +209,34 @@ export class UserController {
             },
             security: true,
             summary: 'Upload avatar'
+        }
+    };
+
+    public readonly getAvatar: IHandler = {
+        method: async (req: Request, res: Response) => {
+            return res
+                .status(200)
+                .sendFile(await this._userServ.getAvatarAbsolutePath(req.params.id), {
+                    headers: { 'Content-Type': 'image/png' }
+                });
+        },
+        validation: {
+            path: {
+                id: {
+                    type: DataType.String,
+                    required: true,
+                    pattern: RE.checkMongoId.source
+                }
+            }
+        },
+        document: {
+            tags: ['User Management'],
+            responses: {
+                200: 'Found Data',
+                403: 'Forbidden'
+            },
+            security: true,
+            summary: 'Get avatar of user by specified ID'
         }
     };
 }
