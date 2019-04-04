@@ -494,4 +494,26 @@ export class KolAuthController {
             }
         }
     };
+
+    updateEngagement: IHandler = {
+        method: async (req: Request, res: Response, next: NextFunction) => {
+            return res.json(await this._kolAuthService.updateEngagement(req.params.id));
+        },
+        validation: {
+            path: {
+                id: {
+                    type: DataType.String,
+                    pattern: RE.checkMongoId.source
+                }
+            },
+        },
+        document: {
+            tags: ['kol authenticate'],
+            security: true,
+            summary: 'update engagement',
+            responses: {
+                200: 'Update engagement successful'
+            }
+        }
+    }
 }

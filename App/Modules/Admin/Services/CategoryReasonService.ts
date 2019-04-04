@@ -29,7 +29,7 @@ export class CategoryReasonService {
         Object.keys(data).forEach(k => {
             _.set(catReason, k, data[k]);
         });
-        const result = await catReason.save();
+        return catReason.save();
     }
 
     async createReason(catReason: any, data: IReason) {
@@ -39,7 +39,8 @@ export class CategoryReasonService {
             }
         })
         catReason.reasons.push(data);
-        return catReason.save();
+        const result = catReason.save();
+        return result.reasons[result.reasons.length-1];
     }
 
     async updateReason(catReason: any, idx: number, data: IReason) {
