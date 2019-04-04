@@ -5,6 +5,7 @@ import * as morgan from 'morgan';
 import * as bodyParser from 'body-parser';
 import * as swaggerUi from 'custom_modules/swagger-ui-express';
 import { Request, Response, NextFunction } from 'express';
+import * as formidableMiddleware from 'express-formidable';
 
 import { Injectable } from './Injectable';
 import { Router } from './Router';
@@ -13,12 +14,12 @@ import { Swagger } from './Swagger';
 import { Security } from './Security';
 import { Config } from './Config';
 import { BaseError, NotFound, MethodNotAllowed } from './Error';
-// import { log } from './Helpers/Log';
 
 import { Mongo } from './Mongo';
 import { InitDatabase } from 'Database';
 import { MorganFormat } from './Enum/Morgan';
 import { CommonErrorMessage } from './Enum/Error';
+import { FileStorage } from './FileStorage';
 
 var debug = require('debug')('shopback-test:server');
 require('./Helpers/Log');
@@ -41,7 +42,8 @@ export class Application {
         private readonly _router: Router,
         private readonly _rbac: RBAC,
         private readonly _swagger: Swagger,
-        private readonly _security: Security
+        private readonly _security: Security,
+        private readonly _storage: FileStorage
     ) {
         this._publicHost = this._config.server.public.host;
         this._publicPort = this._config.server.public.port;
@@ -53,6 +55,7 @@ export class Application {
 
     public async start() {
         console.log('------------------INITIALIZE-------------------');
+        await this._storage.setup();
         await this._configExpress();
         this._startServer();
 
@@ -89,6 +92,9 @@ export class Application {
         );
         this._app.use(bodyParser.json());
         this._app.use(bodyParser.urlencoded({ extended: false }));
+        this._app.use(formidableMiddleware({
+            uploadDir: this._config.storage.tmp
+        }));        
 
         // Config CORS
         this._app.use((req: Request, res: Response, next: NextFunction) => {
