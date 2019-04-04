@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from 'express';
 import { Injectable } from 'System/Injectable';
 import { IHandler } from 'System/Interface';
 import { DataType, FormatType } from 'System/Enum';
-import { NotFound } from 'System/Error';
 import * as RE from 'System/RegularExpression';
 
 import { UserService } from '../Services/UserService';
@@ -180,6 +179,36 @@ export class UserController {
             },
             security: true,
             summary: 'Get users by conditions'
+        }
+    };
+
+    public readonly uploadAvatar: IHandler = {
+        method: async (req: Request, res: Response) => {
+            return res.status(200).json(await this._userServ.uploadAvatar(req.params.id, req.files!.avatar));
+        },
+        validation: {
+            path: {
+                id: {
+                    type: DataType.String,
+                    required: true,
+                    pattern: RE.checkMongoId.source
+                }
+            },
+            formData: {
+                avatar : {
+                    type: DataType.File,
+                    required: true
+                }
+            }
+        },
+        document: {
+            tags: ['User Management'],
+            responses: {
+                200: 'Found Data',
+                403: 'Forbidden'
+            },
+            security: true,
+            summary: 'Upload avatar'
         }
     };
 }

@@ -6,5 +6,7 @@ export enum MIME {
     PNG = 'image/png',
     JPEG = 'image/jpeg',
     GIF = 'image/gif',
-    Plain = 'text/plain',
+    Plain = 'text/plain'
 }
+
+export const ImageMIME = ['image/png', 'image/jpeg', 'image/gif'];
