@@ -47,6 +47,32 @@ export class KolAuthController {
         }
     };
 
+    removeKolUser: IHandler = {
+        method: async (req: Request, res: Response, next: NextFunction) => {
+            if (process.env.ENV == 'production') {
+                throw new InternalError('Feature not enable in "production" env');
+            }
+
+           return res.json(await this._kolAuthService.removeKoluser(req.params.id));
+        },
+        validation: {
+           path: {
+               id: {
+                   type: DataType.String,
+                   pattern: RE.checkMongoId.source
+               }
+           }
+        },
+        document: {
+            tags: ['kol authenticate'],
+            summary: 'Delete kol user',
+            security: true,
+            responses: {
+                200: 'Kol user was deleted successfully'
+            }
+        }
+    };
+
     getKolUsers: IHandler = {
         method: async (req: Request, res: Response, next: NextFunction) => {
             return res.json(await this._kolAuthService.findCondition(req.query));

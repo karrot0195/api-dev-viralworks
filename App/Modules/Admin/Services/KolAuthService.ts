@@ -13,7 +13,7 @@ import {
     KolInfoStatus,
 } from 'App/Models/KolUserModel';
 import * as mongoose from 'mongoose';
-import { InternalError, SystemError } from 'System/Error';
+import { InternalError, SystemError, NotFound } from 'System/Error';
 import { evaluateOption } from 'App/Constants/Evaluate';
 import { KolSearchField } from 'Database/Schema/KolUserSchema';
 
@@ -130,5 +130,13 @@ export class KolAuthService {
                 reason: _.get(kolUser, 'kol_info.reason_reject', null)
             };
         });
+    }
+
+    async removeKoluser(id: string) {
+        const kolUser = await this._model.findById(id);
+        if (!kolUser) {
+            throw new NotFound('Not found kol user by id');
+        }
+        return kolUser.remove();
     }
 }
