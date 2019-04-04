@@ -119,9 +119,11 @@ export class Router implements IRouter {
                     { path: '/category-reasons', method: HTTP.Get, handler: this.categoryReasonController.getReasons },
                     { path: '/category-reasons', method: HTTP.Post, handler: this.categoryReasonController.createCategoryReason },
                     { path: '/category-reasons/{id}', method: HTTP.Get, handler: this.categoryReasonController.getReason },
+                    { path: '/category-reasons/{id}', method: HTTP.Delete, handler: this.categoryReasonController.deleteCategoryReason },
                     { path: '/category-reasons/{id}', method: HTTP.Put, handler: this.categoryReasonController.updateCategoryReason },
                     { path: '/category-reasons/{id}/reasons', method: HTTP.Post, handler: this.categoryReasonController.createReason },
                     { path: '/category-reasons/{id}/reasons', method: HTTP.Put, handler: this.categoryReasonController.updateReason },
+                    { path: '/category-reasons/{id}/reasons/{reason_id}', method: HTTP.Delete, handler: this.categoryReasonController.deleteReason },
                 ]
             },
         ];
