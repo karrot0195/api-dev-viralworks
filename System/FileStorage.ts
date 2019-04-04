@@ -37,7 +37,7 @@ export class FileStorage {
 
         if (!(await fs.existsSync(newDir))) await fs.mkdirSync(newDir);
 
-        let i = await fs.renameSync(filePath, newFilename);
+        await fs.renameSync(filePath, newFilename);
 
         return { message: 'Upload successfully'}
     }
