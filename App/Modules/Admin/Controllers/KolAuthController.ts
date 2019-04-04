@@ -53,15 +53,15 @@ export class KolAuthController {
                 throw new InternalError('Feature not enable in "production" env');
             }
 
-           return res.json(await this._kolAuthService.removeKoluser(req.params.id));
+            return res.json(await this._kolAuthService.removeKoluser(req.params.id));
         },
         validation: {
-           path: {
-               id: {
-                   type: DataType.String,
-                   pattern: RE.checkMongoId.source
-               }
-           }
+            path: {
+                id: {
+                    type: DataType.String,
+                    pattern: RE.checkMongoId.source
+                }
+            }
         },
         document: {
             tags: ['kol authenticate'],

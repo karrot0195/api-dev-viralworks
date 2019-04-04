@@ -10,7 +10,7 @@ import {
     IKolFacebookInfo,
     IKolEvalute,
     HistoryActionType,
-    KolInfoStatus,
+    KolInfoStatus
 } from 'App/Models/KolUserModel';
 import * as mongoose from 'mongoose';
 import { InternalError, SystemError, NotFound } from 'System/Error';
@@ -88,14 +88,14 @@ export class KolAuthService {
             _.set(kolUser, 'kol_info.status', KolInfoStatus.Verified);
 
             const result = await kolUser.save({ session });
-            
+
             if (!result) {
                 throw new SystemError('Not save data');
             }
 
             return {
                 status: KolInfoStatus.Verified,
-                history_action:  _.get(kolUser, 'kol_info.history_action', [])
+                history_action: _.get(kolUser, 'kol_info.history_action', [])
             };
         });
     }
@@ -119,14 +119,14 @@ export class KolAuthService {
             });
 
             const result = await kolUser.save({ session });
-            
+
             if (!result) {
                 throw new SystemError('Not save data');
             }
 
             return {
                 status: KolInfoStatus.Rejected,
-                history_action:  _.get(kolUser, 'kol_info.history_action', []),
+                history_action: _.get(kolUser, 'kol_info.history_action', []),
                 reason: _.get(kolUser, 'kol_info.reason_reject', null)
             };
         });
