@@ -29,6 +29,10 @@ export const config: Config = {
         pepper: 'V1r4lW0rk5_2018',
         RBAC: ENABLE_RBAC
     },
+    storage: {
+        tmp: process.env.UPLOAD_DIR || './tmp-upload',
+        dir: process.env.STORAGE_DIRECTORY || './Storage'
+    },
     // redis: {
     //     host: process.env.REDIS_HOST || '',
     //     port: normalizePort(process.env.REDIS_PORT || 6262)
