@@ -155,9 +155,14 @@ export class Router {
             });
         }
 
-        // Set extends variable Request
+       
         this.expressRouter[route.method!](expressPath, (req: Request, res: Response, next: NextFunction) => {
+            // Set extends variable Request
             req.routePath = route.path!;
+
+            // patch node-formidable
+            req.body = req.fields
+            
             return next();
         });
 

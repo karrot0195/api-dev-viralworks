@@ -88,9 +88,9 @@ export class Application {
                 }
             })
         );
-        this._app.use(bodyParser.json());
-        this._app.use(bodyParser.urlencoded({ extended: false }));
+        
         this._app.use(formidableMiddleware({
+            encoding : 'utf-8',
             uploadDir: this._config.storage.tmp
         }));        
 
