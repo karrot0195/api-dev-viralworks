@@ -10,17 +10,6 @@ require('./Helpers/Log');
 export class FileStorage {
     constructor(private readonly _config: Config) {}
 
-    async setup() {
-        console.log('Configuring file storage...');
-
-        for (let directory in this._config.storage) {
-            let tmp = this._config.storage[directory];
-            if (!(await fs.existsSync(tmp))) await fs.mkdirSync(tmp);
-        }
-
-        console.log('Configuring file storage - DONE');
-    }
-
     async checkUploadFileType(path: string, MIMEList: string[]) {
         const buffer = await fs.readFileSync(path);
 
@@ -39,10 +28,15 @@ export class FileStorage {
 
         await fs.renameSync(filePath, newFilename);
 
-        return { message: 'Upload successfully'}
+        return { message: 'Upload successfully' };
     }
 
-    async deleteFile(filePath: string){
-        if (await fs.existsSync(filePath)) await fs.unlinkSync(filePath)
+    async getAbsoluteFilePath(folder: string, filename: string) {
+        let tmp = path.join(__dirname, '..', this._config.storage.dir, folder, filename);
+        if (await fs.existsSync(tmp)) return tmp;
+    }
+
+    async deleteFile(filePath: string) {
+        if (await fs.existsSync(filePath)) await fs.unlinkSync(filePath);
     }
 }

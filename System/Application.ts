@@ -42,8 +42,7 @@ export class Application {
         private readonly _router: Router,
         private readonly _rbac: RBAC,
         private readonly _swagger: Swagger,
-        private readonly _security: Security,
-        private readonly _storage: FileStorage
+        private readonly _security: Security
     ) {
         this._publicHost = this._config.server.public.host;
         this._publicPort = this._config.server.public.port;
@@ -55,7 +54,6 @@ export class Application {
 
     public async start() {
         console.log('------------------INITIALIZE-------------------');
-        await this._storage.setup();
         await this._configExpress();
         this._startServer();
 
