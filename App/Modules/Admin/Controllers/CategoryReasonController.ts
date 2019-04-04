@@ -15,11 +15,11 @@ export class CategoryReasonController {
         method: async (req: Request, res: Response, next: NextFunction) => {
             try {
                 return res.json(await this._categoryReasonService.createCategoryReason(req.body));
-            } catch(err) {
+            } catch (err) {
                 if (err.code == 11000) {
                     throw new Conflict('Duplicate category reason');
                 }
-                throw new InternalError(err);
+                throw new InternalError(err.message);
             }
         },
         validation: {
@@ -39,9 +39,31 @@ export class CategoryReasonController {
             summary: 'Create new category reason',
             security: true,
             responses: {
-                200: 'successfull',
+                200: 'successfull'
+            }
+        }
+    };
+
+    deleteCategoryReason: IHandler = {
+        method: async (req: Request, res: Response, next: NextFunction) => {
+            return res.json(await this._categoryReasonService.removeCategoryReason(req.params.id));
+        },
+        validation: {
+            path: {
+                id: {
+                    type: DataType.String,
+                    pattern: RE.checkMongoId.source
+                }
             }
         },
+        document: {
+            tags: ['Category Reason'],
+            summary: 'Delete category reason',
+            security: true,
+            responses: {
+                200: 'Category reason was deleted successfully'
+            }
+        }
     };
 
     getReasons: IHandler = {
@@ -54,7 +76,7 @@ export class CategoryReasonController {
             summary: 'Get list reason',
             security: true,
             responses: {
-                200: 'successfull',
+                200: 'successfull'
             }
         }
     };
@@ -74,7 +96,7 @@ export class CategoryReasonController {
             security: true,
             responses: {
                 200: 'successfull',
-                404: 'Not found category reason',
+                404: 'Not found category reason'
             }
         }
     };
@@ -105,7 +127,7 @@ export class CategoryReasonController {
                         description: 'Category reason name'
                     }
                 }
-            },
+            }
         },
         document: {
             tags: ['Category Reason'],
@@ -113,9 +135,9 @@ export class CategoryReasonController {
             security: true,
             responses: {
                 200: 'Category reason was updated successfully',
-                404: 'Not found category reason',
-            },
-        },
+                404: 'Not found category reason'
+            }
+        }
     };
 
     createReason: IHandler = {
@@ -124,7 +146,7 @@ export class CategoryReasonController {
             if (catReason) {
                 return res.json(await this._categoryReasonService.createReason(catReason, req.body));
             }
-            throw new NotFound();
+            throw new NotFound('Not found reason');
         },
         validation: {
             path: {
@@ -144,7 +166,7 @@ export class CategoryReasonController {
                         description: 'Reason name'
                     }
                 }
-            },
+            }
         },
         document: {
             tags: ['Category Reason'],
@@ -189,10 +211,10 @@ export class CategoryReasonController {
                         type: DataType.String,
                         required: true,
                         pattern: RE.checkMongoId.source,
-                        description:'Reason id'
+                        description: 'Reason id'
                     }
                 }
-            },
+            }
         },
         document: {
             tags: ['Category Reason'],
@@ -200,6 +222,36 @@ export class CategoryReasonController {
             security: true,
             responses: {
                 200: 'Reason was updated successfully'
+            }
+        }
+    };
+
+    deleteReason: IHandler = {
+        method: async (req: Request, res: Response, next: NextFunction) => {
+            return res.json(await this._categoryReasonService.deleteReason(req.params.id, req.params.reason_id));
+        },
+        validation: {
+            path: {
+                id: {
+                    type: DataType.String,
+                    required: true,
+                    pattern: RE.checkMongoId.source,
+                    description: 'Category reason id'
+                },
+                reason_id: {
+                    type: DataType.String,
+                    required: true,
+                    pattern: RE.checkMongoId.source,
+                    description: 'Reason id'
+                }
+            }
+        },
+        document: {
+            tags: ['Category Reason'],
+            summary: 'Delete reason',
+            security: true,
+            responses: {
+                200: 'Reason was deleted successfully'
             }
         }
     };

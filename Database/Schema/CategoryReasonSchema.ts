@@ -20,8 +20,7 @@ const ReasonSchema = {
     },
     name: {
         type: String,
-        require: true,
-        unique: true
+        require: true
     },
     created_at: {
         type: Date,
