@@ -10,7 +10,7 @@ import {
     IKolFacebookInfo,
     IKolEvalute,
     HistoryActionType,
-    KolInfoStatus,
+    KolInfoStatus
 } from 'App/Models/KolUserModel';
 import * as mongoose from 'mongoose';
 import { InternalError, SystemError, NotFound } from 'System/Error';
@@ -89,14 +89,14 @@ export class KolAuthService {
             _.set(kolUser, 'kol_info.status', KolInfoStatus.Verified);
 
             const result = await kolUser.save({ session });
-            
+
             if (!result) {
                 throw new SystemError('Not save data');
             }
 
             return {
                 status: KolInfoStatus.Verified,
-                history_action:  _.get(kolUser, 'kol_info.history_action', [])
+                history_action: _.get(kolUser, 'kol_info.history_action', [])
             };
         });
     }
@@ -120,25 +120,32 @@ export class KolAuthService {
             });
 
             const result = await kolUser.save({ session });
-            
+
             if (!result) {
                 throw new SystemError('Not save data');
             }
 
             return {
                 status: KolInfoStatus.Rejected,
-                history_action:  _.get(kolUser, 'kol_info.history_action', []),
+                history_action: _.get(kolUser, 'kol_info.history_action', []),
                 reason: _.get(kolUser, 'kol_info.reason_reject', null)
             };
         });
     }
 
-    async updateEngagement(id: string) {
+    async removeKoluser(id: string) {
         const kolUser = await this._model.findById(id);
         if (!kolUser) {
             throw new NotFound('Not found kol user by id');
         }
+        return kolUser.remove();
+    }
 
+    async updateEngagement(id: string) {
+        const kolUser:any = await this._model.findById(id);
+        if (!kolUser) {
+            throw new NotFound('Not found kol user by id');
+        }
         const entityId = _.get(kolUser, 'facebook.entity_id', null);
         if (!entityId) {
             throw new InternalError('The kol user is miss entity_id field');
@@ -156,6 +163,7 @@ export class KolAuthService {
         analatic['avg_comment_last_3_month'] = Math.round(avgComment);
         analatic['avg_sharing_last_3_month'] = Math.round(avgShare);
         analatic['avg_engagement_last_3_month'] = Math.round(avgReact + avgComment + avgShare);
+
         _.set(kolUser, 'facebook.analytic', analatic);
         if (await kolUser.save()) {
             return analatic;

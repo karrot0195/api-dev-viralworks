@@ -80,6 +80,7 @@ export class Router implements IRouter {
                     { path: '/kol-users', method: HTTP.Get, handler: this.kolAuthController.getKolUsers },
                     { path: '/kol-users', method: HTTP.Post, handler: this.kolAuthController.createKolUser },
                     { path: '/kol-users/{id}', method: HTTP.Get, handler: this.kolAuthController.getKolUser },
+                    { path: '/kol-users/{id}', method: HTTP.Delete, handler: this.kolAuthController.removeKolUser },
                     { path: '/kol-users/{id}/engagement', method: HTTP.Put, handler: this.kolAuthController.updateEngagement },
                     {
                         path: '/kol-users/{id}/basic',
