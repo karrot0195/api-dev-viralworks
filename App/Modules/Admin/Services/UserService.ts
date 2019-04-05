@@ -6,15 +6,19 @@ import { IUser, UserModel } from 'App/Models/UserModel';
 import { generateUserCode } from 'App/Helpers/Generator';
 import { RoleBasedAccessControlService } from 'System/RBAC/Service';
 import { BadRequest } from 'System/Error';
-import { RBACErrorMessage } from 'System/Enum/Error';
 import { UserSearchField } from 'Database/Schema/UserSchema';
+import { FileStorage } from 'System/FileStorage';
+import { ImageMIME } from 'System/Enum/MIME';
+import { UserError } from '../Enum/Error';
+import { Default } from '../Enum/Default';
 
 @Injectable
 export class UserService {
     constructor(
         private readonly _config: Config,
         private readonly _userModel: UserModel,
-        private readonly _RBACService: RoleBasedAccessControlService
+        private readonly _RBACService: RoleBasedAccessControlService,
+        private readonly _storage: FileStorage
     ) {}
 
     async create(data: IUser) {
@@ -28,8 +32,7 @@ export class UserService {
         }
 
         if (data.role && data.role !== 'admin') {
-            if (!(await this._RBACService.findRoleById(data.role)))
-                throw new BadRequest(RBACErrorMessage.ROLE_NOT_FOUND);
+            if (!(await this._RBACService.findRoleById(data.role))) throw new BadRequest(UserError.ROLE_NOT_FOUND);
         }
 
         data.isDisabled = false;
@@ -43,7 +46,7 @@ export class UserService {
     async updateUserById(id: string, userData: IUser) {
         let user = await this.findById(id);
 
-        if (!user) throw new BadRequest(RBACErrorMessage.USER_NOT_FOUND);
+        if (!user) throw new BadRequest(UserError.USER_NOT_FOUND);
 
         if (userData.name) user.name = userData.name;
         if (userData.email) user.email = userData.email;
@@ -52,7 +55,7 @@ export class UserService {
 
         if (userData.role) {
             if (!(await this._RBACService.findRoleById(userData.role))) {
-                throw new BadRequest(RBACErrorMessage.ROLE_NOT_FOUND);
+                throw new BadRequest(UserError.ROLE_NOT_FOUND);
             }
             user.role = userData.role;
         }
@@ -69,11 +72,40 @@ export class UserService {
 
     async findById(id: string, fields?: string) {
         let user = await this._userModel.findById(id, fields);
-        if (!user) throw new BadRequest(RBACErrorMessage.USER_NOT_FOUND);
+        if (!user) throw new BadRequest(UserError.USER_NOT_FOUND);
         return user;
     }
 
     async findUserWithFilter(conditions?: any) {
         return this._userModel.findWithFilter(conditions, UserSearchField);
+    }
+
+    async uploadAvatar(id: string, avatar: any) {
+        try {
+            let user = await this.findById(id);
+
+            if (!user) throw new BadRequest(UserError.USER_NOT_FOUND);
+
+            if (await this._storage.checkUploadFileType(avatar.path, ImageMIME)) {
+                return await this._storage.storeUploadFile(avatar.path, 'avatar', id);
+            }
+
+            throw new BadRequest(UserError.AVATAR_WRONG_TYPE);
+        } catch (err) {
+            throw err;
+        } finally {
+            await this._storage.deleteFile(avatar.path);
+        }
+    }
+
+    async getAvatarAbsolutePath(id: string) {
+        let user = await this.findById(id);
+
+        if (!user) throw new BadRequest(UserError.USER_NOT_FOUND);
+
+        return (
+            (await this._storage.getAbsoluteFilePath('avatar', id)) ||
+            (await this._storage.getAbsoluteFilePath('avatar', Default.USER_AVATAR_IMAGE))
+        );
     }
 }

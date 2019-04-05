@@ -5,6 +5,7 @@ import * as morgan from 'morgan';
 import * as bodyParser from 'body-parser';
 import * as swaggerUi from 'custom_modules/swagger-ui-express';
 import { Request, Response, NextFunction } from 'express';
+import * as formidableMiddleware from 'express-formidable';
 
 import { Injectable } from './Injectable';
 import { Router } from './Router';
@@ -13,7 +14,6 @@ import { Swagger } from './Swagger';
 import { Security } from './Security';
 import { Config } from './Config';
 import { BaseError, NotFound, MethodNotAllowed } from './Error';
-// import { log } from './Helpers/Log';
 
 import { Mongo } from './Mongo';
 import { InitDatabase } from 'Database';
@@ -87,8 +87,11 @@ export class Application {
                 }
             })
         );
-        this._app.use(bodyParser.json());
-        this._app.use(bodyParser.urlencoded({ extended: false }));
+
+        this._app.use(formidableMiddleware({
+            encoding : 'utf-8',
+            uploadDir: this._config.storage.tmp
+        }));        
 
         // Config CORS
         this._app.use((req: Request, res: Response, next: NextFunction) => {

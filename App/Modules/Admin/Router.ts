@@ -61,6 +61,8 @@ export class Router implements IRouter {
                 group: [
                     { path: '/users/create', method: HTTP.Post, handler: this.userController.createUser },
                     { path: '/users/update/{id}', method: HTTP.Post, handler: this.userController.updateUserById },
+                    { path: '/users/{id}/avatar/upload', method: HTTP.Post, handler: this.userController.uploadAvatar},
+                    { path: '/users/{id}/avatar', method: HTTP.Get, handler: this.userController.getAvatar},
                     { path: '/users/{id}', method: HTTP.Get, handler: this.userController.getUserById },
                     { path: '/users', method: HTTP.Get, handler: this.userController.getUsers }
                 ]

@@ -13,7 +13,7 @@ export class RoleController {
     constructor(readonly config: Config, private readonly rbac: RBAC, private readonly service: RBACService) {}
 
     public readonly getPaths: IHandler = {
-        method: (req: Request, res: Response) => {
+        method: async (req: Request, res: Response) => {
             return res.status(200).json(this.service.routePathsWithModule);
         },
         document: {
