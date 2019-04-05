@@ -15,11 +15,12 @@ export const FaqSchema = {
         type: String
     },
     status: {
-        type: Number
+        type: Number,
+        default: 0
     },
     type: {
         type: Number
     }
 }
 
-export const FaqSearchField = ['question', 'answer', 'type', 'status'];
+export const FaqSearchField = ['question', 'answer'];
