@@ -70,5 +70,8 @@
     "nodemon": "^1.18.3",
     "ts-node": "^7.0.0",
     "typescript": "^3.0.1"
+  },
+  "engines": {
+    "node": "8.15.0"
   }
 }
