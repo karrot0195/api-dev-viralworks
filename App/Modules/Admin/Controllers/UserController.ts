@@ -204,7 +204,7 @@ export class UserController {
         document: {
             tags: ['User Management'],
             responses: {
-                200: 'Found Data',
+                200: 'Image upload successfully',
                 403: 'Forbidden'
             },
             security: true,
