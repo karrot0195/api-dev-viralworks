@@ -4,6 +4,7 @@ export abstract class Config {
     readonly jwt: {
         readonly key: string;
         readonly expire: string;
+        readonly remember: string;
     }
     readonly server: {
         readonly host: string;
@@ -30,4 +31,8 @@ export abstract class Config {
         readonly database: string;
         readonly debug: boolean;
     };
+    readonly storage: {
+        readonly tmp: string;
+        readonly dir: string;
+    }
 }

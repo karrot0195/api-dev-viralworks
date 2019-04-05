@@ -1,0 +1,35 @@
+extends ../layouts/template.pug
+
+block body
+    table(style='margin: 0 auto')
+        tbody
+            tr
+                td
+                    // content
+                    div(style='max-width: 430px')
+                        table
+                            tbody
+                                tr
+                                    td
+                                        h3(style='\
+                                        color: #683C97;\
+                                        line-height: normal;\
+                                        font-size: 28px;\
+                                        text-align: center;\
+                                        font-weight: normal') Thông báo về việc đăng ký tài khoản
+                                        p Chào #{kol_name},
+                                        p Cảm ơn bạn đã đăng ký trở thành Influencer cùng ViralWorks.
+                                        p
+                                            | Hệ thống ViralWorks nhận thấy tài khoản của bạn chưa phù hợp với yêu cầu. Vì vậy chúng tôi rất tiếc phải thông báo rằng không thể hợp tác với bạn ở thời điểm này.
+                                        p
+                                            | Mong bạn vẫn sẽ tiếp tục chia sẻ niềm đam mê để phát triển hình ảnh cá nhân trên mạng xã hội.
+                                        p
+                                            | Bạn cần được hỗ trợ ngay? Chỉ cần inbox fanpage 
+                                            a(href='https://www.facebook.com/ViralWorksPlatform/') ViralWorks
+                                            |  hoặc email: 
+                                            a(href='mailto:support@viralworks.com') support@viralworks.com
+                                        p Trân trọng,
+                                        p(style='padding-bottom: 40px;margin: 0;')
+                                            b Đội ngũ phát triển ứng dụng ViralWorks
+                            // /content
+                td

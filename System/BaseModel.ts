@@ -1,6 +1,7 @@
 import { Model, Document, ClientSession, ModelUpdateOptions } from 'mongoose';
 
 import { Mongo } from './Mongo';
+import { processQuery, processField } from './Helpers/Format';
 
 export abstract class BaseModel<I, T extends Document> {
     protected readonly _model: Model<T>;
@@ -16,8 +17,23 @@ export abstract class BaseModel<I, T extends Document> {
         return this._model.find(conditions);
     }
 
-    findById(id: string) {
-        return this._model.findById(id);
+    async findWithFilter(query: any, modelSearchField: Array<string>) {
+        let result: any;
+
+        let queryData = processQuery(query, modelSearchField);
+
+        let count: number = await this._model.countDocuments(queryData.conditions);
+        if (count > 0) {
+            result = await this._model.find(queryData.conditions, queryData.projections, queryData.options);
+        } else {
+            result = [];
+        }
+
+        return { total: count, results: result, limit: queryData.options.limit, page: queryData.options.page };
+    }
+
+    findById(id: string, fields: string = '') {
+        return this._model.findById(id).select(processField(fields));
     }
 
     findOne(conditions?: any) {

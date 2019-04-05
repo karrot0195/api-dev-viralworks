@@ -94,28 +94,30 @@ export class Router {
         };
 
         for (const pos in validation) {
+            if (!(validation.formData && pos == 'formData')) {
 
-            let expressPos = pos;
+                let expressPos = pos;
 
-            if (pos == 'path') {
-                expressPos = 'params';
-            } else if (pos == 'header') {
-                expressPos = 'headers';
-            }
+                if (pos == 'path') {
+                    expressPos = 'params';
+                } else if (pos == 'header') {
+                    expressPos = 'headers';
+                }
 
-            let param: ISchema;
-            if (validation.body && pos == 'body') {
-                param = validation.body;
-            } else {
-                param = this._resolveNonSchemaValidation(req[expressPos], validation[pos]);
-            }
+                let param: ISchema;
+                if (validation.body && pos == 'body') {
+                    param = validation.body;
+                } else {
+                    param = this._resolveNonSchemaValidation(req[expressPos], validation[pos]);
+                }
 
-            const validate = Validator(param, valiOpts);
-            const valid = validate(req[expressPos]);
+                const validate = Validator(param, valiOpts);
+                const valid = validate(req[expressPos]);
 
-            if (!valid) {
-                const errors = convertValidationError(validate.errors);
-                return next(new BadRequest({ in: pos, fields: errors }));
+                if (!valid) {
+                    const errors = convertValidationError(validate.errors);
+                    return next(new BadRequest({ in: pos, fields: errors }));
+                }
             }
         }
 
@@ -153,9 +155,14 @@ export class Router {
             });
         }
 
-        // Set extends variable Request
+       
         this.expressRouter[route.method!](expressPath, (req: Request, res: Response, next: NextFunction) => {
+            // Set extends variable Request
             req.routePath = route.path!;
+
+            // patch node-formidable
+            req.body = req.fields
+            
             return next();
         });
 

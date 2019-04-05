@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import * as jwt from 'jsonwebtoken';
 
 import { Unauthorized } from 'System/Error/Unauthorized';
 import { Injectable } from 'System/Injectable';
@@ -9,16 +8,16 @@ import { AuthService } from '../Services/AuthService';
 
 @Injectable
 export class AuthController {
-    constructor(private readonly _authServ: AuthService) { }
+    constructor(private readonly _authServ: AuthService) {}
 
     postLogin: IHandler = {
         method: async (req: Request, res: Response) => {
-            const result = await this._authServ.login(req.body.email, req.body.password);
+            const result = await this._authServ.login(req.body.email, req.body.password, req.body.remember);
 
             if (result === false) {
-                throw new Unauthorized('Login Failed');
+                throw new Unauthorized();
             } else {
-                return res.status(201).json({ token: result });
+                return res.status(201).json(result);
             }
         },
         validation: {
@@ -33,6 +32,9 @@ export class AuthController {
                     password: {
                         type: DataType.String,
                         required: true
+                    },
+                    remember: {
+                        type: DataType.Integer
                     }
                 }
             }
@@ -45,5 +47,20 @@ export class AuthController {
                 401: 'Login Failed'
             }
         }
-    }
+    };
+
+    getCheckToken: IHandler = {
+        method: async (req: Request, res: Response) => {
+            return res.status(200).json(await this._authServ.getUserInfo(req.get('Authorization')));
+        },
+        document: {
+            tags: ['Authentication'],
+            summary: 'Check if token is still valid',
+            responses: {
+                200: 'Token is valid',
+                401: 'Token is invalid'
+            },
+            security: true
+        }
+    };
 }

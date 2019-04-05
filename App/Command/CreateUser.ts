@@ -9,9 +9,9 @@ export class CreateUser implements ICommand {
 
     public async run() {
         const user = await this.service.create({
-            name: 'Daniel',
-            email: 'truong.huynh@viralworks.com',
-            password: 'daniel123!@#',
+            name: 'Admin',
+            email: 'admin@vw.com',
+            password: 'abc@123',
             role: 'admin'
         });
 

@@ -5,6 +5,7 @@ export enum DataType {
     Boolean = 'boolean',
     Array = 'array',
     Object = 'object',
+    File = 'file'
 }
 
 export enum FormatType {
