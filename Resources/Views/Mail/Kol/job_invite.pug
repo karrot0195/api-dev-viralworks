@@ -1,0 +1,29 @@
+extends ../layouts/template.pug
+
+block body
+    table(style='margin: 0 auto')
+        tbody
+            tr
+                td
+                    // content
+                    div(style='max-width: 430px')
+                        table
+                            tbody
+                                tr
+                                    td
+                                        h3(style='\
+                                        color: #683C97;\
+                                        line-height: normal;\
+                                        font-size: 28px;\
+                                        text-align: center;\
+                                        font-weight: normal') THÔNG BÁO CHIẾN DỊCH MỚI
+                                        p Chào #{kol_name},
+                                        p
+                                            | Một chiến dịch mới đã được khởi tạo. Bạn vui lòng nhấn vào nút dưới đây để tìm hiểu công việc và đăng kí tham gia:.
+                                        a(href=link) [TÌM HIỂU CÔNG VIỆC]
+                                        p Trân trọng,
+                                        p(style='padding-bottom: 40px;margin: 0;')
+                                            b Đội ngũ phát triển ứng dụng ViralWorks
+                        // /content
+                td
+            // /BODY

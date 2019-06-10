@@ -1,271 +1,54 @@
 import { IDocument } from 'System/Interface';
 import * as mongoose from 'mongoose';
+import {
+    FacebookSchemaItem,
+    KolInfoSchemaItem,
+    TokenSchemaItem,
+    IncomeSchemaItem,
+    PaymentSchemaItem,
+    DeliverySchemaItem
+} from 'App/Constants/Schema/KolUser/KolUserSchemaItem';
+import { HistoryAction } from './HistoryActionSchema';
+import { model, Model } from 'mongoose';
+import { HistoryActionType } from 'App/Models/HistoryActionModel';
 
-interface HistoryActionItem {
-    readonly causer_id: string;
-    readonly type: number;
-    readonly ref_id: string;
-}
-
+/* Kol User */
 interface KolUser extends IDocument {
-    readonly email: string;
-    readonly code: string;
-    readonly password: string;
-    readonly setting: object;
-    readonly status: string;
-    readonly facebook: object;
-    readonly kol_info: object;
-    readonly summary_info: string;
-    readonly verify_email: object;
-    readonly verify_password: object;
-    readonly product_tour: number;
-    readonly invites: object;
-    readonly joins: object;
-    readonly num_rate: number;
-    readonly num_rate_evaluate: number;
-    readonly income: object;
-    readonly payment_info: object;
-    readonly delivery_info: object;
-}
-
-const HistoryActionItemSchema = {
-    causer_id: {
-        type: mongoose.SchemaTypes.ObjectId,
-        required: true
-    },
-    type: {
-        type: Number,
-        required: true
-    },
-    kol_status: {
-        type: Number
-    },
-    ref_id: {
-        type: String
-    },
-    created_at: {
-        type: Date,
-        default: new Date()
-    }
-};
-
-const PaymentSchema = {
-    account_name: {
-        type: String
-    },
-    account_id: {
-        type: String
-    },
-    bank_name: {
-        type: String
-    },
-    bank_province: {
-        type: String
-    },
-    bank_branch: {
-        type: String
-    }
-};
-
-const FacebookSchema = {
-    entity_id: {
-        type: String
-    },
-    name: {
-        type: String
-    },
-    profile_link: {
-        type: String
-    },
-    app_scoped_id: {
-        type: String
-    },
-    app_scoped_token: {
-        type: String
-    },
-    page: {
-        type: Array
-    },
-    analytic: {
-        total_follower: {
-            type: Number
-        },
-        total_post_last_3_month: {
-            type: Number
-        },
-        avg_reaction_last_3_month: {
-            type: Number
-        },
-        avg_comment_last_3_month: {
-            type: Number
-        },
-        avg_sharing_last_3_month: {
-            type: Number
-        },
-        avg_engagement_last_3_month: {
-            type: Number
-        },
-        latest_updated: {
-            type: Date
-        }
-    }
-};
-
-const EvaluateSchema = {
-    fb: {
-        frequency: {
-            type: Number
-        },
-        style: {
-            type: Number
-        },
-        content: {
-            type: Array
-        }
-    },
-    text: {
-        length: {
-            type: Number
-        },
-        interactivity: {
-            type: Number
-        },
-        swearing_happy: {
-            type: Number
-        }
-    },
-    image: {
-        content: {
-            type: Array
-        },
-        personal_style: {
-            type: Array
-        },
-        scenery: {
-            type: Number
-        },
-        refine_content: {
-            type: Number
-        }
-    },
-    general_style: {
-        appearence: {
-            type: Number
-        },
-        brand: {
-            type: Number
-        }
-    }
-};
-
-const PriceSchema = {
-    photo: {
-        type: Number
-    },
-    livestream: {
-        type: Number
-    },
-    have_video: {
-        type: Number
-    },
-    share_link: {
-        type: Number
-    }
-};
-
-const KolInfoSchema = {
-    mobile: {
-        type: String
-    },
-    sex: {
-        type: Number
-    },
-    dob: {
-        type: Number
-    },
-    matrimony: {
-        type: Number
-    },
-    num_child: {
-        type: Number
-    },
-    job: {
-        type: Array
-    },
-    job_other: {
-        type: Array
-    },
-    share_story: {
-        type: Array
-    },
-    share_story_other: {
-        type: Array
-    },
-    price: PriceSchema,
-    notification_job: {
-        type: Boolean
-    },
-    step: {
-        type: String
-    },
-    status: {
-        type: Number,
-        default: 0
-    },
-    reject_note: {
-        reason_id: {
-            type: String
-        },
-        description: {
-            type: String
-        }
-    },
-    evaluate: EvaluateSchema,
-    history_action: [HistoryActionItemSchema]
-};
-
-const TokenSchema = {
+    email: string;
+    code: string;
+    password: string;
+    setting: object;
+    status: number;
+    facebook: object;
+    kol_info: object;
+    summary_info: string;
+    verify_email: object;
+    verify_password: object;
+    product_tour: number;
+    income: {
+        pending: number;
+        approved: number;
+    };
+    payment_info: object;
+    delivery_info: object;
+    histories: Array<string | HistoryAction>;
+    location: string;
     token: {
-        type: String
-    },
-    status: {
-        type: Number,
-        default: 0
-    },
-    created_at: {
-        type: Date
-    },
-    updated_at: {
-        type: Date
-    }
-};
-
-const IncomeSchema = {
-    pending: {
-        type: Number,
-        default: 0,
-        min: 0
-    },
-    approved: {
-        type: Number,
-        default: 0,
-        min: 0
-    }
-};
-
-const DeliverySchema = {
-    city: {
-        type: String
-    },
-    district: {
-        type: String
-    },
-    address: {
-        type: String
-    }
-};
+        email: object;
+        password: object;
+    };
+    job: any;
+    rate: {
+        evaluate: {
+            count: number;
+        };
+        num: number;
+    };
+}
+/**/
 
 const KolUserSchema = {
+    histories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'history_action' }],
     email: {
         type: String,
         required: true,
@@ -287,32 +70,115 @@ const KolUserSchema = {
         type: Number,
         default: 1
     },
-    facebook: FacebookSchema,
-    kol_info: KolInfoSchema,
+    facebook: FacebookSchemaItem,
+    kol_info: KolInfoSchemaItem,
     summary_info: {
         type: String
     },
-    verify_email: TokenSchema,
-    verify_password: TokenSchema,
+    token: {
+        email: TokenSchemaItem,
+        password: TokenSchemaItem
+    },
+    verify: {
+        email: {
+            type: Boolean,
+            default: false
+        }
+    },
     product_tour: {
-        type: Number
+        type: Boolean,
+        default: false
     },
-    invites: {
-        type: Array
+    rate: {
+        num: {
+            type: Number,
+            default: 0
+        },
+        evaluate: {
+            count: {
+                type: Number,
+                default: 0
+            }
+        }
     },
-    joins: {
-        type: Array
+    income: IncomeSchemaItem,
+    payment_info: PaymentSchemaItem,
+    delivery_info: DeliverySchemaItem,
+    job: {
+        invite: {
+            count: {
+                type: Number,
+                default: 0
+            }
+        },
+        running: {
+            count: {
+                type: Number,
+                default: 0
+            }
+        },
+        completed: {
+            count: {
+                type: Number,
+                default: 0
+            }
+        }
     },
-    num_rate: {
-        type: Number
-    },
-    num_rate_evaluate: {
-        type: Number
-    },
-    income: IncomeSchema,
-    payment_info: PaymentSchema,
-    delivery_info: DeliverySchema
+    location: String
 };
+
+export const OptionKolUserSchema = {
+    toObject: {
+        virtuals: true
+    },
+    toJSON: {
+        virtuals: true
+    }
+};
+
+export function FuncKolUserCustomSchema(schema: mongoose.Schema, models: Model<any>) {
+    let virtualJob = schema.virtual('kol_info.cat_jobs');
+    let virtualShareStories = schema.virtual('kol_info.cat_share_stories');
+    virtualJob.get(async function() {
+        const jobs = this.kol_info.job;
+        const arr: Array<any> = [];
+        if (jobs) {
+            const data = await models['category_job'].find({
+                'jobs._id': { $in: this.kol_info.job }
+            });
+            if (data && data.length) {
+                for (const catJob of data) {
+                    for (const job of catJob['jobs']) {
+                        if (jobs.find(j => j == job._id.toString())) {
+                            arr.push(job);
+                        }
+                    }
+                }
+            }
+        }
+        return arr;
+    });
+
+    virtualShareStories.get(async function() {
+        const share_stories = this.kol_info.share_story;
+        const arr: Array<any> = [];
+        if (share_stories) {
+            const data = await models['category_share_story'].find({
+                'share_stories._id': { $in: share_stories }
+            });
+            if (data && data.length) {
+                for (const catJob of data) {
+                    for (const shareStory of catJob['share_stories']) {
+                        if (share_stories.find(s => s == shareStory._id.toString())) {
+                            arr.push(shareStory);
+                        }
+                    }
+                }
+            }
+        }
+        return arr;
+    });
+}
 
 const KolSearchField = ['email', 'code', 'summary', 'facebook.name', 'facebook.enitiy_id'];
 

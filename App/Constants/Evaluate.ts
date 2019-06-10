@@ -16,7 +16,6 @@ export const evaluateOption = {
                 'Quảng cáo cho các nhãn hàng ',
             ],
             t: 2,
-            '0': 2,
         },
         style: {
             q: 'Phong cách chung',
@@ -51,7 +50,6 @@ export const evaluateOption = {
                 'Hình ảnh đời sống (ăn uống, chụp cùng bạn bè, check-in...)',
             ],
             t: 2,
-            '0': 2,
         },
         personal_style: {
             q: 'Phong cách cá nhân',
@@ -64,7 +62,6 @@ export const evaluateOption = {
                 'Có gout thời trang riêng',
             ],
             t: 2,
-            '0': 2,
         },
         scenery: {
             q: 'Phong cảnh xuất hiện trong hình ảnh',

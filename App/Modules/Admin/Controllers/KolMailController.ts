@@ -4,19 +4,14 @@ import { IHandler } from 'System/Interface';
 import { DataType } from 'System/Enum';
 import { checkMongoId } from 'System/RegularExpression';
 import { NextFunction, Request, Response } from 'express';
-import { InternalError } from 'System/Error';
 
 @Injectable
 export class KolMailController {
     constructor(private readonly _mailService: MailService) {}
 
-    public readonly sendMail: IHandler = {
+    public readonly actionSendMail: IHandler = {
         method: async (req: Request, res: Response, next: NextFunction) => {
-            try {
-                return res.status(200).json(await this._mailService.sendMailTemplateKol(req.auth.id, req.params.id, req.params.type));
-            } catch(err) {
-                throw new InternalError(err.message);
-            }
+            return res.json(await this._mailService.sendMailTemplateKol(req.auth.id, req.params.id, parseInt(req.params.type)));
         },
         validation: {
             path: {
@@ -35,7 +30,7 @@ export class KolMailController {
         },
         document: {
             summary: 'Send mail template for kol user',
-            tags: ['Mail Template'],
+            tags: ['Admin Manager'],
             security: true,
             responses: {
                 200: 'Mail was sent successfully'

@@ -1,0 +1,2 @@
+#!/bin/sh
+pm2 start ./mail-queue --interpreter bash --name mail

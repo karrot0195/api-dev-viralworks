@@ -3,12 +3,12 @@ import { Mongo } from 'System/Mongo';
 import { BaseModel } from 'System/BaseModel';
 import { Faq } from 'Database/Schema/FaqSchema';
 
-enum StatusFaq {
+export enum FaqStatus {
     Pending = 0,
     Publish = 1
 }
 
-export enum TypeFaq {
+export enum FaqType {
     Influencer = 0,
     Brand = 1,
     KOLUser = 2

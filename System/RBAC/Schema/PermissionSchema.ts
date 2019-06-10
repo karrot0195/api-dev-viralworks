@@ -1,16 +1,17 @@
 import { HTTP } from 'System/Enum/HTTP';
 import { IDocument } from 'System/Interface';
+import { Schema } from 'mongoose';
 
 export interface Permission extends IDocument {
     route: {
         path: string;
         method: string;
     };
-    description?: string;
+    name?: string;
     roles: string[];
 }
 
-export const PermissionSearchField = ['route.path', 'route.method', 'description', 'roles'];
+export const PermissionSearchField = ['route.path', 'route.method', 'name'];
 
 export const PermisisonSchema = {
     route: {
@@ -28,10 +29,11 @@ export const PermisisonSchema = {
         unique: true,
         required: true
     },
-    description: {
-        type: String
+    name: {
+        type: String,
+        required: true
     },
     roles: {
-        type: [String]
+        type: [{ type: Schema.Types.ObjectId, ref: 'role' }]
     }
 };

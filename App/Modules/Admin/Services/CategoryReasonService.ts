@@ -65,7 +65,7 @@ export class CategoryReasonService {
     async removeCategoryReason(categoryId: string) {
         const catgoryReason = await this._categoryReasonModel.findById(categoryId);
         if (!catgoryReason) {
-            throw new NotFound('Not found category reason by id');
+            throw new NotFound('CAT_REASON_NOT_FOUND');
         }
 
         return catgoryReason.remove();
@@ -74,7 +74,7 @@ export class CategoryReasonService {
     async deleteReason(categoryId: string, reasonId: string) {
         const catgoryReason = await this._categoryReasonModel.findById(categoryId);
         if (!catgoryReason) {
-            throw new NotFound('Not found category reason by id');
+            throw new NotFound('CAT_REASON_NOT_FOUND');
         }
         catgoryReason.reasons.forEach((reason, idx) => {
             if (reason._id == reasonId) {

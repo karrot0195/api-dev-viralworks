@@ -1,7 +1,15 @@
-import { Model, Document, ClientSession, ModelUpdateOptions } from 'mongoose';
+import { Model, Document, ClientSession, ModelUpdateOptions, ModelPopulateOptions, Query } from 'mongoose';
 
 import { Mongo } from './Mongo';
 import { processQuery, processField } from './Helpers/Format';
+import { PaginationData } from './Interface/PaginationData';
+
+export interface IHookFilterCondition {
+    beforeQuery?: Function;
+    beforeExcuteQuery?: Function;
+    beforeResultData?: Function;
+    afterExcuteQuery?: Function;
+}
 
 export abstract class BaseModel<I, T extends Document> {
     protected readonly _model: Model<T>;
@@ -13,23 +21,57 @@ export abstract class BaseModel<I, T extends Document> {
         return new this._model(data).save({ session });
     }
 
-    find(conditions?: any) {
-        return this._model.find(conditions);
+    find(conditions?: any, projection: any = {}) {
+        return this._model.find(conditions, projection);
     }
 
-    async findWithFilter(query: any, modelSearchField: Array<string>) {
-        let result: any;
+    async findWithFilter(
+        query: any,
+        modelSearchField: Array<string>,
+        hook?: IHookFilterCondition,
+        population?: ModelPopulateOptions | ModelPopulateOptions[]
+    ): Promise<any> {
+        let data: PaginationData = {};
 
         let queryData = processQuery(query, modelSearchField);
 
-        let count: number = await this._model.countDocuments(queryData.conditions);
-        if (count > 0) {
-            result = await this._model.find(queryData.conditions, queryData.projections, queryData.options);
-        } else {
-            result = [];
-        }
+        if (hook && hook.beforeQuery) await hook.beforeQuery(queryData); // hook before query
 
-        return { total: count, results: result, limit: queryData.options.limit, page: queryData.options.page };
+        let queryBase = this._model.find(queryData.conditions, queryData.projections);
+
+        if (hook && hook.beforeExcuteQuery) await hook.beforeExcuteQuery(queryBase); // hook before excute query
+
+        if (population) {
+            queryBase.populate(population);
+        }
+        const [results, count] = await Promise.all([
+            await queryBase
+                .limit(queryData.options.limit)
+                .skip(queryData.options.skip)
+                .sort(queryData.options.sort),
+            await queryBase.limit(0).skip(0).count()
+        ]);
+
+        data.total = count;
+        data.limit = queryData.options.limit;
+        data.page = queryData.options.page;
+
+        data.lastpage = data.limit;
+        if (data.limit !== 0) data.lastpage = Math.floor(data.total / data.limit!) - (data.total % data.limit! ? 0 : 1);
+
+        data.from = data.page! * data.limit!;
+        if (results.length === 0) data.from = -1;
+
+        data.to = data.from + results.length - 1;
+        if (results.length === 0) data.to = -1;
+
+        if (hook && hook.afterExcuteQuery) {
+            data.results = await hook.afterExcuteQuery(results); // hook after excute query
+        } else {
+            data.results = results;
+        }
+        if (hook && hook.beforeResultData) await hook.beforeResultData(data); // hook before result data
+        return data;
     }
 
     findById(id: string, fields: string = '') {
@@ -58,5 +100,17 @@ export abstract class BaseModel<I, T extends Document> {
 
     deleteMany(conditions: any) {
         return this._model.deleteMany(conditions);
+    }
+
+    insertMany(data: I[], options?: any) {
+        return this._model.insertMany(data, options);
+    }
+
+    dropCollection() {
+        return this._model.collection.drop();
+    }
+
+    count(conditions: any, callback?: (err: any, count: number) => void): Query<number> {
+        return this._model.count(conditions, callback);
     }
 }

@@ -1,15 +1,17 @@
 import { IDocument } from 'System/Interface';
+import { Schema } from 'mongoose';
 
 export interface User extends IDocument {
     name: string;
     email: string;
     password: string;
-    role: string;
+    roles: string[];
     code: string;
-    isDisabled: boolean;
+    is_disabled: boolean;
+    avatar_url?: string;
 }
 
-export const UserSearchField = ['name', 'email', 'role', 'code'];
+export const UserSearchField = ['name', 'email', 'code'];
 
 export const UserSchema = {
     name: {
@@ -25,8 +27,8 @@ export const UserSchema = {
         required: true,
         select: false
     },
-    role: {
-        type: String,
+    roles: {
+        type: [{ type: Schema.Types.ObjectId, ref: 'role' }],
         required: true
     },
     code: {
@@ -34,8 +36,11 @@ export const UserSchema = {
         unique: true,
         required: true
     },
-    isDisabled: {
+    is_disabled: {
         type: Boolean,
         required: true
+    },
+    avatar_url: {
+        type: String
     }
 };

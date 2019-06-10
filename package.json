@@ -5,7 +5,8 @@
   "scripts": {
     "start": "ts-node --files index.ts -- --service",
     "watch": "nodemon -e ts,yaml,yml -w . --ignore './database/*.json'",
-    "build": "tsc --project . --outDir dist && cp tsconfig.json dist/tsconfig.json"
+    "build": "tsc --project . --outDir dist && cp tsconfig.json dist/tsconfig.json",
+    "test": "mocha --require ts-node/register test/**/*.ts"
   },
   "author": {
     "name": "Daniel Huynh",
@@ -19,6 +20,7 @@
     "@types/body-parser": "https://registry.npmjs.org/@types/body-parser/-/body-parser-1.17.0.tgz",
     "@types/chai": "^4.1.4",
     "@types/chai-http": "^3.0.5",
+    "@types/compression": "0.0.36",
     "@types/express": "^4.16.0",
     "@types/express-formidable": "^1.0.3",
     "@types/jsonwebtoken": "^8.3.0",
@@ -32,10 +34,13 @@
     "@types/socket.io": "^1.4.38",
     "bcrypt": "^3.0.5",
     "body-parser": "~1.17.1",
+    "bull": "^3.9.1",
+    "bull-arena": "^2.6.3",
     "chai": "^4.1.2",
-    "chai-http": "^4.0.0",
+    "chai-http": "^4.3.0",
+    "compression": "^1.7.4",
     "cookie-parser": "~1.4.3",
-    "curl-request": "^1.1.1",
+    "cronstrue": "^1.72.0",
     "debug": "~2.6.3",
     "dotenv": "^6.0.0",
     "express": "~4.15.2",
@@ -53,25 +58,23 @@
     "mongodb": "https://registry.npmjs.org/mongodb/-/mongodb-3.1.6.tgz",
     "mongoose": "^5.4.19",
     "morgan": "~1.8.1",
+    "ms": "^2.1.1",
     "pluralize": "^7.0.0",
     "pug": "^2.0.3",
     "redis": "^2.8.0",
     "reflect-metadata": "https://registry.npmjs.org/reflect-metadata/-/reflect-metadata-0.1.12.tgz",
+    "request": "^2.88.0",
+    "rotating-file-stream": "^1.4.1",
     "rxjs": "^6.3.1",
     "serve-favicon": "~2.4.2",
     "socket.io": "^2.1.1",
     "tsconfig-paths": "^3.5.0",
-    "zone.js": "^0.8.26",
-    "nodemon": "^1.18.3",
-    "ts-node": "^7.0.0",
-    "typescript": "^3.0.1"
+    "zone.js": "^0.8.26"
   },
   "devDependencies": {
+    "@types/bull": "^3.5.14",
     "nodemon": "^1.18.3",
     "ts-node": "^7.0.0",
     "typescript": "^3.0.1"
-  },
-  "engines": {
-    "node": "8.15.0"
   }
 }

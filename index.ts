@@ -11,7 +11,7 @@ if (args == undefined || args.length == 0) {
 const moduleName = args.splice(0, 1)[0] || '';
 
 import { register } from 'tsconfig-paths';
-const tsConfig = require("./tsconfig.json");
+const tsConfig = require('./tsconfig.json');
 
 register({
     baseUrl: tsConfig.compilerOptions.baseUrl,
@@ -39,12 +39,21 @@ if (moduleName == '--service') {
 
     const command = bootstrap(Command, { provide: Config, useValue: config });
 
-    command.start(args).then(result => {
-        console.log(result);
-        process.exit();
-    }).catch(error => {
+    command
+        .start(args)
+        .then(result => {
+            console.log(result);
+            process.exit();
+        })
+        .catch(error => {
+            console.error(error);
+            process.exit();
+        });
+} else if (moduleName == '--mail') {
+    const command = bootstrap(Command, { provide: Config, useValue: config });
+
+    command.start(['--run=EmailQueue']).catch(error => {
         console.error(error);
-        process.exit();
     });
 }
 
@@ -55,6 +64,7 @@ Usage: ts-node --files index.ts -- [module]
 Modules:
     --service               run Web Service
     --command               run Command module
+    --mail                  run Mail Queue
 ${commandHelper()}`;
 }
 

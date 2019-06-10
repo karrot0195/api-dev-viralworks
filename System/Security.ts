@@ -4,11 +4,11 @@ import { Request, Response, NextFunction } from 'express';
 // import * as bcrypt from 'bcrypt';
 
 import { Injectable } from './Injectable';
-import { Config } from './Config'
+import { Config } from './Config';
 
 @Injectable
 export class Security {
-    constructor(private readonly _config: Config) { }
+    constructor(private readonly _config: Config) {}
 
     public decodeToken(req: Request, res: Response, next: NextFunction) {
         req.auth = {};
@@ -23,9 +23,9 @@ export class Security {
                 }
             } catch (e) {
                 if (e instanceof JWT.TokenExpiredError) {
-                    return next(new Unauthorized('Session was expired'));
+                    return next(new Unauthorized('UNAUTHORIZED_EXPIRED'));
                 } else {
-                    return next(new Unauthorized('Token is invalid'));
+                    return next(new Unauthorized('UNAUTHORIZED'));
                 }
             }
         }

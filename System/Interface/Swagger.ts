@@ -12,7 +12,7 @@ export interface IValidation {
         [field: string]: IStringSchema | IIntegerSchema | INumberSchema
     };
     readonly formData?: {
-        [field: string]: IFileSchema
+        [field: string]: IFileSchema | IStringSchema | IIntegerSchema | INumberSchema | IQueryArraySchema | IBooleanSchema
     }
 };
 
@@ -103,8 +103,8 @@ export interface IArraySchema extends IArrayOfArraySchema {
 }
 
 export interface IFileSchema extends ISchema{
-    readonly type: DataType.File;    
-    readonly required: true;
+    readonly type: DataType.File;
+    readonly required?: boolean;
 }
 
 export interface IFormDataSchema extends ISchema{

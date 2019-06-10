@@ -22,6 +22,7 @@ $ cd <project_path> && pm2 start npm -- start
 ...
 SERVER_PUBLIC_HOST=api.dev.viralworks.com
 SERVER_PUBLIC_PORT=443
+CORS_ALLOW_ORIGIN=https://viralworks.com
 ```
 #### 7. Restart PM2
 ```

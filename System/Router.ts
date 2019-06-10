@@ -1,27 +1,46 @@
-import { Router as ExpressRouter, Request, Response, NextFunction } from "express";
+import { Router as ExpressRouter, Request, Response, NextFunction } from 'express';
 import * as Validator from 'is-my-json-valid';
+import * as _ from 'lodash';
 
 import { DataType } from './Enum';
 import { Config } from 'System/Config';
 import { Injectable } from './Injectable';
 import { IRoute, IRouteMiddleware, IRouteModule } from './Interface';
-import { IStringSchema, IIntegerSchema, INumberSchema, IBooleanSchema, ISchema, IObjectSchema } from './Interface/Swagger';
+import {
+    IStringSchema,
+    IIntegerSchema,
+    INumberSchema,
+    IBooleanSchema,
+    ISchema,
+    IObjectSchema
+} from './Interface/Swagger';
 import { Swagger } from './Swagger';
 import { RoleBasedAccessControl as RBAC } from './RBAC';
-import { BadRequest, SystemError, NotAcceptable } from "./Error";
+import { BadRequest, SystemError, NotAcceptable } from './Error';
 import * as RE from './RegularExpression';
 
 import { Router as AppRouter } from 'App/Router';
+import { FileStorage } from './FileStorage';
+import { QueueUI } from './Mail/MailUI';
 
 @Injectable
 export class Router {
     readonly expressRouter: ExpressRouter = ExpressRouter();
     readonly routes: { [module: string]: IRoute[] } = {};
 
-    constructor(appRouter: AppRouter, private readonly _swagger: Swagger, private readonly _rbac: RBAC, private readonly _config: Config) {
+    constructor(
+        appRouter: AppRouter,
+        private readonly _swagger: Swagger,
+        private readonly _rbac: RBAC,
+        private readonly _config: Config,
+        private readonly _storage: FileStorage,
+        private readonly _queueUI: QueueUI
+    ) {
         for (const moduleName in appRouter.routes) {
             if (!RE.checkModuleName.test(moduleName)) {
-                throw new SystemError(`Module name "${moduleName}" is invalid format. It must be ${RE.checkModuleName}`);
+                throw new SystemError(
+                    `Module name "${moduleName}" is invalid format. It must be ${RE.checkModuleName}`
+                );
             }
 
             const routeModule = appRouter.routes[moduleName];
@@ -31,6 +50,36 @@ export class Router {
             if (_config.document.enable) {
                 this._createDocumentURL(moduleName, routeModule);
             }
+        }
+
+        // handle method not allow
+        let pathWithMethodList = _.uniqWith(
+            this.expressRouter.stack.map(r => {
+                return { method: Object.keys(r.route.methods), path: r.route.path };
+            }),
+            _.isEqual
+        );
+
+        let pathList: any = [];
+
+        for (let key in pathWithMethodList) {
+            let item = pathWithMethodList[key];
+            if (!pathList[item.path]) pathList[item.path] = '';
+            pathList[item.path] += item.method[0] + ',';
+        }
+
+        this._createQueueUI();
+
+        for (let path in pathList) {
+            let methods = pathList[path].toUpperCase().slice(0, -1);
+
+            this.expressRouter.route(path).options((req: Request, res: Response, next: NextFunction) => {
+                res.status(200).send(methods);
+            });
+
+            this.expressRouter.route(path).all((req: Request, res: Response, next: NextFunction) => {
+                res.status(405).send();
+            });
         }
     }
 
@@ -42,7 +91,15 @@ export class Router {
         });
     }
 
-    private _resolve(route: IRoute, moduleName: string, parent?: { middlewares?: IRouteMiddleware[], paths?: string[] }): IRoute | void | undefined {
+    private _createQueueUI() {
+        this.expressRouter.use(this._config.mail_queue.admin_path, this._queueUI.arena);
+    }
+
+    private _resolve(
+        route: IRoute,
+        moduleName: string,
+        parent?: { middlewares?: IRouteMiddleware[]; paths?: string[] }
+    ): IRoute | void | undefined {
         const paths: string[] = [];
         const middlewares: IRouteMiddleware[] = route.middleware || [];
 
@@ -66,7 +123,12 @@ export class Router {
             }
         } else if (route.method && route.handler) {
             if (paths && paths.length > 0) {
-                const resolvedRoute: IRoute = { path: resolvePath(paths), method: route.method, handler: route.handler, middleware: resolveMiddleware(middlewares) };
+                const resolvedRoute: IRoute = {
+                    path: resolvePath(paths),
+                    method: route.method,
+                    handler: route.handler,
+                    middleware: resolveMiddleware(middlewares)
+                };
                 if (RE.checkRoutePath.test(resolvedRoute.path!)) {
                     let summary: string | undefined;
 
@@ -78,7 +140,9 @@ export class Router {
                     this.routes[moduleName].push(resolvedRoute);
                     this._setExpressRoute(resolvedRoute);
                 } else {
-                    throw new SystemError(`Path "${resolvedRoute.path!}" is invalid format. It must be ${RE.checkRoutePath}`);
+                    throw new SystemError(
+                        `Path "${resolvedRoute.path!}" is invalid format. It must be ${RE.checkRoutePath}`
+                    );
                 }
             }
         }
@@ -95,7 +159,6 @@ export class Router {
 
         for (const pos in validation) {
             if (!(validation.formData && pos == 'formData')) {
-
                 let expressPos = pos;
 
                 if (pos == 'path') {
@@ -124,7 +187,10 @@ export class Router {
         return next();
     }
 
-    private _resolveNonSchemaValidation(requestPosition: any, params: { [field: string]: IStringSchema | IIntegerSchema | INumberSchema | IBooleanSchema }) {
+    private _resolveNonSchemaValidation(
+        requestPosition: any,
+        params: { [field: string]: IStringSchema | IIntegerSchema | INumberSchema | IBooleanSchema }
+    ) {
         const schema: IObjectSchema = {
             type: DataType.Object,
             properties: {} as { [field: string]: IStringSchema | IIntegerSchema | INumberSchema | IBooleanSchema }
@@ -155,14 +221,13 @@ export class Router {
             });
         }
 
-       
         this.expressRouter[route.method!](expressPath, (req: Request, res: Response, next: NextFunction) => {
             // Set extends variable Request
             req.routePath = route.path!;
 
             // patch node-formidable
-            req.body = req.fields
-            
+            req.body = req.fields;
+
             return next();
         });
 
@@ -176,7 +241,6 @@ export class Router {
                 });
             }
         }
-
         // Set RBAC to Express Route if it's enabled
         if (this._config.security.RBAC) {
             this.expressRouter[route.method!](expressPath, this._rbac.middleware.bind(this._rbac));
@@ -204,7 +268,6 @@ export class Router {
 
         // Set handler function to resolve request to Express Route
         this.expressRouter[route.method!](expressPath, wrapper(route.handler!.method));
-        // this.expressRouter.route(expressPath)[route.method!](wrapper(route.handler!.method));
     }
 }
 

@@ -45,7 +45,7 @@ export class Command {
 
     private async _runCommand(key: string) {
         if (this._appCommand.commands[key]) {
-            return this._appCommand.commands[key].run();
+            return this._appCommand.commands[key].run(this.args);
         } else {
             return 'Command does not exist';
         }

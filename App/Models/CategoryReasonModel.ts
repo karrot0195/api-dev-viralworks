@@ -15,7 +15,7 @@ export interface ICategoryReason {
 @Injectable
 export class CategoryReasonModel extends BaseModel<ICategoryReason, CategoryReason> {
     constructor(_mongo: Mongo) {
-        super(_mongo, 'category_reasons');
+        super(_mongo, 'category_reason');
     }
 
 }

@@ -7,9 +7,9 @@ export interface IUser {
     readonly name: string;
     readonly email: string;
     password: string;
-    readonly role: string;
+    readonly roles: string[];
     code?: string;
-    isDisabled?: boolean;
+    is_disabled?: boolean;
 }
 
 @Injectable

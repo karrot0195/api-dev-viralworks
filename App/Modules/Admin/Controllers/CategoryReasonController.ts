@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import { DataType } from 'System/Enum';
 import * as _ from 'lodash';
 import { CategoryReasonService } from '../Services/CategoryReasonService';
-import { NotFound, Conflict, InternalError } from 'System/Error';
+import { NotFound } from 'System/Error';
 import * as RE from 'System/RegularExpression';
 
 @Injectable
@@ -13,14 +13,7 @@ export class CategoryReasonController {
 
     createCategoryReason: IHandler = {
         method: async (req: Request, res: Response, next: NextFunction) => {
-            try {
-                return res.json(await this._categoryReasonService.createCategoryReason(req.body));
-            } catch (err) {
-                if (err.code == 11000) {
-                    throw new Conflict('Duplicate category reason');
-                }
-                throw new InternalError(err.message);
-            }
+            return res.json(await this._categoryReasonService.createCategoryReason(req.body));
         },
         validation: {
             body: {
@@ -87,7 +80,7 @@ export class CategoryReasonController {
             if (catReason) {
                 return res.json(catReason);
             }
-            throw new NotFound();
+            throw new NotFound('REASON_NOT_FOUND');
         },
         validation: {},
         document: {
@@ -107,7 +100,7 @@ export class CategoryReasonController {
             if (catReason) {
                 return res.json(await this._categoryReasonService.updateCategoryReason(catReason, req.body));
             }
-            throw new NotFound();
+            throw new NotFound('CAT_REASON_NOT_FOUND');
         },
         validation: {
             path: {
@@ -146,7 +139,7 @@ export class CategoryReasonController {
             if (catReason) {
                 return res.json(await this._categoryReasonService.createReason(catReason, req.body));
             }
-            throw new NotFound('Not found reason');
+            throw new NotFound('REASON_NOT_FOUND');
         },
         validation: {
             path: {
@@ -170,7 +163,7 @@ export class CategoryReasonController {
         },
         document: {
             tags: ['Category Reason'],
-            summary: 'Update data category reason',
+            summary: 'Create reason',
             security: true,
             responses: {
                 200: 'Category reason was updated successfully',
@@ -186,9 +179,9 @@ export class CategoryReasonController {
             if (idx > -1) {
                 return res.json(await this._categoryReasonService.updateReason(catReason, idx, req.body));
             } else {
-                throw new NotFound('Not found reason');
+                throw new NotFound('REASON_NOT_FOUND');
             }
-            throw new NotFound('Not found category reason');
+            throw new NotFound('CAT_REASON_NOT_FOUND');
         },
         validation: {
             path: {

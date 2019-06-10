@@ -1,16 +1,17 @@
 import { IDocument } from 'System/Interface';
 
 interface MailEvent {
-    readonly event: string,
-    readonly timestamp: number
+    readonly event: string;
+    readonly timestamp: number;
 }
 
 export interface Mail extends IDocument {
-    readonly message_id: string,
-    readonly email: string,
-    readonly events: Array<MailEvent>,
-    readonly event_latest: string,
-    readonly status: number
+    message_id: string;
+    mail_type: number;
+    readonly email: string;
+    readonly events: Array<MailEvent>;
+    readonly event_latest: string;
+    status: number;
 }
 
 const EventMailSchema = {
@@ -25,11 +26,8 @@ const EventMailSchema = {
 };
 
 export const MailSchema = {
-    message_id: {
-        type: String,
-        required: true,
-        unique: true
-    },
+    message_id: String,
+    mail_type: Number,
     email: {
         type: String,
         required: true

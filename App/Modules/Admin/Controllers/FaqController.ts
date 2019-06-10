@@ -7,9 +7,6 @@ import { NotFound } from 'System/Error';
 import * as RE from 'System/RegularExpression';
 
 import { FaqService } from '../Services/FaqService';
-import { Conflict, InternalError } from 'System/Error';
-
-import { IQueryArraySchema } from 'System/Interface/Swagger';
 
 @Injectable
 export class FaqController {
@@ -28,14 +25,12 @@ export class FaqController {
                     pattern: RE.checkSortArrayString.source
                 },
                 page: {
-                    type: DataType.Number,
-                    description: 'Page number of result',
-                    default: 0
+                    type: DataType.String,
+                    description: 'Page number of result'
                 },
                 limit: {
-                    type: DataType.Number,
-                    description: 'Limit per page',
-                    default: 0
+                    type: DataType.String,
+                    description: 'Limit per page'
                 },
                 term: {
                     type: DataType.String,
@@ -150,7 +145,7 @@ export class FaqController {
             if (faq) {
                 return res.status(200).json(await faq.remove());
             }
-            throw new NotFound('Not found faq');
+            throw new NotFound('FAQ_NOT_FOUND');
         },
         validation: {
             path: {

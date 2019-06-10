@@ -5,13 +5,14 @@ import { Injectable } from './Injectable';
 import { Config } from './Config';
 import { ModelDict } from 'Database';
 import { BadRequest } from './Error/BadRequest';
-import { CommonErrorMessage } from './Enum/Error';
+import { inspect as stringify } from 'util';
+import { Conflict } from './Error/Conflict';
 
 require('./Helpers/Log');
 
 @Injectable
 export class Mongo {
-    private _mongodb: Mongoose.Connection;
+    public _mongodb: Mongoose.Connection;
     public models: ModelDict;
     private _connectionString: string;
     constructor(private readonly _config: Config) {
@@ -19,13 +20,12 @@ export class Mongo {
         this._connectionString = `mongodb://${mongoConfig.username}:${encodeURIComponent(mongoConfig.password)}@${
             mongoConfig.host
         }:${mongoConfig.port}/${mongoConfig.database}`;
-
-        Mongoose.connect(this._connectionString, { useNewUrlParser: true, replicaSet: 'rs0' });
+        Mongoose.connect(this._connectionString, { useNewUrlParser: true, replicaSet: 'rs' });
         Mongoose.set('useCreateIndex', true);
 
         if (mongoConfig.debug) {
-            Mongoose.set('debug', function(coll, method, query) {
-                console.log(`DEBUG: Mongoose: ${coll}.${method} ${JSON.stringify(query)}`);
+            Mongoose.set('debug', function(coll, method, query, doc) {
+                console.log(`DEBUG: Mongoose: ${coll}.${method} ${stringify(query)}`);
             });
         }
 
@@ -66,10 +66,11 @@ export class Mongo {
         }
     }
 
-    define(modelName: string, schemaObject: { schema: {}; index?: {}; class?: Function }) {
-        const schema = new Mongoose.Schema(schemaObject.schema, {
-            timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
-        });
+    define(modelName: string, schemaObject: { schema: {}; index?: {}; class?: Function; option?: object; customSchema?: Function }) {
+        const schemaOption = schemaObject.option || {};
+        schemaOption['timestamps'] = { createdAt: 'created_at', updatedAt: 'updated_at' };
+
+        const schema = new Mongoose.Schema(schemaObject.schema, schemaOption);
 
         if (schemaObject.index) {
             schema.index(schemaObject.index);
@@ -79,11 +80,15 @@ export class Mongo {
             schema.loadClass(schemaObject.class);
         }
 
+        if (schemaObject.customSchema) {
+            schemaObject.customSchema(schema, this.models);
+        }
+
         // middleware that handle error
-        schema.post('save', handleError);
-        schema.post('update', handleError);
-        schema.post('findOneAndUpdate', handleError);
-        schema.post('insertMany', handleError);
+        schema.post('save', handleDuplicated);
+        schema.post('update', handleDuplicated);
+        schema.post('findOneAndUpdate', handleDuplicated);
+        schema.post('insertMany', handleDuplicated);
 
         const model = Mongoose.model(modelName, schema);
 
@@ -97,9 +102,15 @@ export class Mongo {
     }
 }
 
-function handleError(error, doc, next) {
+function handleDuplicated(error, doc, next) {
     if (error.name === 'MongoError' && error.code === 11000) {
-        next(new BadRequest(CommonErrorMessage.E700));
+        let key = error.errmsg
+            .split(':')[2]
+            .split(' ')[1]
+            .replace(/_[0-9]+$/, '')
+            .toUpperCase();
+
+        next(new Conflict(key + '_DUPLICATED'));
     } else {
         next();
     }

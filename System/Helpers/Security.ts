@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import * as crypto from 'crypto';
 
 export function hash(password: string) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
@@ -16,4 +17,8 @@ export function signToken(payload: any, secretKey: string, expiresIn: string) {
 
 export function decodeToken(token: string) {
     return jwt.decode(token);
+}
+
+export function generatetoken() {
+    return crypto.randomBytes(6).toString('hex');
 }
