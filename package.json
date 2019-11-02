@@ -57,7 +57,7 @@
     "moment-timezone": "^0.5.21",
     "mongodb": "https://registry.npmjs.org/mongodb/-/mongodb-3.1.6.tgz",
     "mongoose": "^5.4.19",
-    "morgan": "~1.8.1",
+    "morgan": "~1.9.1",
     "ms": "^2.1.1",
     "pluralize": "^7.0.0",
     "pug": "^2.0.3",
