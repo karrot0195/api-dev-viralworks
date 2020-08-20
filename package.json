@@ -32,7 +32,7 @@
     "@types/redis": "^2.8.6",
     "@types/reflect-metadata": "https://registry.npmjs.org/@types/reflect-metadata/-/reflect-metadata-0.1.0.tgz",
     "@types/socket.io": "^1.4.38",
-    "bcrypt": "^3.0.5",
+    "bcrypt": "^5.0.0",
     "body-parser": "~1.17.1",
     "bull": "^3.9.1",
     "bull-arena": "^2.6.3",
