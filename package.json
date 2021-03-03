@@ -60,7 +60,7 @@
     "morgan": "~1.8.1",
     "ms": "^2.1.1",
     "pluralize": "^7.0.0",
-    "pug": "^2.0.3",
+    "pug": "^3.0.1",
     "redis": "^2.8.0",
     "reflect-metadata": "https://registry.npmjs.org/reflect-metadata/-/reflect-metadata-0.1.12.tgz",
     "request": "^2.88.0",
