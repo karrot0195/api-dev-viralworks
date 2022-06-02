@@ -14,7 +14,7 @@
     "url": "https://www.linkedin.com/in/huynh-nhat-truong/"
   },
   "dependencies": {
-    "@angular/core": "^6.1.6",
+    "@angular/core": "^11.0.5",
     "@sendgrid/mail": "^6.3.1",
     "@types/bcrypt": "^3.0.0",
     "@types/body-parser": "https://registry.npmjs.org/@types/body-parser/-/body-parser-1.17.0.tgz",
