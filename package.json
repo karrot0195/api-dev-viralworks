@@ -43,7 +43,7 @@
     "cronstrue": "^1.72.0",
     "debug": "~2.6.3",
     "dotenv": "^6.0.0",
-    "express": "~4.15.2",
+    "express": "~4.17.3",
     "express-formidable": "^1.2.0",
     "file-type": "^10.10.0",
     "fs": "0.0.1-security",
